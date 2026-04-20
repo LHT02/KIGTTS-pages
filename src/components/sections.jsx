@@ -93,13 +93,13 @@ export function SymbolIcon({ name, size = 24, sx }) {
   );
 }
 
-function PseudoQr() {
+function PseudoQr({ compact = false }) {
   return (
     <Box
       sx={{
-        width: 168,
-        height: 168,
-        p: 1.25,
+        width: compact ? 96 : 168,
+        height: compact ? 96 : 168,
+        p: compact ? 0.75 : 1.25,
         backgroundColor: '#fbfbfb',
         borderRadius: 0.5,
         boxShadow: '0 1px 2px rgba(0,0,0,0.16)',
@@ -159,9 +159,10 @@ function BetaBubble({ onSelect, compact = false }) {
         right: compact ? 'auto' : { lg: 42, xl: 56 },
         top: compact ? 'auto' : { lg: 34, xl: 46 },
         width: compact ? '100%' : { lg: 320, xl: 354 },
+        maxWidth: compact ? { xs: 288, sm: '100%' } : 'none',
         minHeight: compact ? 'auto' : 190,
-        px: { xs: 3, md: 3.2 },
-        py: { xs: 2.6, md: 3 },
+        px: compact ? { xs: 2, sm: 3, md: 3.2 } : { xs: 3, md: 3.2 },
+        py: compact ? { xs: 1.5, sm: 2.6, md: 3 } : { xs: 2.6, md: 3 },
         borderRadius: '28px',
         color: '#0b1819',
         background: 'linear-gradient(180deg, #92dde0 0%, #82d4d8 100%)',
@@ -174,14 +175,14 @@ function BetaBubble({ onSelect, compact = false }) {
           backgroundColor: alpha('#d6f5f6', 0.56),
         },
         '&::before': {
-          width: 92,
-          height: 92,
+          width: compact ? 72 : 92,
+          height: compact ? 72 : 92,
           top: -20,
           right: -12,
         },
         '&::after': {
-          width: 76,
-          height: 76,
+          width: compact ? 58 : 76,
+          height: compact ? 58 : 76,
           bottom: -14,
           left: -12,
         },
@@ -192,9 +193,9 @@ function BetaBubble({ onSelect, compact = false }) {
           position: 'absolute',
           left: 18,
           right: 18,
-          bottom: 18,
-          top: '50%',
-          borderRadius: '18px',
+          bottom: compact ? 12 : 18,
+          top: compact ? '54%' : '50%',
+          borderRadius: compact ? '14px' : '18px',
           background: `
             radial-gradient(circle at 16% 22%, ${alpha('#117d80', 0.24)} 0 22%, transparent 22%),
             radial-gradient(circle at 100% 10%, ${alpha('#d5f3f4', 0.55)} 0 20%, transparent 20%),
@@ -213,8 +214,8 @@ function BetaBubble({ onSelect, compact = false }) {
       >
         <Typography
           sx={{
-            fontSize: { xs: '1.05rem', md: '1.1rem' },
-            lineHeight: 1.45,
+            fontSize: compact ? { xs: '0.92rem', sm: '1.05rem', md: '1.1rem' } : { xs: '1.05rem', md: '1.1rem' },
+            lineHeight: compact ? 1.38 : 1.45,
             fontWeight: 500,
           }}
         >
@@ -227,14 +228,14 @@ function BetaBubble({ onSelect, compact = false }) {
         <Button
           onClick={() => onSelect('lab')}
           sx={{
-            minWidth: 188,
-            minHeight: 52,
-            px: 4,
+            minWidth: compact ? 148 : 188,
+            minHeight: compact ? 42 : 52,
+            px: compact ? 2.8 : 4,
             borderRadius: 999,
             color: '#f5fbfb',
             backgroundColor: '#0e7f83',
             boxShadow: '0 2px 6px rgba(0,0,0,0.18)',
-            fontSize: '1rem',
+            fontSize: compact ? '0.88rem' : '1rem',
             '&:hover': {
               backgroundColor: '#0f8d92',
             },
@@ -247,32 +248,42 @@ function BetaBubble({ onSelect, compact = false }) {
   );
 }
 
-function DownloadPanel() {
+function DownloadPanel({ compact = false }) {
   return (
     <Box
       sx={{
         flex: 1,
-        minHeight: 244,
-        px: { xs: 2.2, md: 2.5 },
-        py: { xs: 2.2, md: 2.5 },
+        minHeight: compact ? { xs: 'auto', sm: 244 } : 244,
+        px: compact ? { xs: 1.25, sm: 2.2, md: 2.5 } : { xs: 2.2, md: 2.5 },
+        py: compact ? { xs: 1.25, sm: 2.2, md: 2.5 } : { xs: 2.2, md: 2.5 },
         ...md2Surface,
       }}
     >
-      <Stack spacing={1.8} sx={{ height: '100%' }}>
+      <Stack spacing={compact ? 1.1 : 1.8} sx={{ height: '100%' }}>
         <Button
           fullWidth
-          startIcon={<SymbolIcon name="android" size={28} />}
+          startIcon={<SymbolIcon name="android" size={compact ? 22 : 28} />}
           sx={{
             ...md2Button,
+            minHeight: compact ? { xs: 48, sm: 72 } : 72,
+            px: compact ? { xs: 1.35, sm: 2.8 } : 2.8,
+            fontSize: compact ? { xs: '0.86rem', sm: '1.18rem', md: '1.28rem' } : { xs: '1.18rem', md: '1.28rem' },
+            justifyContent: compact ? 'center' : 'flex-start',
+            whiteSpace: 'nowrap',
           }}
         >
           下载APK
         </Button>
         <Button
           fullWidth
-          startIcon={<SymbolIcon name="laptop_mac" size={28} />}
+          startIcon={<SymbolIcon name="laptop_mac" size={compact ? 22 : 28} />}
           sx={{
             ...md2Button,
+            minHeight: compact ? { xs: 48, sm: 72 } : 72,
+            px: compact ? { xs: 1.35, sm: 2.8 } : 2.8,
+            fontSize: compact ? { xs: '0.86rem', sm: '1.18rem', md: '1.28rem' } : { xs: '1.18rem', md: '1.28rem' },
+            justifyContent: compact ? 'center' : 'flex-start',
+            whiteSpace: 'nowrap',
           }}
         >
           下载训练器
@@ -282,27 +293,28 @@ function DownloadPanel() {
   );
 }
 
-function QrPanel() {
+function QrPanel({ compact = false }) {
   return (
     <Box
       sx={{
-        width: { xs: '100%', sm: 230 },
-        minWidth: { sm: 230 },
-        minHeight: 244,
-        px: { xs: 2.2, md: 2.5 },
-        py: { xs: 2.2, md: 2.5 },
+        width: compact ? { xs: 122, sm: 230 } : { xs: '100%', sm: 230 },
+        minWidth: compact ? { xs: 122, sm: 230 } : { sm: 230 },
+        minHeight: compact ? { xs: 'auto', sm: 244 } : 244,
+        px: compact ? { xs: 1.15, sm: 2.2, md: 2.5 } : { xs: 2.2, md: 2.5 },
+        py: compact ? { xs: 1.15, sm: 2.2, md: 2.5 } : { xs: 2.2, md: 2.5 },
         ...md2Surface,
       }}
     >
-      <Stack spacing={1.8} alignItems="center">
-        <PseudoQr />
+      <Stack spacing={compact ? 0.9 : 1.8} alignItems="center">
+        <PseudoQr compact={compact} />
         <Typography
           variant="body2"
           sx={{
             textAlign: 'center',
             color: alpha('#f5fbfb', 0.64),
-            fontSize: '0.92rem',
-            lineHeight: 1.55,
+            display: compact ? { xs: 'none', sm: 'block' } : 'block',
+            fontSize: compact ? '0.72rem' : '0.92rem',
+            lineHeight: compact ? 1.35 : 1.55,
           }}
         >
           {downloadNotes[0]}
@@ -312,14 +324,14 @@ function QrPanel() {
   );
 }
 
-function HomeRightBlock({ onSelect }) {
+function HomeRightBlock({ onSelect, compact = false }) {
   return (
     <Box
       sx={{
         position: 'relative',
         width: '100%',
         maxWidth: { lg: 502, xl: 536 },
-        mt: { xs: 2, lg: 0 },
+        mt: compact ? { xs: -0.4, sm: 1.1, lg: 0 } : { xs: 2, lg: 0 },
         ml: { lg: 'auto' },
       }}
     >
@@ -328,15 +340,15 @@ function HomeRightBlock({ onSelect }) {
         src={logoWhite}
         alt="KIGTTS"
         sx={{
-          width: '100%',
-          maxWidth: 474,
+          width: compact ? { xs: '80%', sm: '100%' } : '100%',
+          maxWidth: compact ? { xs: 248, sm: 474 } : 474,
         }}
       />
       <Typography
         sx={{
-          mt: 2,
-          fontSize: { xs: '2rem', md: '2.6rem', xl: '2.9rem' },
-          lineHeight: 1.18,
+          mt: compact ? { xs: 0.8, sm: 1.6, md: 2 } : 2,
+          fontSize: compact ? { xs: '1.38rem', sm: '2rem', md: '2.6rem', xl: '2.9rem' } : { xs: '2rem', md: '2.6rem', xl: '2.9rem' },
+          lineHeight: compact ? 1.12 : 1.18,
           letterSpacing: '0.03em',
           color: '#f1f4f4',
           fontWeight: 300,
@@ -345,15 +357,15 @@ function HomeRightBlock({ onSelect }) {
         变娃交流无阻碍
       </Typography>
       <Stack
-        direction={{ xs: 'column', sm: 'row' }}
-        spacing={2}
+        direction={compact ? 'row' : { xs: 'column', sm: 'row' }}
+        spacing={compact ? 1.2 : 2}
         sx={{
-          mt: { xs: 4, md: 5.2 },
+          mt: compact ? { xs: 1.8, sm: 4, md: 5.2 } : { xs: 4, md: 5.2 },
           alignItems: 'stretch',
         }}
       >
-        <QrPanel />
-        <DownloadPanel />
+        <QrPanel compact={compact} />
+        <DownloadPanel compact={compact} />
       </Stack>
     </Box>
   );
@@ -365,9 +377,9 @@ export function HomeSection({ onSelect }) {
       sx={{
         position: 'relative',
         minHeight: { xs: 'auto', lg: '100svh' },
-        px: { xs: 2.5, sm: 3.4, lg: 5.4, xl: 6.4 },
-        pt: { xs: 3, lg: 3.8 },
-        pb: { xs: 4.2, lg: 5.2 },
+        px: { xs: 1.35, sm: 3.4, lg: 5.4, xl: 6.4 },
+        pt: { xs: 1.2, sm: 3, lg: 3.8 },
+        pb: { xs: 2.3, sm: 4.2, lg: 5.2 },
         scrollSnapAlign: 'start',
       }}
     >
@@ -376,8 +388,8 @@ export function HomeSection({ onSelect }) {
         src={lhtstudioLogo}
         alt="LHT Studio"
         sx={{
-          width: { xs: 170, md: 200 },
-          mb: { xs: 2.8, lg: 0 },
+          width: { xs: 108, sm: 170, md: 200 },
+          mb: { xs: 0.8, sm: 2.8, lg: 0 },
         }}
       />
       <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
@@ -396,14 +408,14 @@ export function HomeSection({ onSelect }) {
           minHeight: { lg: 'calc(100svh - 158px)' },
         }}
       >
-        <Box sx={{ display: { xs: 'block', lg: 'none' } }}>
+        <Box sx={{ display: { xs: 'flex', lg: 'none' }, justifyContent: 'center' }}>
           <BetaBubble onSelect={onSelect} compact />
         </Box>
         <Box
           sx={{
             minWidth: 0,
             width: '100%',
-            mt: { xs: 3.2, lg: 0 },
+            mt: { xs: 1.1, sm: 3.2, lg: 0 },
             pointerEvents: 'none',
             display: 'flex',
             alignItems: 'center',
@@ -415,15 +427,17 @@ export function HomeSection({ onSelect }) {
             src={heroShot}
             alt="KIGTTS 视觉主体"
             sx={{
-              width: '100%',
-              maxWidth: { lg: 'min(58vw, 980px)', xl: 'min(56vw, 1080px)' },
+              width: { xs: 'auto', sm: '100%' },
+              maxWidth: { xs: '100%', sm: '100%', lg: 'min(58vw, 980px)', xl: 'min(56vw, 1080px)' },
+              maxHeight: { xs: 214, sm: 'none' },
               display: 'block',
+              marginInline: 'auto',
               filter: 'drop-shadow(0 18px 34px rgba(0,0,0,0.26))',
             }}
           />
         </Box>
         <Box sx={{ minWidth: 0, display: 'flex', justifyContent: { lg: 'flex-end' } }}>
-          <HomeRightBlock onSelect={onSelect} />
+          <HomeRightBlock onSelect={onSelect} compact />
         </Box>
       </Box>
     </Box>
