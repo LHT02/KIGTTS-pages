@@ -41,6 +41,7 @@ const SCROLL_EPSILON = 2;
 const WHEEL_TRIGGER_DELTA = 24;
 const SWIPE_DISTANCE_RATIO = 0.11;
 const SWIPE_VELOCITY_THRESHOLD = 0.42;
+const DRAG_START_DELTA = 4;
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -213,7 +214,18 @@ export default function App() {
   const touchStateRef = useRef({
     startY: 0,
     lastY: 0,
+    startScrollTop: 0,
+    startSectionId: 'home',
     startTime: 0,
+    tracking: false,
+  });
+  const mouseDragStateRef = useRef({
+    startY: 0,
+    lastY: 0,
+    startScrollTop: 0,
+    startSectionId: 'home',
+    startTime: 0,
+    moved: false,
     tracking: false,
   });
   const [activeId, setActiveId] = useState(getInitialSection);
@@ -256,6 +268,22 @@ export default function App() {
     ).id;
   };
 
+  const setSnapEnabled = (enabled) => {
+    const scrollRoot = scrollContainerRef.current;
+    if (!scrollRoot) {
+      return;
+    }
+
+    if (enabled) {
+      scrollRoot.style.removeProperty('scroll-snap-type');
+      scrollRoot.style.removeProperty('scroll-behavior');
+      return;
+    }
+
+    scrollRoot.style.scrollSnapType = 'none';
+    scrollRoot.style.scrollBehavior = 'auto';
+  };
+
   const finishAnimation = () => {
     if (animationFrameRef.current) {
       window.cancelAnimationFrame(animationFrameRef.current);
@@ -264,6 +292,7 @@ export default function App() {
 
     animationLockRef.current = false;
     targetIdRef.current = null;
+    setSnapEnabled(true);
   };
 
   const animateToSection = (sectionId, duration = compactNavigation ? 460 : 540) => {
@@ -278,11 +307,13 @@ export default function App() {
     const travel = targetTop - startTop;
 
     finishAnimation();
+    setSnapEnabled(false);
 
     if (Math.abs(travel) <= SCROLL_EPSILON) {
       scrollRoot.scrollTop = targetTop;
       setCurrentSection(sectionId);
       updateHash(sectionId);
+      setSnapEnabled(true);
       return;
     }
 
@@ -313,17 +344,39 @@ export default function App() {
     animationFrameRef.current = window.requestAnimationFrame(step);
   };
 
-  const snapByDirection = (direction) => {
-    const currentId = targetIdRef.current ?? getNearestSectionId();
-    const currentIndex = getSectionIndex(currentId);
-    const nextIndex = clamp(currentIndex + direction, 0, navItems.length - 1);
+  const snapFromSection = (sectionId, direction) => {
+    const currentIndex = getSectionIndex(sectionId);
+    const baseIndex = currentIndex >= 0 ? currentIndex : getSectionIndex(activeIdRef.current);
+    const nextIndex = clamp(baseIndex + direction, 0, navItems.length - 1);
 
-    if (nextIndex === currentIndex) {
-      animateToSection(currentId, compactNavigation ? 360 : 420);
+    if (nextIndex === baseIndex) {
+      animateToSection(navItems[baseIndex]?.id ?? activeIdRef.current, compactNavigation ? 360 : 420);
       return;
     }
 
     animateToSection(navItems[nextIndex].id);
+  };
+
+  const snapByDirection = (direction) => {
+    snapFromSection(targetIdRef.current ?? getNearestSectionId(), direction);
+  };
+
+  const settleDrag = (travel, elapsed, startSectionId) => {
+    const scrollRoot = scrollContainerRef.current;
+    if (!scrollRoot) {
+      setSnapEnabled(true);
+      return;
+    }
+
+    const velocity = Math.abs(travel) / Math.max(elapsed, 1);
+    const travelThreshold = scrollRoot.clientHeight * SWIPE_DISTANCE_RATIO;
+
+    if (Math.abs(travel) >= travelThreshold || velocity >= SWIPE_VELOCITY_THRESHOLD) {
+      snapFromSection(startSectionId, travel > 0 ? 1 : -1);
+      return;
+    }
+
+    animateToSection(getNearestSectionId(), compactNavigation ? 320 : 360);
   };
 
   const setSectionRef = (sectionId) => (node) => {
@@ -399,9 +452,13 @@ export default function App() {
       }
 
       const touch = event.touches[0];
+      finishAnimation();
+      setSnapEnabled(false);
       touchStateRef.current = {
         startY: touch.clientY,
         lastY: touch.clientY,
+        startScrollTop: scrollRoot.scrollTop,
+        startSectionId: getNearestSectionId(),
         startTime: performance.now(),
         tracking: true,
       };
@@ -412,43 +469,125 @@ export default function App() {
         return;
       }
 
-      touchStateRef.current.lastY = event.touches[0].clientY;
+      if (event.cancelable) {
+        event.preventDefault();
+      }
+
+      const nextY = event.touches[0].clientY;
+      const touchState = touchStateRef.current;
+      const travel = touchState.startY - nextY;
+      const maxScrollTop = Math.max(scrollRoot.scrollHeight - scrollRoot.clientHeight, 0);
+
+      touchStateRef.current.lastY = nextY;
+      scrollRoot.scrollTop = clamp(touchState.startScrollTop + travel, 0, maxScrollTop);
     };
 
     const handleTouchEnd = () => {
       const touchState = touchStateRef.current;
       if (!touchState.tracking || animationLockRef.current) {
         touchStateRef.current.tracking = false;
+        if (!animationLockRef.current) {
+          setSnapEnabled(true);
+        }
         return;
       }
 
       touchStateRef.current.tracking = false;
 
       const travel = touchState.startY - touchState.lastY;
-      const elapsed = Math.max(performance.now() - touchState.startTime, 1);
-      const velocity = Math.abs(travel) / elapsed;
-      const travelThreshold = scrollRoot.clientHeight * SWIPE_DISTANCE_RATIO;
+      const elapsed = performance.now() - touchState.startTime;
 
-      if (Math.abs(travel) >= travelThreshold || velocity >= SWIPE_VELOCITY_THRESHOLD) {
-        snapByDirection(travel > 0 ? 1 : -1);
+      settleDrag(travel, elapsed, touchState.startSectionId);
+    };
+
+    const handleMouseDown = (event) => {
+      if (event.button !== 0 || event.defaultPrevented) {
         return;
       }
 
-      animateToSection(getNearestSectionId(), compactNavigation ? 320 : 360);
+      const targetElement = event.target instanceof Element ? event.target : event.target?.parentElement;
+      const interactiveTarget = targetElement?.closest(
+        'a, button, input, textarea, select, [role="button"], [aria-haspopup="true"]',
+      );
+      if (interactiveTarget) {
+        return;
+      }
+
+      finishAnimation();
+      setSnapEnabled(false);
+
+      mouseDragStateRef.current = {
+        startY: event.clientY,
+        lastY: event.clientY,
+        startScrollTop: scrollRoot.scrollTop,
+        startSectionId: getNearestSectionId(),
+        startTime: performance.now(),
+        moved: false,
+        tracking: true,
+      };
     };
 
-    scrollRoot.addEventListener('wheel', handleWheel, { passive: false });
+    const handleMouseMove = (event) => {
+      const dragState = mouseDragStateRef.current;
+      if (!dragState.tracking) {
+        return;
+      }
+
+      const travel = dragState.startY - event.clientY;
+      if (!dragState.moved && Math.abs(travel) < DRAG_START_DELTA) {
+        return;
+      }
+
+      event.preventDefault();
+      const maxScrollTop = Math.max(scrollRoot.scrollHeight - scrollRoot.clientHeight, 0);
+
+      mouseDragStateRef.current.lastY = event.clientY;
+      mouseDragStateRef.current.moved = true;
+      scrollRoot.scrollTop = clamp(dragState.startScrollTop + travel, 0, maxScrollTop);
+    };
+
+    const handleMouseUp = () => {
+      const dragState = mouseDragStateRef.current;
+      if (!dragState.tracking || animationLockRef.current) {
+        mouseDragStateRef.current.tracking = false;
+        if (!animationLockRef.current) {
+          setSnapEnabled(true);
+        }
+        return;
+      }
+
+      mouseDragStateRef.current.tracking = false;
+
+      if (!dragState.moved) {
+        setSnapEnabled(true);
+        return;
+      }
+
+      const travel = dragState.startY - dragState.lastY;
+      const elapsed = performance.now() - dragState.startTime;
+
+      settleDrag(travel, elapsed, dragState.startSectionId);
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
     scrollRoot.addEventListener('touchstart', handleTouchStart, { passive: true });
-    scrollRoot.addEventListener('touchmove', handleTouchMove, { passive: true });
+    scrollRoot.addEventListener('touchmove', handleTouchMove, { passive: false });
     scrollRoot.addEventListener('touchend', handleTouchEnd, { passive: true });
     scrollRoot.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+    scrollRoot.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mousemove', handleMouseMove, { passive: false });
+    window.addEventListener('mouseup', handleMouseUp);
 
     return () => {
-      scrollRoot.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('wheel', handleWheel);
       scrollRoot.removeEventListener('touchstart', handleTouchStart);
       scrollRoot.removeEventListener('touchmove', handleTouchMove);
       scrollRoot.removeEventListener('touchend', handleTouchEnd);
       scrollRoot.removeEventListener('touchcancel', handleTouchEnd);
+      scrollRoot.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      setSnapEnabled(true);
     };
   }, [compactNavigation]);
 
@@ -523,7 +662,12 @@ export default function App() {
               scrollSnapType: 'y mandatory',
               scrollbarWidth: 'thin',
               overscrollBehaviorY: 'contain',
-              touchAction: 'pan-y',
+              touchAction: 'none',
+              cursor: 'grab',
+              userSelect: 'none',
+              '&:active': {
+                cursor: 'grabbing',
+              },
               '&::-webkit-scrollbar': {
                 width: 8,
               },
