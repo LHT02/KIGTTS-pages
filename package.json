@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist -r https://github.com/KigScope/KIGTTS-pages.git && gh-pages -d dist -r https://github.com/LHT02/KIGTTS-pages.git"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
