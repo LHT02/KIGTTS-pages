@@ -7,7 +7,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { alpha } from '@mui/material/styles';
+import { alpha, keyframes } from '@mui/material/styles';
 import heroShot from '../../ART/KIGTTS1.png';
 import logoWhite from '../../ART/LOGOWhite.svg';
 import lhtstudioLogo from '../../ART/lhtstudio.svg';
@@ -151,6 +151,65 @@ function PseudoQr({ compact = false }) {
   );
 }
 
+const rotateFlower = keyframes`
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+`;
+
+function Md3Clover8({ size, color, sx }) {
+  const commonSx = {
+    content: '""',
+    position: 'absolute',
+    backgroundColor: color,
+    borderRadius: 999,
+    top: '22%',
+    bottom: '22%',
+    left: 0,
+    right: 0,
+  };
+
+  return (
+    <Box
+      sx={{
+        width: size,
+        height: size,
+        position: 'absolute',
+        animation: `${rotateFlower} 45s linear infinite`,
+        ...sx,
+        '&::before': { ...commonSx, transform: 'rotate(0deg)' },
+        '&::after': { ...commonSx, transform: 'rotate(45deg)' },
+      }}
+    >
+      <Box sx={{ '&::before': { ...commonSx, transform: 'rotate(90deg)' }, '&::after': { ...commonSx, transform: 'rotate(135deg)' } }} />
+    </Box>
+  );
+}
+
+const md3CookieMask = `url("data:image/svg+xml,%3Csvg viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 50 0 C 80 0 70 20 75 25 C 80 30 100 20 100 50 C 100 80 80 70 75 75 C 70 80 80 100 50 100 C 20 100 30 80 25 75 C 20 70 0 80 0 50 C 0 20 20 30 25 25 C 30 20 20 0 50 0 Z' fill='black'/%3E%3C/svg>")`;
+
+function Md3Cookie4({ size, color, sx }) {
+  return (
+    <Box
+      sx={{
+        width: size,
+        height: size,
+        position: 'absolute',
+        animation: `${rotateFlower} 30s linear infinite`,
+        backgroundColor: color,
+        WebkitMaskImage: md3CookieMask,
+        maskImage: md3CookieMask,
+        WebkitMaskSize: 'contain',
+        maskSize: 'contain',
+        WebkitMaskRepeat: 'no-repeat',
+        maskRepeat: 'no-repeat',
+        WebkitMaskPosition: 'center',
+        maskPosition: 'center',
+        ...sx,
+      }}
+    />
+  );
+}
+
 function BetaBubble({ onSelect, compact = false }) {
   return (
     <Box
@@ -168,52 +227,50 @@ function BetaBubble({ onSelect, compact = false }) {
         backgroundColor: '#82cbcc', // Base teal background
         boxShadow: '0 8px 24px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1)',
         overflow: 'hidden',
-        transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease',
+        transition: 'box-shadow 0.2s ease',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          backgroundColor: '#000000',
+          opacity: 0,
+          transition: 'opacity 0.2s ease',
+          zIndex: 1, // Above background shapes, below content
+          pointerEvents: 'none',
+        },
         '&:hover': {
-          transform: 'translateY(-6px)',
-          boxShadow: '0 14px 28px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.15)',
-          '& .blob-top': { transform: 'scale(1.05) translate(-4px, 4px)' },
-          '& .blob-bottom': { transform: 'scale(1.1) rotate(5deg) translate(2px, -2px)' },
+          boxShadow: '0 12px 28px rgba(0,0,0,0.18), 0 4px 12px rgba(0,0,0,0.12)', // Subtle elevation
+        },
+        '&:hover::before': {
+          opacity: 0.08, // MD3 standard hover state layer on surface
         },
       }}
     >
-      {/* Top right cloud */}
-      <Box
-        className="blob-top"
+      {/* Top right MD3 8-leaf clover */}
+      <Md3Clover8
+        size={150}
+        color="#9ad9d9"
         sx={{
-          position: 'absolute',
-          top: -24,
-          right: -24,
-          width: 130,
-          height: 130,
-          backgroundColor: '#9ad9d9',
-          borderRadius: '50%',
-          boxShadow: '-50px 30px 0 -24px #9ad9d9, -15px 75px 0 -10px #9ad9d9',
-          transition: 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
-          pointerEvents: 'none',
+          top: -40,
+          right: -40,
         }}
       />
-      {/* Bottom left blob */}
-      <Box
-        className="blob-bottom"
+      {/* Bottom left MD3 4-sided cookie */}
+      <Md3Cookie4
+        size={170}
+        color="#6bb8b9"
         sx={{
-          position: 'absolute',
-          bottom: -40,
-          left: -30,
-          width: 140,
-          height: 120,
-          backgroundColor: '#6bb8b9',
-          borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%',
-          transform: 'rotate(-15deg)',
-          transition: 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
-          pointerEvents: 'none',
+          bottom: -60,
+          left: -40,
+          animationDirection: 'reverse', // Rotate opposite way
+          animationDuration: '45s',
         }}
       />
       <Stack
         spacing={2.2}
         sx={{
           position: 'relative',
-          zIndex: 1,
+          zIndex: 2, // Ensure text is above state layer overlay
           alignItems: 'center',
           textAlign: 'center',
         }}
@@ -245,14 +302,25 @@ function BetaBubble({ onSelect, compact = false }) {
             boxShadow: '0 4px 12px rgba(19, 113, 116, 0.4), 0 2px 4px rgba(0,0,0,0.1)',
             fontSize: compact ? '0.95rem' : '1.08rem',
             fontWeight: 500,
-            transition: 'all 0.2s ease',
-            '&:hover': {
-              backgroundColor: '#168488',
-              transform: 'scale(1.04)',
-              boxShadow: '0 6px 16px rgba(19, 113, 116, 0.5), 0 3px 6px rgba(0,0,0,0.15)',
+            transition: 'box-shadow 0.2s ease',
+            position: 'relative',
+            overflow: 'hidden',
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: '#ffffff',
+              opacity: 0,
+              transition: 'opacity 0.2s ease',
             },
-            '&:active': {
-              transform: 'scale(0.98)',
+            '&:hover': {
+              boxShadow: '0 6px 16px rgba(19, 113, 116, 0.5), 0 3px 6px rgba(0,0,0,0.15)', // MD3 elevation
+            },
+            '&:hover::after': {
+              opacity: 0.08, // MD3 primary button hover state
+            },
+            '&:active::after': {
+              opacity: 0.12, // MD3 primary button press state
             },
           }}
         >
@@ -391,10 +459,10 @@ export function HomeSection({ onSelect }) {
     <Box
       sx={{
         position: 'relative',
-        minHeight: { xs: 'auto', lg: '100svh' },
-        px: { xs: 1.35, sm: 3.4, lg: 5.4, xl: 6.4 },
-        pt: { xs: 1.2, sm: 3, lg: 3.8 },
-        pb: { xs: 2.3, sm: 4.2, lg: 5.2 },
+        minHeight: '100svh',
+        px: { xs: 2.8, sm: 3.4, lg: 5.4, xl: 6.4 },
+        pt: { xs: 3, sm: 3, lg: 3.8 },
+        pb: { xs: 3, sm: 4.2, lg: 5.2 },
         scrollSnapAlign: 'start',
       }}
     >
@@ -463,7 +531,7 @@ export function AboutSection() {
   return (
     <Box
       sx={{
-        minHeight: { xs: 560, lg: 'calc(100svh - 90px)' },
+        minHeight: '100svh',
         px: { xs: 2.5, sm: 3.6, lg: 6.4 },
         py: { xs: 3.2, lg: 5.4 },
         display: 'grid',
@@ -511,7 +579,7 @@ export function DownloadSection() {
   return (
     <Box
       sx={{
-        minHeight: { xs: 560, lg: 'calc(100svh - 90px)' },
+        minHeight: '100svh',
         px: { xs: 2.5, sm: 3.6, lg: 5.8 },
         py: { xs: 3.2, lg: 4.4 },
       }}
@@ -566,7 +634,7 @@ export function LabSection({ onSelect }) {
   return (
     <Box
       sx={{
-        minHeight: { xs: 560, lg: 'calc(100svh - 90px)' },
+        minHeight: '100svh',
         px: { xs: 2.5, sm: 3.6, lg: 5.8 },
         py: { xs: 3.2, lg: 4.4 },
       }}

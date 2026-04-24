@@ -61,45 +61,52 @@ function SideRail({ activeId, onSelect }) {
         alignItems: 'center',
       }}
     >
-      <Stack spacing={1.4} sx={{ width: '100%', mt: 2 }}>
-        {navItems.map((item) => {
-          const selected = item.id === activeId;
+      <Box sx={{ width: '100%', mt: 2, position: 'relative' }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            width: 4,
+            height: 44,
+            borderRadius: 999,
+            backgroundColor: 'primary.main',
+            boxShadow: `0 0 24px ${alpha('#038387', 0.48)}`,
+            transform: `translateY(${
+              Math.max(0, navItems.findIndex((item) => item.id === activeId)) * (68 + 11.2) + 12
+            }px)`,
+            transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
+            zIndex: 1,
+            pointerEvents: 'none',
+          }}
+        />
+        <Stack spacing={1.4} sx={{ width: '100%' }}>
+          {navItems.map((item) => {
+            const selected = item.id === activeId;
 
-          return (
-            <Button
-              key={item.id}
-              onClick={() => onSelect(item.id)}
-              variant="text"
-              sx={{
-                position: 'relative',
-                minWidth: 0,
-                minHeight: 68,
-                borderRadius: 0,
-                color: selected ? '#f5fbfb' : alpha('#f5fbfb', 0.6),
-                transition: 'color 180ms ease, background-color 180ms ease',
-                '&::before': selected
-                  ? {
-                      content: '""',
-                      position: 'absolute',
-                      right: 0,
-                      top: 12,
-                      bottom: 12,
-                      width: 4,
-                      borderRadius: 999,
-                      backgroundColor: 'primary.main',
-                      boxShadow: `0 0 24px ${alpha('#038387', 0.48)}`,
-                    }
-                  : {},
-                '&:hover': {
-                  backgroundColor: alpha('#ffffff', 0.03),
-                },
-              }}
-            >
-              <SymbolIcon name={item.icon} size={28} />
-            </Button>
-          );
-        })}
-      </Stack>
+            return (
+              <Button
+                key={item.id}
+                onClick={() => onSelect(item.id)}
+                variant="text"
+                sx={{
+                  position: 'relative',
+                  minWidth: 0,
+                  height: 68,
+                  borderRadius: 0,
+                  color: selected ? '#f5fbfb' : alpha('#f5fbfb', 0.6),
+                  transition: 'color 180ms ease, background-color 180ms ease',
+                  '&:hover': {
+                    backgroundColor: alpha('#ffffff', 0.03),
+                  },
+                }}
+              >
+                <SymbolIcon name={item.icon} size={28} />
+              </Button>
+            );
+          })}
+        </Stack>
+      </Box>
       <Box sx={{ flex: 1 }} />
       <Box
         sx={{
@@ -198,6 +205,8 @@ export default function App() {
   const scrollContainerRef = useRef(null);
   const sectionRefs = useRef({});
   const [activeId, setActiveId] = useState(getInitialSection);
+  const isScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef(null);
 
   const updateHash = (sectionId) => {
     if (window.location.hash !== `#${sectionId}`) {
@@ -206,6 +215,17 @@ export default function App() {
   };
 
   const handleSelect = (nextId) => {
+    setActiveId(nextId);
+    updateHash(nextId);
+
+    isScrollingRef.current = true;
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+    scrollTimeoutRef.current = setTimeout(() => {
+      isScrollingRef.current = false;
+    }, 850);
+
     const targetNode = sectionRefs.current[nextId];
     if (targetNode && scrollContainerRef.current) {
       targetNode.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -219,7 +239,7 @@ export default function App() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && !isScrollingRef.current) {
             const sectionId = entry.target.getAttribute('data-section-id');
             if (sectionId) {
               setActiveId(sectionId);
@@ -293,21 +313,19 @@ export default function App() {
             minWidth: 0,
             height: '100%',
             boxSizing: 'border-box',
-            px: { xs: 2, sm: 3, md: 4, lg: 0 },
-            pt: { xs: 2.2, md: compactNavigation ? 3 : 0 },
-            pb: { xs: 5, md: 6, lg: 0 },
+            px: 0,
+            pt: 0,
+            pb: 0,
           }}
         >
           <Box
             sx={{
               height: '100%',
               borderRadius: 0,
-              border: compactNavigation ? `1px solid ${alpha('#f5fbfb', 0.08)}` : 'none',
-              backgroundColor: compactNavigation
-                ? alpha(theme.palette.background.paper, 0.42)
-                : 'transparent',
+              border: 'none',
+              backgroundColor: 'transparent',
               backdropFilter: 'blur(12px)',
-              boxShadow: compactNavigation ? `0 28px 72px ${alpha('#000000', 0.24)}` : 'none',
+              boxShadow: 'none',
               overflowY: 'auto',
               overflowX: 'hidden',
               scrollSnapType: 'y mandatory',
