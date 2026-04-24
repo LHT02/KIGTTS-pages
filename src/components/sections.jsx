@@ -233,11 +233,11 @@ function BetaBubble({ onSelect, compact = false }) {
         right: compact ? 'auto' : { lg: 42, xl: 56 },
         top: compact ? 'auto' : { lg: 34, xl: 46 },
         width: compact ? '100%' : { lg: 320, xl: 354 },
-        maxWidth: compact ? { xs: 274, sm: '100%' } : 'none',
-        minHeight: compact ? 'auto' : 190,
-        px: compact ? { xs: 1.6, sm: 3, md: 3.2 } : { xs: 3, md: 3.2 },
-        py: compact ? { xs: 1.15, sm: 2.6, md: 3 } : { xs: 2.6, md: 3 },
-        borderRadius: '28px',
+        maxWidth: compact ? '100%' : 'none',
+        minHeight: compact ? { xs: 62, sm: 70 } : 190,
+        px: compact ? { xs: 1.45, sm: 2.1, md: 2.4 } : { xs: 3, md: 3.2 },
+        py: compact ? { xs: 0.9, sm: 1.1 } : { xs: 2.6, md: 3 },
+        borderRadius: compact ? { xs: '22px', sm: '28px' } : '28px',
         color: '#1a2a2a', // Dark text matching image
         backgroundColor: '#82cbcc', // Base teal background
         boxShadow: '0 8px 24px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1)',
@@ -263,59 +263,70 @@ function BetaBubble({ onSelect, compact = false }) {
     >
       {/* Top right MD3 8-leaf clover */}
       <Md3Clover8
-        size={compact ? 118 : 150}
+        size={compact ? 92 : 150}
         color="#9ad9d9"
         sx={{
-          top: -40,
-          right: -40,
+          top: compact ? -28 : -40,
+          right: compact ? -22 : -40,
         }}
       />
       {/* Bottom left MD3 4-sided cookie */}
       <Md3Cookie4
-        size={compact ? 132 : 170}
+        size={compact ? 104 : 170}
         color="#6bb8b9"
         sx={{
-          bottom: -60,
-          left: -40,
+          bottom: compact ? -46 : -60,
+          left: compact ? -30 : -40,
           animationDirection: 'reverse', // Rotate opposite way
           animationDuration: '45s',
         }}
       />
       <Stack
-        spacing={compact ? { xs: 1.35, sm: 2.2 } : 2.2}
+        direction={compact ? 'row' : 'column'}
+        spacing={compact ? { xs: 1, sm: 1.5 } : 2.2}
         sx={{
           position: 'relative',
           zIndex: 2, // Ensure text is above state layer overlay
+          width: '100%',
           alignItems: 'center',
-          textAlign: 'center',
+          justifyContent: compact ? 'space-between' : 'center',
+          textAlign: compact ? 'left' : 'center',
         }}
       >
         <Typography
           sx={{
-            fontSize: compact ? { xs: '0.94rem', sm: '1.15rem', md: '1.2rem' } : { xs: '1.15rem', md: '1.2rem' },
-            lineHeight: compact ? 1.38 : 1.45,
+            flex: compact ? '1 1 auto' : 'initial',
+            minWidth: 0,
+            fontSize: compact ? { xs: '0.82rem', sm: '0.98rem', md: '1.06rem' } : { xs: '1.15rem', md: '1.2rem' },
+            lineHeight: compact ? 1.22 : 1.45,
             fontWeight: 500,
             letterSpacing: '0.02em',
             textShadow: '0 1px 2px rgba(255,255,255,0.2)',
+            whiteSpace: compact ? 'nowrap' : 'normal',
+            overflow: compact ? 'hidden' : 'visible',
+            textOverflow: compact ? 'ellipsis' : 'clip',
           }}
         >
-          {betaLines.map((line) => (
-            <Box key={line} component="span" sx={{ display: 'block' }}>
-              {line}
-            </Box>
-          ))}
+          {compact
+            ? betaLines.join('')
+            : betaLines.map((line) => (
+                <Box key={line} component="span" sx={{ display: 'block' }}>
+                  {line}
+                </Box>
+              ))}
         </Typography>
         <Button
           onClick={() => onSelect('lab')}
           sx={{
-            minWidth: compact ? { xs: 138, sm: 148 } : 198,
+            flexShrink: 0,
+            minWidth: compact ? { xs: 94, sm: 118 } : 198,
             minHeight: compact ? { xs: 38, sm: 42 } : 54,
-            px: compact ? 2.8 : 4,
+            px: compact ? { xs: 1.45, sm: 2.2 } : 4,
             borderRadius: 999,
             color: '#ffffff',
             backgroundColor: '#137174',
             boxShadow: '0 4px 12px rgba(19, 113, 116, 0.4), 0 2px 4px rgba(0,0,0,0.1)',
-            fontSize: compact ? { xs: '0.88rem', sm: '0.95rem' } : '1.08rem',
+            fontSize: compact ? { xs: '0.8rem', sm: '0.92rem' } : '1.08rem',
             fontWeight: 500,
             transition: 'box-shadow 0.2s ease',
             position: 'relative',
@@ -339,7 +350,7 @@ function BetaBubble({ onSelect, compact = false }) {
             },
           }}
         >
-          前往Beta页面
+          {compact ? '前往Beta' : '前往Beta页面'}
         </Button>
       </Stack>
     </Box>
