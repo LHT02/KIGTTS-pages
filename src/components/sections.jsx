@@ -77,6 +77,21 @@ const md2Button = {
   },
 };
 
+const centeredSectionSx = {
+  minHeight: '100svh',
+  width: '100%',
+  boxSizing: 'border-box',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+};
+
+const centeredContentSx = {
+  width: '100%',
+  maxWidth: { xs: '100%', lg: 1320, xl: 1480 },
+  mx: 'auto',
+};
+
 export function SymbolIcon({ name, size = 24, sx }) {
   return (
     <Icon
@@ -416,6 +431,11 @@ function HomeRightBlock({ onSelect, compact = false }) {
         maxWidth: { lg: 502, xl: 536 },
         mt: compact ? { xs: -0.4, sm: 1.1, lg: 0 } : { xs: 2, lg: 0 },
         ml: { lg: 'auto' },
+        mx: { xs: 'auto', lg: 0 },
+        textAlign: { xs: 'center', lg: 'left' },
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: { xs: 'center', lg: 'flex-start' },
       }}
     >
       <Box
@@ -443,8 +463,12 @@ function HomeRightBlock({ onSelect, compact = false }) {
         direction={compact ? 'row' : { xs: 'column', sm: 'row' }}
         spacing={compact ? 1.2 : 2}
         sx={{
+          width: '100%',
+          maxWidth: { xs: 360, sm: '100%' },
+          mx: { xs: 'auto', lg: 0 },
           mt: compact ? { xs: 1.8, sm: 4, md: 5.2 } : { xs: 4, md: 5.2 },
           alignItems: 'stretch',
+          justifyContent: 'center',
         }}
       >
         <QrPanel compact={compact} />
@@ -458,8 +482,10 @@ export function HomeSection({ onSelect }) {
   return (
     <Box
       sx={{
+        ...centeredSectionSx,
         position: 'relative',
-        minHeight: '100svh',
+        flexDirection: 'column',
+        alignItems: 'stretch',
         px: { xs: 2.8, sm: 3.4, lg: 5.4, xl: 6.4 },
         pt: { xs: 3, sm: 3, lg: 3.8 },
         pb: { xs: 3, sm: 4.2, lg: 5.2 },
@@ -473,6 +499,8 @@ export function HomeSection({ onSelect }) {
         sx={{
           width: { xs: 108, sm: 170, md: 200 },
           mb: { xs: 0.8, sm: 2.8, lg: 0 },
+          display: 'block',
+          alignSelf: { xs: 'center', lg: 'flex-start' },
         }}
       />
       <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
@@ -480,6 +508,9 @@ export function HomeSection({ onSelect }) {
       </Box>
       <Box
         sx={{
+          ...centeredContentSx,
+          maxWidth: { xs: '100%', lg: 1500, xl: 1640 },
+          flex: 1,
           mt: { xs: 0, lg: 3.2 },
           display: { xs: 'block', lg: 'grid' },
           gridTemplateColumns: {
@@ -502,7 +533,7 @@ export function HomeSection({ onSelect }) {
             pointerEvents: 'none',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: { lg: 'flex-start' },
+            justifyContent: { xs: 'center', lg: 'flex-start' },
           }}
         >
           <Box
@@ -519,7 +550,7 @@ export function HomeSection({ onSelect }) {
             }}
           />
         </Box>
-        <Box sx={{ minWidth: 0, display: 'flex', justifyContent: { lg: 'flex-end' } }}>
+        <Box sx={{ minWidth: 0, display: 'flex', justifyContent: { xs: 'center', lg: 'flex-end' } }}>
           <HomeRightBlock onSelect={onSelect} compact />
         </Box>
       </Box>
@@ -531,16 +562,16 @@ export function AboutSection() {
   return (
     <Box
       sx={{
-        minHeight: '100svh',
+        ...centeredSectionSx,
         px: { xs: 2.5, sm: 3.6, lg: 6.4 },
         py: { xs: 3.2, lg: 5.4 },
-        display: 'grid',
-        placeItems: 'center',
       }}
     >
       <Box
         sx={{
-          width: { xs: '100%', lg: '74%', xl: '68%' },
+          width: '100%',
+          maxWidth: { xs: '100%', md: 820, lg: 920, xl: 980 },
+          mx: 'auto',
           minHeight: { xs: 420, md: 520, lg: 560 },
           ...md2Surface,
           boxShadow: md2RaisedShadow,
@@ -579,53 +610,68 @@ export function DownloadSection() {
   return (
     <Box
       sx={{
-        minHeight: '100svh',
+        ...centeredSectionSx,
         px: { xs: 2.5, sm: 3.6, lg: 5.8 },
         py: { xs: 3.2, lg: 4.4 },
       }}
     >
-      <Typography sx={{ color: alpha('#ffffff', 0.82), fontSize: '0.9rem', letterSpacing: '0.18em' }}>
-        DOWNLOAD
-      </Typography>
-      <Typography
-        sx={{
-          mt: 1.8,
-          maxWidth: 680,
-          fontSize: { xs: '2rem', md: '2.7rem' },
-          lineHeight: 1.1,
-          color: '#f5f7f7',
-        }}
-      >
-        下载区保持跟首页同一套块面逻辑，只把重点压到二维码和按钮入口。
-      </Typography>
-      <Grid container spacing={3} sx={{ mt: 3.2 }}>
-        <Grid size={{ xs: 12, lg: 7.2 }}>
-          <Box
-            sx={{
-              minHeight: 360,
-              p: { xs: 2.8, md: 3.6 },
-              ...md2Surface,
-            }}
-          >
-            <Stack spacing={2.4}>
-              {downloadNotes.map((item, index) => (
-                <Box key={item} sx={{ display: 'flex', gap: 2 }}>
-                  <Typography sx={{ minWidth: 34, color: '#79d6d9', fontSize: '1.2rem' }}>
-                    0{index + 1}
-                  </Typography>
-                  <Typography sx={{ color: alpha('#ffffff', 0.76), lineHeight: 1.8 }}>{item}</Typography>
-                </Box>
-              ))}
+      <Box sx={{ ...centeredContentSx, maxWidth: { xs: '100%', lg: 1260, xl: 1380 } }}>
+        <Typography
+          sx={{
+            color: alpha('#ffffff', 0.82),
+            fontSize: '0.9rem',
+            letterSpacing: '0.18em',
+            textAlign: { xs: 'center', lg: 'left' },
+          }}
+        >
+          DOWNLOAD
+        </Typography>
+        <Typography
+          sx={{
+            mt: 1.8,
+            maxWidth: 680,
+            mx: { xs: 'auto', lg: 0 },
+            fontSize: { xs: '2rem', md: '2.7rem' },
+            lineHeight: 1.1,
+            color: '#f5f7f7',
+            textAlign: { xs: 'center', lg: 'left' },
+          }}
+        >
+          下载区保持跟首页同一套块面逻辑，只把重点压到二维码和按钮入口。
+        </Typography>
+        <Grid container spacing={3} justifyContent="center" sx={{ mt: 3.2 }}>
+          <Grid size={{ xs: 12, lg: 7.2 }}>
+            <Box
+              sx={{
+                minHeight: 360,
+                p: { xs: 2.8, md: 3.6 },
+                ...md2Surface,
+              }}
+            >
+              <Stack spacing={2.4}>
+                {downloadNotes.map((item, index) => (
+                  <Box key={item} sx={{ display: 'flex', gap: 2 }}>
+                    <Typography sx={{ minWidth: 34, color: '#79d6d9', fontSize: '1.2rem' }}>
+                      0{index + 1}
+                    </Typography>
+                    <Typography sx={{ color: alpha('#ffffff', 0.76), lineHeight: 1.8 }}>{item}</Typography>
+                  </Box>
+                ))}
+              </Stack>
+            </Box>
+          </Grid>
+          <Grid size={{ xs: 12, lg: 4.8 }}>
+            <Stack
+              direction={{ xs: 'column', sm: 'row', lg: 'column' }}
+              spacing={2.2}
+              sx={{ alignItems: 'stretch', justifyContent: 'center' }}
+            >
+              <QrPanel />
+              <DownloadPanel />
             </Stack>
-          </Box>
+          </Grid>
         </Grid>
-        <Grid size={{ xs: 12, lg: 4.8 }}>
-          <Stack direction={{ xs: 'column', sm: 'row', lg: 'column' }} spacing={2.2}>
-            <QrPanel />
-            <DownloadPanel />
-          </Stack>
-        </Grid>
-      </Grid>
+      </Box>
     </Box>
   );
 }
@@ -634,90 +680,101 @@ export function LabSection({ onSelect }) {
   return (
     <Box
       sx={{
-        minHeight: '100svh',
+        ...centeredSectionSx,
         px: { xs: 2.5, sm: 3.6, lg: 5.8 },
         py: { xs: 3.2, lg: 4.4 },
       }}
     >
-      <Typography sx={{ color: alpha('#ffffff', 0.82), fontSize: '0.9rem', letterSpacing: '0.18em' }}>
-        BETA / LAB
-      </Typography>
-      <Grid container spacing={3} sx={{ mt: 1.6 }}>
-        <Grid size={{ xs: 12, lg: 7.2 }}>
-          <Box
-            sx={{
-              minHeight: 430,
-              p: { xs: 2.8, md: 3.6 },
-              background: `linear-gradient(155deg, ${alpha('#152425', 0.98)} 0%, ${alpha(
-                '#0f6f73',
-                0.28,
-              )} 100%)`,
-              border: `1px solid ${alpha('#ffffff', 0.04)}`,
-              borderRadius: 1,
-              boxShadow: md2RaisedShadow,
-            }}
-          >
-            <Typography
-              sx={{
-                maxWidth: 720,
-                fontSize: { xs: '2rem', md: '2.8rem' },
-                lineHeight: 1.08,
-                color: '#f5f7f7',
-              }}
-            >
-              这里留给 Flutter Beta、实验功能和未来路线图，不跟首页抢同一个视觉中心。
-            </Typography>
-            <Grid container spacing={2} sx={{ mt: 3.4 }}>
-              {labItems.map((item) => (
-                <Grid key={item} size={{ xs: 12, md: 4 }}>
-                  <Box
-                    sx={{
-                      height: '100%',
-                      p: 2.2,
-                      backgroundColor: alpha('#0a1415', 0.54),
-                      border: `1px solid ${alpha('#ffffff', 0.06)}`,
-                      borderRadius: 1,
-                    }}
-                  >
-                    <Typography sx={{ color: alpha('#ffffff', 0.72), lineHeight: 1.8 }}>{item}</Typography>
-                  </Box>
-                </Grid>
-              ))}
-            </Grid>
-          </Box>
-        </Grid>
-        <Grid size={{ xs: 12, lg: 4.8 }}>
-          <Stack spacing={2.2}>
-            <BetaBubble onSelect={() => onSelect?.('home')} compact />
+      <Box sx={{ ...centeredContentSx, maxWidth: { xs: '100%', lg: 1260, xl: 1380 } }}>
+        <Typography
+          sx={{
+            color: alpha('#ffffff', 0.82),
+            fontSize: '0.9rem',
+            letterSpacing: '0.18em',
+            textAlign: { xs: 'center', lg: 'left' },
+          }}
+        >
+          BETA / LAB
+        </Typography>
+        <Grid container spacing={3} justifyContent="center" sx={{ mt: 1.6 }}>
+          <Grid size={{ xs: 12, lg: 7.2 }}>
             <Box
               sx={{
-                p: { xs: 2.8, md: 3.2 },
-                ...md2Surface,
+                minHeight: 430,
+                p: { xs: 2.8, md: 3.6 },
+                background: `linear-gradient(155deg, ${alpha('#152425', 0.98)} 0%, ${alpha(
+                  '#0f6f73',
+                  0.28,
+                )} 100%)`,
+                border: `1px solid ${alpha('#ffffff', 0.04)}`,
+                borderRadius: 1,
+                boxShadow: md2RaisedShadow,
               }}
             >
-              <Stack spacing={2}>
-                <Typography sx={{ fontSize: '1.4rem', color: '#f5f7f7' }}>可继续接入</Typography>
-                <Divider sx={{ borderColor: alpha('#ffffff', 0.08) }} />
-                <Typography sx={{ color: alpha('#ffffff', 0.72), lineHeight: 1.8 }}>
-                  后续把 Beta 的真实入口、更新日志和测试说明接进来就可以，不需要再改整套布局。
-                </Typography>
-                <Button
-                  startIcon={<SymbolIcon name="deployed_code" size={22} />}
-                  sx={{
-                    alignSelf: 'flex-start',
-                    px: 3.4,
-                    ...md2Button,
-                    minHeight: 44,
-                    justifyContent: 'center',
-                  }}
-                >
-                  保留实验入口
-                </Button>
-              </Stack>
+              <Typography
+                sx={{
+                  maxWidth: 720,
+                  mx: { xs: 'auto', lg: 0 },
+                  fontSize: { xs: '2rem', md: '2.8rem' },
+                  lineHeight: 1.08,
+                  color: '#f5f7f7',
+                  textAlign: { xs: 'center', lg: 'left' },
+                }}
+              >
+                这里留给 Flutter Beta、实验功能和未来路线图，不跟首页抢同一个视觉中心。
+              </Typography>
+              <Grid container spacing={2} justifyContent="center" sx={{ mt: 3.4 }}>
+                {labItems.map((item) => (
+                  <Grid key={item} size={{ xs: 12, md: 4 }}>
+                    <Box
+                      sx={{
+                        height: '100%',
+                        p: 2.2,
+                        backgroundColor: alpha('#0a1415', 0.54),
+                        border: `1px solid ${alpha('#ffffff', 0.06)}`,
+                        borderRadius: 1,
+                      }}
+                    >
+                      <Typography sx={{ color: alpha('#ffffff', 0.72), lineHeight: 1.8 }}>{item}</Typography>
+                    </Box>
+                  </Grid>
+                ))}
+              </Grid>
             </Box>
-          </Stack>
+          </Grid>
+          <Grid size={{ xs: 12, lg: 4.8 }}>
+            <Stack spacing={2.2} sx={{ alignItems: 'stretch', justifyContent: 'center' }}>
+              <BetaBubble onSelect={() => onSelect?.('home')} compact />
+              <Box
+                sx={{
+                  p: { xs: 2.8, md: 3.2 },
+                  ...md2Surface,
+                }}
+              >
+                <Stack spacing={2}>
+                  <Typography sx={{ fontSize: '1.4rem', color: '#f5f7f7' }}>可继续接入</Typography>
+                  <Divider sx={{ borderColor: alpha('#ffffff', 0.08) }} />
+                  <Typography sx={{ color: alpha('#ffffff', 0.72), lineHeight: 1.8 }}>
+                    后续把 Beta 的真实入口、更新日志和测试说明接进来就可以，不需要再改整套布局。
+                  </Typography>
+                  <Button
+                    startIcon={<SymbolIcon name="deployed_code" size={22} />}
+                    sx={{
+                      alignSelf: { xs: 'center', sm: 'flex-start' },
+                      px: 3.4,
+                      ...md2Button,
+                      minHeight: 44,
+                      justifyContent: 'center',
+                    }}
+                  >
+                    保留实验入口
+                  </Button>
+                </Stack>
+              </Box>
+            </Stack>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
     </Box>
   );
 }
