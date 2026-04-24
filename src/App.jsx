@@ -37,16 +37,6 @@ const pageReveal = keyframes`
   }
 `;
 
-const SCROLL_EPSILON = 2;
-const WHEEL_TRIGGER_DELTA = 24;
-const SWIPE_DISTANCE_RATIO = 0.11;
-const SWIPE_VELOCITY_THRESHOLD = 0.42;
-const DRAG_START_DELTA = 4;
-
-function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max);
-}
-
 function getInitialSection() {
   if (typeof window === 'undefined') {
     return 'home';
@@ -207,33 +197,7 @@ export default function App() {
   const compactNavigation = narrowViewport || touchNavigation;
   const scrollContainerRef = useRef(null);
   const sectionRefs = useRef({});
-  const activeIdRef = useRef(getInitialSection());
-  const targetIdRef = useRef(null);
-  const animationFrameRef = useRef(0);
-  const animationLockRef = useRef(false);
-  const touchStateRef = useRef({
-    startY: 0,
-    lastY: 0,
-    startScrollTop: 0,
-    startSectionId: 'home',
-    startTime: 0,
-    tracking: false,
-  });
-  const mouseDragStateRef = useRef({
-    startY: 0,
-    lastY: 0,
-    startScrollTop: 0,
-    startSectionId: 'home',
-    startTime: 0,
-    moved: false,
-    tracking: false,
-  });
   const [activeId, setActiveId] = useState(getInitialSection);
-
-  const setCurrentSection = (nextId) => {
-    activeIdRef.current = nextId;
-    setActiveId((previousId) => (previousId === nextId ? previousId : nextId));
-  };
 
   const updateHash = (sectionId) => {
     if (window.location.hash !== `#${sectionId}`) {
@@ -241,383 +205,70 @@ export default function App() {
     }
   };
 
-  const getSectionIndex = (sectionId) => navItems.findIndex((item) => item.id === sectionId);
-
-  const getNearestSectionId = () => {
-    const scrollRoot = scrollContainerRef.current;
-    if (!scrollRoot) {
-      return activeIdRef.current;
+  const handleSelect = (nextId) => {
+    const targetNode = sectionRefs.current[nextId];
+    if (targetNode && scrollContainerRef.current) {
+      targetNode.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+  };
 
-    const probeOffset = scrollRoot.clientHeight * (compactNavigation ? 0.2 : 0.18);
-    return navItems.reduce(
-      (closest, item) => {
-        const sectionNode = sectionRefs.current[item.id];
-        if (!sectionNode) {
-          return closest;
-        }
+  useEffect(() => {
+    const scrollRoot = scrollContainerRef.current;
+    if (!scrollRoot) return;
 
-        const distance = Math.abs(sectionNode.offsetTop - scrollRoot.scrollTop - probeOffset);
-        if (distance < closest.distance) {
-          return { id: item.id, distance };
-        }
-
-        return closest;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const sectionId = entry.target.getAttribute('data-section-id');
+            if (sectionId) {
+              setActiveId(sectionId);
+              updateHash(sectionId);
+            }
+          }
+        });
       },
-      { id: activeIdRef.current, distance: Number.POSITIVE_INFINITY },
-    ).id;
-  };
-
-  const setSnapEnabled = (enabled) => {
-    const scrollRoot = scrollContainerRef.current;
-    if (!scrollRoot) {
-      return;
-    }
-
-    if (enabled) {
-      scrollRoot.style.removeProperty('scroll-snap-type');
-      scrollRoot.style.removeProperty('scroll-behavior');
-      return;
-    }
-
-    scrollRoot.style.scrollSnapType = 'none';
-    scrollRoot.style.scrollBehavior = 'auto';
-  };
-
-  const finishAnimation = () => {
-    if (animationFrameRef.current) {
-      window.cancelAnimationFrame(animationFrameRef.current);
-      animationFrameRef.current = 0;
-    }
-
-    animationLockRef.current = false;
-    targetIdRef.current = null;
-    setSnapEnabled(true);
-  };
-
-  const animateToSection = (sectionId, duration = compactNavigation ? 460 : 540) => {
-    const scrollRoot = scrollContainerRef.current;
-    const targetNode = sectionRefs.current[sectionId];
-    if (!scrollRoot || !targetNode) {
-      return;
-    }
-
-    const targetTop = targetNode.offsetTop;
-    const startTop = scrollRoot.scrollTop;
-    const travel = targetTop - startTop;
-
-    finishAnimation();
-    setSnapEnabled(false);
-
-    if (Math.abs(travel) <= SCROLL_EPSILON) {
-      scrollRoot.scrollTop = targetTop;
-      setCurrentSection(sectionId);
-      updateHash(sectionId);
-      setSnapEnabled(true);
-      return;
-    }
-
-    targetIdRef.current = sectionId;
-    animationLockRef.current = true;
-    setCurrentSection(sectionId);
-    updateHash(sectionId);
-
-    const startTime = performance.now();
-    const easing = (progress) => 1 - Math.pow(1 - progress, 4);
-
-    const step = (now) => {
-      const progress = clamp((now - startTime) / duration, 0, 1);
-      scrollRoot.scrollTop = startTop + travel * easing(progress);
-
-      if (progress < 1) {
-        animationFrameRef.current = window.requestAnimationFrame(step);
-        return;
+      {
+        root: scrollRoot,
+        threshold: 0.5,
       }
+    );
 
-      scrollRoot.scrollTop = targetTop;
-      finishAnimation();
-      const settledId = getNearestSectionId();
-      setCurrentSection(settledId);
-      updateHash(settledId);
-    };
+    Object.values(sectionRefs.current).forEach((node) => {
+      if (node) observer.observe(node);
+    });
 
-    animationFrameRef.current = window.requestAnimationFrame(step);
-  };
-
-  const snapFromSection = (sectionId, direction) => {
-    const currentIndex = getSectionIndex(sectionId);
-    const baseIndex = currentIndex >= 0 ? currentIndex : getSectionIndex(activeIdRef.current);
-    const nextIndex = clamp(baseIndex + direction, 0, navItems.length - 1);
-
-    if (nextIndex === baseIndex) {
-      animateToSection(navItems[baseIndex]?.id ?? activeIdRef.current, compactNavigation ? 360 : 420);
-      return;
-    }
-
-    animateToSection(navItems[nextIndex].id);
-  };
-
-  const snapByDirection = (direction) => {
-    snapFromSection(targetIdRef.current ?? getNearestSectionId(), direction);
-  };
-
-  const settleDrag = (travel, elapsed, startSectionId) => {
-    const scrollRoot = scrollContainerRef.current;
-    if (!scrollRoot) {
-      setSnapEnabled(true);
-      return;
-    }
-
-    const velocity = Math.abs(travel) / Math.max(elapsed, 1);
-    const travelThreshold = scrollRoot.clientHeight * SWIPE_DISTANCE_RATIO;
-
-    if (Math.abs(travel) >= travelThreshold || velocity >= SWIPE_VELOCITY_THRESHOLD) {
-      snapFromSection(startSectionId, travel > 0 ? 1 : -1);
-      return;
-    }
-
-    animateToSection(getNearestSectionId(), compactNavigation ? 320 : 360);
-  };
-
-  const setSectionRef = (sectionId) => (node) => {
-    if (node) {
-      sectionRefs.current[sectionId] = node;
-      return;
-    }
-
-    delete sectionRefs.current[sectionId];
-  };
-
-  useEffect(() => {
-    const scrollRoot = scrollContainerRef.current;
-    if (!scrollRoot) {
-      return undefined;
-    }
-
-    const updateActiveSection = () => {
-      if (animationLockRef.current && targetIdRef.current) {
-        setCurrentSection(targetIdRef.current);
-        return;
-      }
-
-      const nextId = getNearestSectionId();
-      setCurrentSection(nextId);
-      updateHash(nextId);
-    };
-
-    let scrollRafId = 0;
-
-    const handleScroll = () => {
-      window.cancelAnimationFrame(scrollRafId);
-      scrollRafId = window.requestAnimationFrame(updateActiveSection);
-    };
-
-    updateActiveSection();
-    scrollRoot.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      scrollRoot.removeEventListener('scroll', handleScroll);
-      window.cancelAnimationFrame(scrollRafId);
-    };
-  }, [compactNavigation]);
-
-  useEffect(() => {
-    activeIdRef.current = activeId;
-  }, [activeId]);
-
-  useEffect(() => {
-    const scrollRoot = scrollContainerRef.current;
-    if (!scrollRoot) {
-      return undefined;
-    }
-
-    const handleWheel = (event) => {
-      if (Math.abs(event.deltaY) < WHEEL_TRIGGER_DELTA || Math.abs(event.deltaY) < Math.abs(event.deltaX)) {
-        return;
-      }
-
-      event.preventDefault();
-
-      if (animationLockRef.current) {
-        return;
-      }
-
-      snapByDirection(event.deltaY > 0 ? 1 : -1);
-    };
-
-    const handleTouchStart = (event) => {
-      if (event.touches.length !== 1) {
-        touchStateRef.current.tracking = false;
-        return;
-      }
-
-      const touch = event.touches[0];
-      finishAnimation();
-      setSnapEnabled(false);
-      touchStateRef.current = {
-        startY: touch.clientY,
-        lastY: touch.clientY,
-        startScrollTop: scrollRoot.scrollTop,
-        startSectionId: getNearestSectionId(),
-        startTime: performance.now(),
-        tracking: true,
-      };
-    };
-
-    const handleTouchMove = (event) => {
-      if (!touchStateRef.current.tracking || event.touches.length !== 1) {
-        return;
-      }
-
-      if (event.cancelable) {
-        event.preventDefault();
-      }
-
-      const nextY = event.touches[0].clientY;
-      const touchState = touchStateRef.current;
-      const travel = touchState.startY - nextY;
-      const maxScrollTop = Math.max(scrollRoot.scrollHeight - scrollRoot.clientHeight, 0);
-
-      touchStateRef.current.lastY = nextY;
-      scrollRoot.scrollTop = clamp(touchState.startScrollTop + travel, 0, maxScrollTop);
-    };
-
-    const handleTouchEnd = () => {
-      const touchState = touchStateRef.current;
-      if (!touchState.tracking || animationLockRef.current) {
-        touchStateRef.current.tracking = false;
-        if (!animationLockRef.current) {
-          setSnapEnabled(true);
-        }
-        return;
-      }
-
-      touchStateRef.current.tracking = false;
-
-      const travel = touchState.startY - touchState.lastY;
-      const elapsed = performance.now() - touchState.startTime;
-
-      settleDrag(travel, elapsed, touchState.startSectionId);
-    };
-
-    const handleMouseDown = (event) => {
-      if (event.button !== 0 || event.defaultPrevented) {
-        return;
-      }
-
-      const targetElement = event.target instanceof Element ? event.target : event.target?.parentElement;
-      const interactiveTarget = targetElement?.closest(
-        'a, button, input, textarea, select, [role="button"], [aria-haspopup="true"]',
-      );
-      if (interactiveTarget) {
-        return;
-      }
-
-      finishAnimation();
-      setSnapEnabled(false);
-
-      mouseDragStateRef.current = {
-        startY: event.clientY,
-        lastY: event.clientY,
-        startScrollTop: scrollRoot.scrollTop,
-        startSectionId: getNearestSectionId(),
-        startTime: performance.now(),
-        moved: false,
-        tracking: true,
-      };
-    };
-
-    const handleMouseMove = (event) => {
-      const dragState = mouseDragStateRef.current;
-      if (!dragState.tracking) {
-        return;
-      }
-
-      const travel = dragState.startY - event.clientY;
-      if (!dragState.moved && Math.abs(travel) < DRAG_START_DELTA) {
-        return;
-      }
-
-      event.preventDefault();
-      const maxScrollTop = Math.max(scrollRoot.scrollHeight - scrollRoot.clientHeight, 0);
-
-      mouseDragStateRef.current.lastY = event.clientY;
-      mouseDragStateRef.current.moved = true;
-      scrollRoot.scrollTop = clamp(dragState.startScrollTop + travel, 0, maxScrollTop);
-    };
-
-    const handleMouseUp = () => {
-      const dragState = mouseDragStateRef.current;
-      if (!dragState.tracking || animationLockRef.current) {
-        mouseDragStateRef.current.tracking = false;
-        if (!animationLockRef.current) {
-          setSnapEnabled(true);
-        }
-        return;
-      }
-
-      mouseDragStateRef.current.tracking = false;
-
-      if (!dragState.moved) {
-        setSnapEnabled(true);
-        return;
-      }
-
-      const travel = dragState.startY - dragState.lastY;
-      const elapsed = performance.now() - dragState.startTime;
-
-      settleDrag(travel, elapsed, dragState.startSectionId);
-    };
-
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    scrollRoot.addEventListener('touchstart', handleTouchStart, { passive: true });
-    scrollRoot.addEventListener('touchmove', handleTouchMove, { passive: false });
-    scrollRoot.addEventListener('touchend', handleTouchEnd, { passive: true });
-    scrollRoot.addEventListener('touchcancel', handleTouchEnd, { passive: true });
-    scrollRoot.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mousemove', handleMouseMove, { passive: false });
-    window.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      scrollRoot.removeEventListener('touchstart', handleTouchStart);
-      scrollRoot.removeEventListener('touchmove', handleTouchMove);
-      scrollRoot.removeEventListener('touchend', handleTouchEnd);
-      scrollRoot.removeEventListener('touchcancel', handleTouchEnd);
-      scrollRoot.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-      setSnapEnabled(true);
-    };
-  }, [compactNavigation]);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const handleHashChange = () => {
       const nextId = getInitialSection();
-      animateToSection(nextId, compactNavigation ? 360 : 420);
+      handleSelect(nextId);
     };
 
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [compactNavigation]);
+  }, []);
 
   useEffect(() => {
     const initialId = getInitialSection();
     const timerId = window.setTimeout(() => {
-      const scrollRoot = scrollContainerRef.current;
       const targetNode = sectionRefs.current[initialId];
-      if (scrollRoot && targetNode) {
-        scrollRoot.scrollTop = targetNode.offsetTop;
-        setCurrentSection(initialId);
-        updateHash(initialId);
+      if (targetNode) {
+        targetNode.scrollIntoView({ behavior: 'auto', block: 'start' });
       }
     }, 30);
 
     return () => window.clearTimeout(timerId);
   }, []);
 
-  const handleSelect = (nextId) => {
-    animateToSection(nextId, compactNavigation ? 420 : 520);
+  const setSectionRef = (sectionId) => (node) => {
+    if (node) {
+      sectionRefs.current[sectionId] = node;
+    } else {
+      delete sectionRefs.current[sectionId];
+    }
   };
 
   return (
@@ -660,14 +311,9 @@ export default function App() {
               overflowY: 'auto',
               overflowX: 'hidden',
               scrollSnapType: 'y mandatory',
+              scrollBehavior: 'smooth',
               scrollbarWidth: 'thin',
               overscrollBehaviorY: 'contain',
-              touchAction: 'none',
-              cursor: 'grab',
-              userSelect: 'none',
-              '&:active': {
-                cursor: 'grabbing',
-              },
               '&::-webkit-scrollbar': {
                 width: 8,
               },
@@ -692,7 +338,7 @@ export default function App() {
                 id="home"
                 data-section-id="home"
                 ref={setSectionRef('home')}
-                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', scrollMarginTop: 24 }}
+                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%' }}
               >
                 <HomeSection onSelect={handleSelect} />
               </Box>
@@ -701,7 +347,7 @@ export default function App() {
                 id="about"
                 data-section-id="about"
                 ref={setSectionRef('about')}
-                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', scrollMarginTop: 24 }}
+                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%' }}
               >
                 <AboutSection />
               </Box>
@@ -710,7 +356,7 @@ export default function App() {
                 id="download"
                 data-section-id="download"
                 ref={setSectionRef('download')}
-                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', scrollMarginTop: 24 }}
+                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%' }}
               >
                 <DownloadSection />
               </Box>
@@ -719,7 +365,7 @@ export default function App() {
                 id="lab"
                 data-section-id="lab"
                 ref={setSectionRef('lab')}
-                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', scrollMarginTop: 24 }}
+                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%' }}
               >
                 <LabSection onSelect={handleSelect} />
               </Box>

@@ -164,43 +164,49 @@ function BetaBubble({ onSelect, compact = false }) {
         px: compact ? { xs: 2, sm: 3, md: 3.2 } : { xs: 3, md: 3.2 },
         py: compact ? { xs: 1.5, sm: 2.6, md: 3 } : { xs: 2.6, md: 3 },
         borderRadius: '28px',
-        color: '#0b1819',
-        background: 'linear-gradient(180deg, #92dde0 0%, #82d4d8 100%)',
-        boxShadow: '0 8px 24px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.18)',
+        color: '#1a2a2a', // Dark text matching image
+        backgroundColor: '#82cbcc', // Base teal background
+        boxShadow: '0 8px 24px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1)',
         overflow: 'hidden',
-        '&::before, &::after': {
-          content: '""',
-          position: 'absolute',
-          borderRadius: '48%',
-          backgroundColor: alpha('#d6f5f6', 0.56),
-        },
-        '&::before': {
-          width: compact ? 72 : 92,
-          height: compact ? 72 : 92,
-          top: -20,
-          right: -12,
-        },
-        '&::after': {
-          width: compact ? 58 : 76,
-          height: compact ? 58 : 76,
-          bottom: -14,
-          left: -12,
+        transition: 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease',
+        '&:hover': {
+          transform: 'translateY(-6px)',
+          boxShadow: '0 14px 28px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.15)',
+          '& .blob-top': { transform: 'scale(1.05) translate(-4px, 4px)' },
+          '& .blob-bottom': { transform: 'scale(1.1) rotate(5deg) translate(2px, -2px)' },
         },
       }}
     >
+      {/* Top right cloud */}
       <Box
+        className="blob-top"
         sx={{
           position: 'absolute',
-          left: 18,
-          right: 18,
-          bottom: compact ? 12 : 18,
-          top: compact ? '54%' : '50%',
-          borderRadius: compact ? '14px' : '18px',
-          background: `
-            radial-gradient(circle at 16% 22%, ${alpha('#117d80', 0.24)} 0 22%, transparent 22%),
-            radial-gradient(circle at 100% 10%, ${alpha('#d5f3f4', 0.55)} 0 20%, transparent 20%),
-            radial-gradient(circle at 84% 100%, ${alpha('#149ea2', 0.18)} 0 26%, transparent 26%)
-          `,
+          top: -24,
+          right: -24,
+          width: 130,
+          height: 130,
+          backgroundColor: '#9ad9d9',
+          borderRadius: '50%',
+          boxShadow: '-50px 30px 0 -24px #9ad9d9, -15px 75px 0 -10px #9ad9d9',
+          transition: 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
+          pointerEvents: 'none',
+        }}
+      />
+      {/* Bottom left blob */}
+      <Box
+        className="blob-bottom"
+        sx={{
+          position: 'absolute',
+          bottom: -40,
+          left: -30,
+          width: 140,
+          height: 120,
+          backgroundColor: '#6bb8b9',
+          borderRadius: '40% 60% 70% 30% / 40% 50% 60% 50%',
+          transform: 'rotate(-15deg)',
+          transition: 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
+          pointerEvents: 'none',
         }}
       />
       <Stack
@@ -214,9 +220,11 @@ function BetaBubble({ onSelect, compact = false }) {
       >
         <Typography
           sx={{
-            fontSize: compact ? { xs: '0.92rem', sm: '1.05rem', md: '1.1rem' } : { xs: '1.05rem', md: '1.1rem' },
+            fontSize: compact ? { xs: '1rem', sm: '1.15rem', md: '1.2rem' } : { xs: '1.15rem', md: '1.2rem' },
             lineHeight: compact ? 1.38 : 1.45,
             fontWeight: 500,
+            letterSpacing: '0.02em',
+            textShadow: '0 1px 2px rgba(255,255,255,0.2)',
           }}
         >
           {betaLines.map((line) => (
@@ -228,16 +236,23 @@ function BetaBubble({ onSelect, compact = false }) {
         <Button
           onClick={() => onSelect('lab')}
           sx={{
-            minWidth: compact ? 148 : 188,
-            minHeight: compact ? 42 : 52,
+            minWidth: compact ? 148 : 198,
+            minHeight: compact ? 42 : 54,
             px: compact ? 2.8 : 4,
             borderRadius: 999,
-            color: '#f5fbfb',
-            backgroundColor: '#0e7f83',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.18)',
-            fontSize: compact ? '0.88rem' : '1rem',
+            color: '#ffffff',
+            backgroundColor: '#137174',
+            boxShadow: '0 4px 12px rgba(19, 113, 116, 0.4), 0 2px 4px rgba(0,0,0,0.1)',
+            fontSize: compact ? '0.95rem' : '1.08rem',
+            fontWeight: 500,
+            transition: 'all 0.2s ease',
             '&:hover': {
-              backgroundColor: '#0f8d92',
+              backgroundColor: '#168488',
+              transform: 'scale(1.04)',
+              boxShadow: '0 6px 16px rgba(19, 113, 116, 0.5), 0 3px 6px rgba(0,0,0,0.15)',
+            },
+            '&:active': {
+              transform: 'scale(0.98)',
             },
           }}
         >

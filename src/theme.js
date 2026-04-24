@@ -64,10 +64,9 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: alpha('#071314', 0.82),
-          backdropFilter: 'blur(18px)',
+          backgroundColor: '#0c1819', // Solid color for MD1/MD2
           borderBottom: `1px solid ${alpha('#f5fbfb', 0.08)}`,
-          boxShadow: 'none',
+          boxShadow: '0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12)', // Standard MD elevation
         },
       },
     },
@@ -83,10 +82,10 @@ export const theme = createTheme({
         },
         contained: {
           backgroundColor: '#038387',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.28), 0 3px 10px rgba(0,0,0,0.2)',
+          boxShadow: '0 3px 1px -2px rgba(0,0,0,0.2), 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12)', // MD elevation
           '&:hover': {
             backgroundColor: '#04959a',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.28), 0 6px 14px rgba(0,0,0,0.24)',
+            boxShadow: '0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12)',
           },
         },
         outlined: {
@@ -102,10 +101,9 @@ export const theme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: 'none',
-          backgroundColor: alpha('#111b1d', 0.82),
-          backdropFilter: 'blur(20px)',
+          backgroundColor: '#111b1d', // Solid color
           border: `1px solid ${alpha('#f5fbfb', 0.08)}`,
-          boxShadow: '0 2px 4px rgba(0,0,0,0.28), 0 8px 16px rgba(0,0,0,0.18)',
+          boxShadow: '0 3px 3px -2px rgba(0,0,0,0.2), 0 3px 4px 0 rgba(0,0,0,0.14), 0 1px 8px 0 rgba(0,0,0,0.12)', // MD elevation
           borderRadius: 4,
         },
       },
@@ -114,10 +112,9 @@ export const theme = createTheme({
       styleOverrides: {
         paper: {
           backgroundImage: 'none',
-          backgroundColor: alpha('#071314', 0.94),
-          backdropFilter: 'blur(28px)',
+          backgroundColor: '#0c1819', // Solid color
           borderLeft: `1px solid ${alpha('#f5fbfb', 0.08)}`,
-          boxShadow: `0 24px 56px ${alpha('#000000', 0.34)}`,
+          boxShadow: '0 8px 10px -5px rgba(0,0,0,0.2), 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12)', // MD1 drawer shadow
         },
       },
     },
