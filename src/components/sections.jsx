@@ -78,7 +78,7 @@ const md2Button = {
 };
 
 const centeredSectionSx = {
-  minHeight: '100svh',
+  minHeight: '100%',
   width: '100%',
   boxSizing: 'border-box',
   display: 'flex',
@@ -112,9 +112,9 @@ function PseudoQr({ compact = false }) {
   return (
     <Box
       sx={{
-        width: compact ? 96 : 168,
-        height: compact ? 96 : 168,
-        p: compact ? 0.75 : 1.25,
+        width: compact ? 'clamp(84px, 24vw, 108px)' : { xs: 116, sm: 168 },
+        height: compact ? 'clamp(84px, 24vw, 108px)' : { xs: 116, sm: 168 },
+        p: compact ? 0.75 : { xs: 0.85, sm: 1.25 },
         backgroundColor: '#fbfbfb',
         borderRadius: 0.5,
         boxShadow: '0 1px 2px rgba(0,0,0,0.16)',
@@ -135,29 +135,29 @@ function PseudoQr({ compact = false }) {
           '&::before, &::after': {
             content: '""',
             position: 'absolute',
-            width: 38,
-            height: 38,
-            border: '8px solid #111',
+            width: '28%',
+            height: '28%',
+            border: compact ? '6px solid #111' : { xs: '6px solid #111', sm: '8px solid #111' },
             backgroundColor: '#fff',
           },
           '&::before': {
-            top: 10,
-            left: 10,
+            top: '7%',
+            left: '7%',
           },
           '&::after': {
-            top: 10,
-            right: 10,
+            top: '7%',
+            right: '7%',
           },
         }}
       >
         <Box
           sx={{
             position: 'absolute',
-            left: 10,
-            bottom: 10,
-            width: 38,
-            height: 38,
-            border: '8px solid #111',
+            left: '7%',
+            bottom: '7%',
+            width: '28%',
+            height: '28%',
+            border: compact ? '6px solid #111' : { xs: '6px solid #111', sm: '8px solid #111' },
             backgroundColor: '#fff',
           }}
         />
@@ -233,10 +233,10 @@ function BetaBubble({ onSelect, compact = false }) {
         right: compact ? 'auto' : { lg: 42, xl: 56 },
         top: compact ? 'auto' : { lg: 34, xl: 46 },
         width: compact ? '100%' : { lg: 320, xl: 354 },
-        maxWidth: compact ? { xs: 288, sm: '100%' } : 'none',
+        maxWidth: compact ? { xs: 274, sm: '100%' } : 'none',
         minHeight: compact ? 'auto' : 190,
-        px: compact ? { xs: 2, sm: 3, md: 3.2 } : { xs: 3, md: 3.2 },
-        py: compact ? { xs: 1.5, sm: 2.6, md: 3 } : { xs: 2.6, md: 3 },
+        px: compact ? { xs: 1.6, sm: 3, md: 3.2 } : { xs: 3, md: 3.2 },
+        py: compact ? { xs: 1.15, sm: 2.6, md: 3 } : { xs: 2.6, md: 3 },
         borderRadius: '28px',
         color: '#1a2a2a', // Dark text matching image
         backgroundColor: '#82cbcc', // Base teal background
@@ -263,7 +263,7 @@ function BetaBubble({ onSelect, compact = false }) {
     >
       {/* Top right MD3 8-leaf clover */}
       <Md3Clover8
-        size={150}
+        size={compact ? 118 : 150}
         color="#9ad9d9"
         sx={{
           top: -40,
@@ -272,7 +272,7 @@ function BetaBubble({ onSelect, compact = false }) {
       />
       {/* Bottom left MD3 4-sided cookie */}
       <Md3Cookie4
-        size={170}
+        size={compact ? 132 : 170}
         color="#6bb8b9"
         sx={{
           bottom: -60,
@@ -282,7 +282,7 @@ function BetaBubble({ onSelect, compact = false }) {
         }}
       />
       <Stack
-        spacing={2.2}
+        spacing={compact ? { xs: 1.35, sm: 2.2 } : 2.2}
         sx={{
           position: 'relative',
           zIndex: 2, // Ensure text is above state layer overlay
@@ -292,7 +292,7 @@ function BetaBubble({ onSelect, compact = false }) {
       >
         <Typography
           sx={{
-            fontSize: compact ? { xs: '1rem', sm: '1.15rem', md: '1.2rem' } : { xs: '1.15rem', md: '1.2rem' },
+            fontSize: compact ? { xs: '0.94rem', sm: '1.15rem', md: '1.2rem' } : { xs: '1.15rem', md: '1.2rem' },
             lineHeight: compact ? 1.38 : 1.45,
             fontWeight: 500,
             letterSpacing: '0.02em',
@@ -308,14 +308,14 @@ function BetaBubble({ onSelect, compact = false }) {
         <Button
           onClick={() => onSelect('lab')}
           sx={{
-            minWidth: compact ? 148 : 198,
-            minHeight: compact ? 42 : 54,
+            minWidth: compact ? { xs: 138, sm: 148 } : 198,
+            minHeight: compact ? { xs: 38, sm: 42 } : 54,
             px: compact ? 2.8 : 4,
             borderRadius: 999,
             color: '#ffffff',
             backgroundColor: '#137174',
             boxShadow: '0 4px 12px rgba(19, 113, 116, 0.4), 0 2px 4px rgba(0,0,0,0.1)',
-            fontSize: compact ? '0.95rem' : '1.08rem',
+            fontSize: compact ? { xs: '0.88rem', sm: '0.95rem' } : '1.08rem',
             fontWeight: 500,
             transition: 'box-shadow 0.2s ease',
             position: 'relative',
@@ -351,9 +351,9 @@ function DownloadPanel({ compact = false }) {
     <Box
       sx={{
         flex: 1,
-        minHeight: compact ? { xs: 'auto', sm: 244 } : 244,
-        px: compact ? { xs: 1.25, sm: 2.2, md: 2.5 } : { xs: 2.2, md: 2.5 },
-        py: compact ? { xs: 1.25, sm: 2.2, md: 2.5 } : { xs: 2.2, md: 2.5 },
+        minHeight: compact ? { xs: 'auto', sm: 204, md: 244 } : { xs: 'auto', sm: 220, lg: 244 },
+        px: compact ? { xs: 1.05, sm: 2.2, md: 2.5 } : { xs: 1.5, sm: 2.2, md: 2.5 },
+        py: compact ? { xs: 1.05, sm: 2.2, md: 2.5 } : { xs: 1.5, sm: 2.2, md: 2.5 },
         ...md2Surface,
       }}
     >
@@ -363,9 +363,9 @@ function DownloadPanel({ compact = false }) {
           startIcon={<SymbolIcon name="android" size={compact ? 22 : 28} />}
           sx={{
             ...md2Button,
-            minHeight: compact ? { xs: 48, sm: 72 } : 72,
+            minHeight: compact ? { xs: 42, sm: 64, md: 72 } : { xs: 50, sm: 64, lg: 72 },
             px: compact ? { xs: 1.35, sm: 2.8 } : 2.8,
-            fontSize: compact ? { xs: '0.86rem', sm: '1.18rem', md: '1.28rem' } : { xs: '1.18rem', md: '1.28rem' },
+            fontSize: compact ? { xs: '0.78rem', sm: '1.08rem', md: '1.28rem' } : { xs: '1rem', sm: '1.18rem', md: '1.28rem' },
             justifyContent: compact ? 'center' : 'flex-start',
             whiteSpace: 'nowrap',
           }}
@@ -377,9 +377,9 @@ function DownloadPanel({ compact = false }) {
           startIcon={<SymbolIcon name="laptop_mac" size={compact ? 22 : 28} />}
           sx={{
             ...md2Button,
-            minHeight: compact ? { xs: 48, sm: 72 } : 72,
+            minHeight: compact ? { xs: 42, sm: 64, md: 72 } : { xs: 50, sm: 64, lg: 72 },
             px: compact ? { xs: 1.35, sm: 2.8 } : 2.8,
-            fontSize: compact ? { xs: '0.86rem', sm: '1.18rem', md: '1.28rem' } : { xs: '1.18rem', md: '1.28rem' },
+            fontSize: compact ? { xs: '0.78rem', sm: '1.08rem', md: '1.28rem' } : { xs: '1rem', sm: '1.18rem', md: '1.28rem' },
             justifyContent: compact ? 'center' : 'flex-start',
             whiteSpace: 'nowrap',
           }}
@@ -395,11 +395,11 @@ function QrPanel({ compact = false }) {
   return (
     <Box
       sx={{
-        width: compact ? { xs: 122, sm: 230 } : { xs: '100%', sm: 230 },
-        minWidth: compact ? { xs: 122, sm: 230 } : { sm: 230 },
-        minHeight: compact ? { xs: 'auto', sm: 244 } : 244,
-        px: compact ? { xs: 1.15, sm: 2.2, md: 2.5 } : { xs: 2.2, md: 2.5 },
-        py: compact ? { xs: 1.15, sm: 2.2, md: 2.5 } : { xs: 2.2, md: 2.5 },
+        width: compact ? { xs: 112, sm: 214, md: 230 } : { xs: '100%', sm: 214, md: 230 },
+        minWidth: compact ? { xs: 112, sm: 214, md: 230 } : { sm: 214, md: 230 },
+        minHeight: compact ? { xs: 'auto', sm: 204, md: 244 } : { xs: 'auto', sm: 220, lg: 244 },
+        px: compact ? { xs: 0.95, sm: 2.2, md: 2.5 } : { xs: 1.4, sm: 2.2, md: 2.5 },
+        py: compact ? { xs: 0.95, sm: 2.2, md: 2.5 } : { xs: 1.4, sm: 2.2, md: 2.5 },
         ...md2Surface,
       }}
     >
@@ -410,7 +410,7 @@ function QrPanel({ compact = false }) {
           sx={{
             textAlign: 'center',
             color: alpha('#f5fbfb', 0.64),
-            display: compact ? { xs: 'none', sm: 'block' } : 'block',
+            display: { xs: 'none', sm: 'block' },
             fontSize: compact ? '0.72rem' : '0.92rem',
             lineHeight: compact ? 1.35 : 1.55,
           }}
@@ -429,7 +429,7 @@ function HomeRightBlock({ onSelect, compact = false }) {
         position: 'relative',
         width: '100%',
         maxWidth: { lg: 502, xl: 536 },
-        mt: compact ? { xs: -0.4, sm: 1.1, lg: 0 } : { xs: 2, lg: 0 },
+        mt: compact ? { xs: -0.2, sm: 1.1, lg: 0 } : { xs: 2, lg: 0 },
         ml: { lg: 'auto' },
         mx: { xs: 'auto', lg: 0 },
         textAlign: { xs: 'center', lg: 'left' },
@@ -443,14 +443,14 @@ function HomeRightBlock({ onSelect, compact = false }) {
         src={logoWhite}
         alt="KIGTTS"
         sx={{
-          width: compact ? { xs: '80%', sm: '100%' } : '100%',
-          maxWidth: compact ? { xs: 248, sm: 474 } : 474,
+          width: compact ? { xs: '76%', sm: '100%' } : '100%',
+          maxWidth: compact ? { xs: 228, sm: 474 } : 474,
         }}
       />
       <Typography
         sx={{
-          mt: compact ? { xs: 0.8, sm: 1.6, md: 2 } : 2,
-          fontSize: compact ? { xs: '1.38rem', sm: '2rem', md: '2.6rem', xl: '2.9rem' } : { xs: '2rem', md: '2.6rem', xl: '2.9rem' },
+          mt: compact ? { xs: 0.45, sm: 1.6, md: 2 } : 2,
+          fontSize: compact ? { xs: '1.22rem', sm: '2rem', md: '2.6rem', xl: '2.9rem' } : { xs: '2rem', md: '2.6rem', xl: '2.9rem' },
           lineHeight: compact ? 1.12 : 1.18,
           letterSpacing: '0.03em',
           color: '#f1f4f4',
@@ -464,9 +464,9 @@ function HomeRightBlock({ onSelect, compact = false }) {
         spacing={compact ? 1.2 : 2}
         sx={{
           width: '100%',
-          maxWidth: { xs: 360, sm: '100%' },
+          maxWidth: { xs: 338, sm: '100%' },
           mx: { xs: 'auto', lg: 0 },
-          mt: compact ? { xs: 1.8, sm: 4, md: 5.2 } : { xs: 4, md: 5.2 },
+          mt: compact ? { xs: 1.15, sm: 4, md: 5.2 } : { xs: 4, md: 5.2 },
           alignItems: 'stretch',
           justifyContent: 'center',
         }}
@@ -486,9 +486,9 @@ export function HomeSection({ onSelect }) {
         position: 'relative',
         flexDirection: 'column',
         alignItems: 'stretch',
-        px: { xs: 2.8, sm: 3.4, lg: 5.4, xl: 6.4 },
-        pt: { xs: 3, sm: 3, lg: 3.8 },
-        pb: { xs: 3, sm: 4.2, lg: 5.2 },
+        px: { xs: 1.8, sm: 3.4, lg: 5.4, xl: 6.4 },
+        pt: { xs: 1.1, sm: 2.2, lg: 3.8 },
+        pb: { xs: 1.4, sm: 3.2, lg: 5.2 },
         scrollSnapAlign: 'start',
       }}
     >
@@ -499,7 +499,7 @@ export function HomeSection({ onSelect }) {
         sx={{
           width: { xs: 108, sm: 170, md: 200 },
           mb: { xs: 0.8, sm: 2.8, lg: 0 },
-          display: 'block',
+          display: { xs: 'none', lg: 'block' },
           alignSelf: { xs: 'center', lg: 'flex-start' },
         }}
       />
@@ -512,24 +512,26 @@ export function HomeSection({ onSelect }) {
           maxWidth: { xs: '100%', lg: 1500, xl: 1640 },
           flex: 1,
           mt: { xs: 0, lg: 3.2 },
-          display: { xs: 'block', lg: 'grid' },
+          display: { xs: 'flex', lg: 'grid' },
+          flexDirection: { xs: 'column', lg: 'row' },
           gridTemplateColumns: {
             lg: 'minmax(0, 1.1fr) minmax(380px, 0.82fr)',
             xl: 'minmax(0, 1.14fr) minmax(420px, 0.86fr)',
           },
           alignItems: 'center',
-          gap: { lg: 4.5, xl: 6.2 },
+          justifyContent: { xs: 'center', lg: 'initial' },
+          gap: { xs: 0, lg: 4.5, xl: 6.2 },
           minHeight: { lg: 'calc(100svh - 158px)' },
         }}
       >
-        <Box sx={{ display: { xs: 'flex', lg: 'none' }, justifyContent: 'center' }}>
+        <Box sx={{ width: '100%', display: { xs: 'flex', lg: 'none' }, justifyContent: 'center' }}>
           <BetaBubble onSelect={onSelect} compact />
         </Box>
         <Box
           sx={{
             minWidth: 0,
             width: '100%',
-            mt: { xs: 1.1, sm: 3.2, lg: 0 },
+            mt: { xs: 0.85, sm: 2.4, lg: 0 },
             pointerEvents: 'none',
             display: 'flex',
             alignItems: 'center',
@@ -543,14 +545,14 @@ export function HomeSection({ onSelect }) {
             sx={{
               width: { xs: 'auto', sm: '100%' },
               maxWidth: { xs: '100%', sm: '100%', lg: 'min(58vw, 980px)', xl: 'min(56vw, 1080px)' },
-              maxHeight: { xs: 214, sm: 'none' },
+              maxHeight: { xs: 158, sm: 280, md: 360, lg: 'none' },
               display: 'block',
               marginInline: 'auto',
               filter: 'drop-shadow(0 18px 34px rgba(0,0,0,0.26))',
             }}
           />
         </Box>
-        <Box sx={{ minWidth: 0, display: 'flex', justifyContent: { xs: 'center', lg: 'flex-end' } }}>
+        <Box sx={{ minWidth: 0, width: '100%', display: 'flex', justifyContent: { xs: 'center', lg: 'flex-end' } }}>
           <HomeRightBlock onSelect={onSelect} compact />
         </Box>
       </Box>
@@ -563,8 +565,8 @@ export function AboutSection() {
     <Box
       sx={{
         ...centeredSectionSx,
-        px: { xs: 2.5, sm: 3.6, lg: 6.4 },
-        py: { xs: 3.2, lg: 5.4 },
+        px: { xs: 1.8, sm: 3.6, lg: 6.4 },
+        py: { xs: 2, sm: 3.2, lg: 5.4 },
       }}
     >
       <Box
@@ -572,11 +574,11 @@ export function AboutSection() {
           width: '100%',
           maxWidth: { xs: '100%', md: 820, lg: 920, xl: 980 },
           mx: 'auto',
-          minHeight: { xs: 420, md: 520, lg: 560 },
+          minHeight: { xs: 330, sm: 420, md: 520, lg: 560 },
           ...md2Surface,
           boxShadow: md2RaisedShadow,
-          px: { xs: 3.2, md: 5.6 },
-          pt: { xs: 7, md: 8.5 },
+          px: { xs: 2.4, sm: 3.2, md: 5.6 },
+          pt: { xs: 4.8, sm: 7, md: 8.5 },
         }}
       >
         <Typography
@@ -591,10 +593,10 @@ export function AboutSection() {
         </Typography>
         <Typography
           sx={{
-            mt: { xs: 3.6, md: 5.8 },
+            mt: { xs: 2.6, sm: 3.6, md: 5.8 },
             textAlign: 'center',
             color: '#f5f7f7',
-            fontSize: { xs: '1.55rem', md: '2.05rem' },
+            fontSize: { xs: '1.28rem', sm: '1.55rem', md: '2.05rem' },
             fontWeight: 400,
             letterSpacing: '0.01em',
           }}
@@ -611,15 +613,15 @@ export function DownloadSection() {
     <Box
       sx={{
         ...centeredSectionSx,
-        px: { xs: 2.5, sm: 3.6, lg: 5.8 },
-        py: { xs: 3.2, lg: 4.4 },
+        px: { xs: 1.8, sm: 3.6, lg: 5.8 },
+        py: { xs: 2, sm: 3.2, lg: 4.4 },
       }}
     >
       <Box sx={{ ...centeredContentSx, maxWidth: { xs: '100%', lg: 1260, xl: 1380 } }}>
         <Typography
           sx={{
             color: alpha('#ffffff', 0.82),
-            fontSize: '0.9rem',
+            fontSize: { xs: '0.78rem', sm: '0.9rem' },
             letterSpacing: '0.18em',
             textAlign: { xs: 'center', lg: 'left' },
           }}
@@ -628,33 +630,33 @@ export function DownloadSection() {
         </Typography>
         <Typography
           sx={{
-            mt: 1.8,
+            mt: { xs: 1, sm: 1.8 },
             maxWidth: 680,
             mx: { xs: 'auto', lg: 0 },
-            fontSize: { xs: '2rem', md: '2.7rem' },
-            lineHeight: 1.1,
+            fontSize: { xs: '1.36rem', sm: '2rem', md: '2.7rem' },
+            lineHeight: { xs: 1.18, sm: 1.1 },
             color: '#f5f7f7',
             textAlign: { xs: 'center', lg: 'left' },
           }}
         >
           下载区保持跟首页同一套块面逻辑，只把重点压到二维码和按钮入口。
         </Typography>
-        <Grid container spacing={3} justifyContent="center" sx={{ mt: 3.2 }}>
+        <Grid container spacing={{ xs: 1.6, sm: 3 }} justifyContent="center" sx={{ mt: { xs: 1.7, sm: 3.2 } }}>
           <Grid size={{ xs: 12, lg: 7.2 }}>
             <Box
               sx={{
-                minHeight: 360,
-                p: { xs: 2.8, md: 3.6 },
+                minHeight: { xs: 196, sm: 280, lg: 360 },
+                p: { xs: 2, sm: 2.8, md: 3.6 },
                 ...md2Surface,
               }}
             >
-              <Stack spacing={2.4}>
+              <Stack spacing={{ xs: 1.35, sm: 2.4 }}>
                 {downloadNotes.map((item, index) => (
-                  <Box key={item} sx={{ display: 'flex', gap: 2 }}>
-                    <Typography sx={{ minWidth: 34, color: '#79d6d9', fontSize: '1.2rem' }}>
+                  <Box key={item} sx={{ display: 'flex', gap: { xs: 1.2, sm: 2 } }}>
+                    <Typography sx={{ minWidth: { xs: 26, sm: 34 }, color: '#79d6d9', fontSize: { xs: '0.95rem', sm: '1.2rem' } }}>
                       0{index + 1}
                     </Typography>
-                    <Typography sx={{ color: alpha('#ffffff', 0.76), lineHeight: 1.8 }}>{item}</Typography>
+                    <Typography sx={{ color: alpha('#ffffff', 0.76), lineHeight: { xs: 1.55, sm: 1.8 }, fontSize: { xs: '0.86rem', sm: '1rem' } }}>{item}</Typography>
                   </Box>
                 ))}
               </Stack>
@@ -662,8 +664,8 @@ export function DownloadSection() {
           </Grid>
           <Grid size={{ xs: 12, lg: 4.8 }}>
             <Stack
-              direction={{ xs: 'column', sm: 'row', lg: 'column' }}
-              spacing={2.2}
+              direction={{ xs: 'row', sm: 'row', lg: 'column' }}
+              spacing={{ xs: 1.2, sm: 2.2 }}
               sx={{ alignItems: 'stretch', justifyContent: 'center' }}
             >
               <QrPanel />
@@ -681,27 +683,27 @@ export function LabSection({ onSelect }) {
     <Box
       sx={{
         ...centeredSectionSx,
-        px: { xs: 2.5, sm: 3.6, lg: 5.8 },
-        py: { xs: 3.2, lg: 4.4 },
+        px: { xs: 1.8, sm: 3.6, lg: 5.8 },
+        py: { xs: 2, sm: 3.2, lg: 4.4 },
       }}
     >
       <Box sx={{ ...centeredContentSx, maxWidth: { xs: '100%', lg: 1260, xl: 1380 } }}>
         <Typography
           sx={{
             color: alpha('#ffffff', 0.82),
-            fontSize: '0.9rem',
+            fontSize: { xs: '0.78rem', sm: '0.9rem' },
             letterSpacing: '0.18em',
             textAlign: { xs: 'center', lg: 'left' },
           }}
         >
           BETA / LAB
         </Typography>
-        <Grid container spacing={3} justifyContent="center" sx={{ mt: 1.6 }}>
+        <Grid container spacing={{ xs: 1.6, sm: 3 }} justifyContent="center" sx={{ mt: { xs: 1.2, sm: 1.6 } }}>
           <Grid size={{ xs: 12, lg: 7.2 }}>
             <Box
               sx={{
-                minHeight: 430,
-                p: { xs: 2.8, md: 3.6 },
+                minHeight: { xs: 'auto', sm: 360, lg: 430 },
+                p: { xs: 2, sm: 2.8, md: 3.6 },
                 background: `linear-gradient(155deg, ${alpha('#152425', 0.98)} 0%, ${alpha(
                   '#0f6f73',
                   0.28,
@@ -715,27 +717,27 @@ export function LabSection({ onSelect }) {
                 sx={{
                   maxWidth: 720,
                   mx: { xs: 'auto', lg: 0 },
-                  fontSize: { xs: '2rem', md: '2.8rem' },
-                  lineHeight: 1.08,
+                  fontSize: { xs: '1.42rem', sm: '2rem', md: '2.8rem' },
+                  lineHeight: { xs: 1.16, sm: 1.08 },
                   color: '#f5f7f7',
                   textAlign: { xs: 'center', lg: 'left' },
                 }}
               >
                 这里留给 Flutter Beta、实验功能和未来路线图，不跟首页抢同一个视觉中心。
               </Typography>
-              <Grid container spacing={2} justifyContent="center" sx={{ mt: 3.4 }}>
+              <Grid container spacing={{ xs: 1.2, sm: 2 }} justifyContent="center" sx={{ mt: { xs: 1.8, sm: 3.4 } }}>
                 {labItems.map((item) => (
                   <Grid key={item} size={{ xs: 12, md: 4 }}>
                     <Box
                       sx={{
                         height: '100%',
-                        p: 2.2,
+                        p: { xs: 1.5, sm: 2.2 },
                         backgroundColor: alpha('#0a1415', 0.54),
                         border: `1px solid ${alpha('#ffffff', 0.06)}`,
                         borderRadius: 1,
                       }}
                     >
-                      <Typography sx={{ color: alpha('#ffffff', 0.72), lineHeight: 1.8 }}>{item}</Typography>
+                      <Typography sx={{ color: alpha('#ffffff', 0.72), lineHeight: { xs: 1.5, sm: 1.8 }, fontSize: { xs: '0.84rem', sm: '1rem' } }}>{item}</Typography>
                     </Box>
                   </Grid>
                 ))}
@@ -743,18 +745,20 @@ export function LabSection({ onSelect }) {
             </Box>
           </Grid>
           <Grid size={{ xs: 12, lg: 4.8 }}>
-            <Stack spacing={2.2} sx={{ alignItems: 'stretch', justifyContent: 'center' }}>
-              <BetaBubble onSelect={() => onSelect?.('home')} compact />
+            <Stack spacing={{ xs: 1.4, sm: 2.2 }} sx={{ alignItems: 'stretch', justifyContent: 'center' }}>
+              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <BetaBubble onSelect={() => onSelect?.('home')} compact />
+              </Box>
               <Box
                 sx={{
-                  p: { xs: 2.8, md: 3.2 },
+                  p: { xs: 2, sm: 2.8, md: 3.2 },
                   ...md2Surface,
                 }}
               >
                 <Stack spacing={2}>
-                  <Typography sx={{ fontSize: '1.4rem', color: '#f5f7f7' }}>可继续接入</Typography>
+                  <Typography sx={{ fontSize: { xs: '1.12rem', sm: '1.4rem' }, color: '#f5f7f7' }}>可继续接入</Typography>
                   <Divider sx={{ borderColor: alpha('#ffffff', 0.08) }} />
-                  <Typography sx={{ color: alpha('#ffffff', 0.72), lineHeight: 1.8 }}>
+                  <Typography sx={{ color: alpha('#ffffff', 0.72), lineHeight: { xs: 1.55, sm: 1.8 }, fontSize: { xs: '0.86rem', sm: '1rem' } }}>
                     后续把 Beta 的真实入口、更新日志和测试说明接进来就可以，不需要再改整套布局。
                   </Typography>
                   <Button
@@ -763,7 +767,7 @@ export function LabSection({ onSelect }) {
                       alignSelf: { xs: 'center', sm: 'flex-start' },
                       px: 3.4,
                       ...md2Button,
-                      minHeight: 44,
+                      minHeight: { xs: 40, sm: 44 },
                       justifyContent: 'center',
                     }}
                   >

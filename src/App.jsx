@@ -142,8 +142,8 @@ function MobileNavigation({ activeId, onSelect }) {
   return (
     <>
       <AppBar position="sticky">
-        <Toolbar sx={{ minHeight: 74, gap: 1.5 }}>
-          <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: 118, flexShrink: 0 }} />
+        <Toolbar sx={{ minHeight: { xs: 64, sm: 70 }, gap: { xs: 1, sm: 1.5 } }}>
+          <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: { xs: 108, sm: 118 }, flexShrink: 0 }} />
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
               {currentItem.label}
@@ -487,7 +487,9 @@ export default function App() {
           display: 'flex',
           alignItems: 'stretch',
           gap: 0,
-          height: compactNavigation ? 'calc(100svh - 74px)' : '100svh',
+          height: compactNavigation
+            ? { xs: 'calc(100svh - 64px)', sm: 'calc(100svh - 70px)', lg: 'calc(100svh - 70px)' }
+            : '100svh',
           overflow: 'clip',
           backgroundColor: { lg: alpha('#0a1415', 0.26) },
         }}
@@ -533,6 +535,7 @@ export default function App() {
               sx={{
                 animation: `${pageReveal} 520ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
                 minHeight: '100%',
+                height: '100%',
                 width: '100%',
                 maxWidth: { lg: '1720px', xl: '1840px' },
                 mx: 'auto',
@@ -543,7 +546,7 @@ export default function App() {
                 id="home"
                 data-section-id="home"
                 ref={setSectionRef('home')}
-                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%' }}
+                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%', height: '100%' }}
               >
                 <HomeSection onSelect={handleSelect} />
               </Box>
@@ -552,7 +555,7 @@ export default function App() {
                 id="about"
                 data-section-id="about"
                 ref={setSectionRef('about')}
-                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%' }}
+                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%', height: '100%' }}
               >
                 <AboutSection />
               </Box>
@@ -561,7 +564,7 @@ export default function App() {
                 id="download"
                 data-section-id="download"
                 ref={setSectionRef('download')}
-                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%' }}
+                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%', height: '100%' }}
               >
                 <DownloadSection />
               </Box>
@@ -570,7 +573,7 @@ export default function App() {
                 id="lab"
                 data-section-id="lab"
                 ref={setSectionRef('lab')}
-                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%' }}
+                sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%', height: '100%' }}
               >
                 <LabSection onSelect={handleSelect} />
               </Box>
