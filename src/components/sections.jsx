@@ -225,7 +225,9 @@ function Md3Cookie4({ size, color, sx }) {
   );
 }
 
-function BetaBubble({ onSelect, compact = false }) {
+function BetaBubble({ onSelect, compact = false, banner = false }) {
+  const isBanner = compact && banner;
+
   return (
     <Box
       sx={{
@@ -233,11 +235,11 @@ function BetaBubble({ onSelect, compact = false }) {
         right: compact ? 'auto' : { lg: 42, xl: 56 },
         top: compact ? 'auto' : { lg: 34, xl: 46 },
         width: compact ? '100%' : { lg: 320, xl: 354 },
-        maxWidth: compact ? '100%' : 'none',
-        minHeight: compact ? { xs: 62, sm: 70 } : 190,
-        px: compact ? { xs: 1.45, sm: 2.1, md: 2.4 } : { xs: 3, md: 3.2 },
-        py: compact ? { xs: 0.9, sm: 1.1 } : { xs: 2.6, md: 3 },
-        borderRadius: compact ? { xs: '22px', sm: '28px' } : '28px',
+        maxWidth: isBanner ? '100%' : compact ? { xs: 274, sm: '100%' } : 'none',
+        minHeight: isBanner ? { xs: 58, sm: 64 } : compact ? 'auto' : 190,
+        px: isBanner ? { xs: 1.8, sm: 2.4 } : compact ? { xs: 1.6, sm: 3, md: 3.2 } : { xs: 3, md: 3.2 },
+        py: isBanner ? 0 : compact ? { xs: 1.15, sm: 2.6, md: 3 } : { xs: 2.6, md: 3 },
+        borderRadius: isBanner ? 0 : '28px',
         color: '#1a2a2a', // Dark text matching image
         backgroundColor: '#82cbcc', // Base teal background
         boxShadow: '0 8px 24px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1)',
@@ -263,51 +265,56 @@ function BetaBubble({ onSelect, compact = false }) {
     >
       {/* Top right MD3 8-leaf clover */}
       <Md3Clover8
-        size={compact ? 92 : 150}
+        size={isBanner ? 92 : compact ? 118 : 150}
         color="#9ad9d9"
         sx={{
-          top: compact ? -28 : -40,
-          right: compact ? -22 : -40,
+          top: isBanner ? -28 : -40,
+          right: isBanner ? -22 : -40,
         }}
       />
       {/* Bottom left MD3 4-sided cookie */}
       <Md3Cookie4
-        size={compact ? 104 : 170}
+        size={isBanner ? 104 : compact ? 132 : 170}
         color="#6bb8b9"
         sx={{
-          bottom: compact ? -46 : -60,
-          left: compact ? -30 : -40,
+          bottom: isBanner ? -46 : -60,
+          left: isBanner ? -30 : -40,
           animationDirection: 'reverse', // Rotate opposite way
           animationDuration: '45s',
         }}
       />
       <Stack
-        direction={compact ? 'row' : 'column'}
-        spacing={compact ? { xs: 1, sm: 1.5 } : 2.2}
+        direction={isBanner ? 'row' : 'column'}
+        spacing={isBanner ? { xs: 1, sm: 1.5 } : compact ? { xs: 1.35, sm: 2.2 } : 2.2}
         sx={{
           position: 'relative',
           zIndex: 2, // Ensure text is above state layer overlay
           width: '100%',
           alignItems: 'center',
-          justifyContent: compact ? 'space-between' : 'center',
-          textAlign: compact ? 'left' : 'center',
+          justifyContent: isBanner ? 'space-between' : 'center',
+          textAlign: isBanner ? 'left' : 'center',
+          minHeight: isBanner ? '100%' : 'auto',
         }}
       >
         <Typography
           sx={{
-            flex: compact ? '1 1 auto' : 'initial',
+            flex: isBanner ? '1 1 auto' : 'initial',
             minWidth: 0,
-            fontSize: compact ? { xs: '0.82rem', sm: '0.98rem', md: '1.06rem' } : { xs: '1.15rem', md: '1.2rem' },
-            lineHeight: compact ? 1.22 : 1.45,
+            fontSize: isBanner
+              ? { xs: '0.82rem', sm: '0.98rem', md: '1.06rem' }
+              : compact
+                ? { xs: '0.94rem', sm: '1.15rem', md: '1.2rem' }
+                : { xs: '1.15rem', md: '1.2rem' },
+            lineHeight: isBanner ? 1.22 : compact ? 1.38 : 1.45,
             fontWeight: 500,
             letterSpacing: '0.02em',
             textShadow: '0 1px 2px rgba(255,255,255,0.2)',
-            whiteSpace: compact ? 'nowrap' : 'normal',
-            overflow: compact ? 'hidden' : 'visible',
-            textOverflow: compact ? 'ellipsis' : 'clip',
+            whiteSpace: isBanner ? 'nowrap' : 'normal',
+            overflow: isBanner ? 'hidden' : 'visible',
+            textOverflow: isBanner ? 'ellipsis' : 'clip',
           }}
         >
-          {compact
+          {isBanner
             ? betaLines.join('')
             : betaLines.map((line) => (
                 <Box key={line} component="span" sx={{ display: 'block' }}>
@@ -319,14 +326,14 @@ function BetaBubble({ onSelect, compact = false }) {
           onClick={() => onSelect('lab')}
           sx={{
             flexShrink: 0,
-            minWidth: compact ? { xs: 94, sm: 118 } : 198,
-            minHeight: compact ? { xs: 38, sm: 42 } : 54,
-            px: compact ? { xs: 1.45, sm: 2.2 } : 4,
+            minWidth: isBanner ? { xs: 94, sm: 118 } : compact ? { xs: 138, sm: 148 } : 198,
+            minHeight: isBanner ? { xs: 38, sm: 42 } : compact ? { xs: 38, sm: 42 } : 54,
+            px: isBanner ? { xs: 1.45, sm: 2.2 } : compact ? 2.8 : 4,
             borderRadius: 999,
             color: '#ffffff',
             backgroundColor: '#137174',
             boxShadow: '0 4px 12px rgba(19, 113, 116, 0.4), 0 2px 4px rgba(0,0,0,0.1)',
-            fontSize: compact ? { xs: '0.8rem', sm: '0.92rem' } : '1.08rem',
+            fontSize: isBanner ? { xs: '0.8rem', sm: '0.92rem' } : compact ? { xs: '0.88rem', sm: '0.95rem' } : '1.08rem',
             fontWeight: 500,
             transition: 'box-shadow 0.2s ease',
             position: 'relative',
@@ -350,7 +357,7 @@ function BetaBubble({ onSelect, compact = false }) {
             },
           }}
         >
-          {compact ? '前往Beta' : '前往Beta页面'}
+          {isBanner ? '前往Beta' : '前往Beta页面'}
         </Button>
       </Stack>
     </Box>
@@ -497,9 +504,9 @@ export function HomeSection({ onSelect }) {
         position: 'relative',
         flexDirection: 'column',
         alignItems: 'stretch',
-        px: { xs: 1.8, sm: 3.4, lg: 5.4, xl: 6.4 },
-        pt: { xs: 1.1, sm: 2.2, lg: 3.8 },
-        pb: { xs: 1.4, sm: 3.2, lg: 5.2 },
+        px: { xs: 0, sm: 0, lg: 5.4, xl: 6.4 },
+        pt: { xs: 0, lg: 3.8 },
+        pb: { xs: 'max(10px, env(safe-area-inset-bottom))', sm: 2.2, lg: 5.2 },
         scrollSnapAlign: 'start',
       }}
     >
@@ -530,18 +537,19 @@ export function HomeSection({ onSelect }) {
             xl: 'minmax(0, 1.14fr) minmax(420px, 0.86fr)',
           },
           alignItems: 'center',
-          justifyContent: { xs: 'center', lg: 'initial' },
+          justifyContent: { xs: 'space-between', lg: 'initial' },
           gap: { xs: 0, lg: 4.5, xl: 6.2 },
           minHeight: { lg: 'calc(100svh - 158px)' },
         }}
       >
         <Box sx={{ width: '100%', display: { xs: 'flex', lg: 'none' }, justifyContent: 'center' }}>
-          <BetaBubble onSelect={onSelect} compact />
+          <BetaBubble onSelect={onSelect} compact banner />
         </Box>
         <Box
           sx={{
             minWidth: 0,
             width: '100%',
+            px: { xs: 1.8, sm: 3.4, lg: 0 },
             mt: { xs: 0.85, sm: 2.4, lg: 0 },
             pointerEvents: 'none',
             display: 'flex',
@@ -563,7 +571,15 @@ export function HomeSection({ onSelect }) {
             }}
           />
         </Box>
-        <Box sx={{ minWidth: 0, width: '100%', display: 'flex', justifyContent: { xs: 'center', lg: 'flex-end' } }}>
+        <Box
+          sx={{
+            minWidth: 0,
+            width: '100%',
+            px: { xs: 1.8, sm: 3.4, lg: 0 },
+            display: 'flex',
+            justifyContent: { xs: 'center', lg: 'flex-end' },
+          }}
+        >
           <HomeRightBlock onSelect={onSelect} compact />
         </Box>
       </Box>
@@ -757,7 +773,7 @@ export function LabSection({ onSelect }) {
           </Grid>
           <Grid size={{ xs: 12, lg: 4.8 }}>
             <Stack spacing={{ xs: 1.4, sm: 2.2 }} sx={{ alignItems: 'stretch', justifyContent: 'center' }}>
-              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+              <Box sx={{ display: 'block' }}>
                 <BetaBubble onSelect={() => onSelect?.('home')} compact />
               </Box>
               <Box

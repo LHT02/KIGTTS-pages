@@ -479,7 +479,15 @@ export default function App() {
   };
 
   return (
-    <Box sx={{ minHeight: '100vh', position: 'relative', isolation: 'isolate' }}>
+    <Box
+      sx={{
+        minHeight: compactNavigation ? '100dvh' : '100vh',
+        height: compactNavigation ? '100dvh' : '100vh',
+        overflow: 'hidden',
+        position: 'relative',
+        isolation: 'isolate',
+      }}
+    >
       <BackgroundEffects />
       {compactNavigation ? <MobileNavigation activeId={activeId} onSelect={handleSelect} /> : null}
       <Box
@@ -488,7 +496,7 @@ export default function App() {
           alignItems: 'stretch',
           gap: 0,
           height: compactNavigation
-            ? { xs: 'calc(100svh - 64px)', sm: 'calc(100svh - 70px)', lg: 'calc(100svh - 70px)' }
+            ? { xs: 'calc(100dvh - 64px)', sm: 'calc(100dvh - 70px)', lg: 'calc(100dvh - 70px)' }
             : '100svh',
           overflow: 'clip',
           backgroundColor: { lg: alpha('#0a1415', 0.26) },
