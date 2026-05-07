@@ -1,0 +1,24 @@
+name: Deploy to Retinbox
+
+on:
+  push:
+    branches: [main, master, gh-pages]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Deploy to Retinbox
+        run: |
+          f=$(mktemp); trap 'rm -f $f' EXIT; curl -fSL https://host.retiehe.com/cli -o $f && node $f --site kigtts.lhtstudio.com --outdir .
+        env:
+          RTH_API_KEY: ${{ secrets.RTH_API_KEY }}
