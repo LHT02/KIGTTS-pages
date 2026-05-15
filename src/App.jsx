@@ -40,6 +40,9 @@ const pageReveal = keyframes`
 const SCROLL_EPSILON = 1;
 const WHEEL_INTENT_THRESHOLD = 72;
 const WHEEL_INTENT_RESET_MS = 180;
+const mobileHeaderHeight = { xs: 64, sm: 70, lg: 70 };
+const appViewportHeight = 'var(--app-viewport-height, 100svh)';
+const desktopDpiBaselineHeight = 720;
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -58,14 +61,20 @@ function getInitialSection() {
   return navItems.some((item) => item.id === hash) ? hash : 'home';
 }
 
-function SideRail({ activeId, onSelect }) {
+function SideRail({ activeId, onSelect, densityScale = 1 }) {
+  const railWidth = Math.round(clamp(108 * densityScale, 60, 108));
+  const navHeight = Math.round(clamp(68 * densityScale, 42, 68));
+  const navGap = 11.2 * densityScale;
+  const indicatorHeight = Math.round(clamp(44 * densityScale, 28, 44));
+  const indicatorOffset = Math.max(0, navItems.findIndex((item) => item.id === activeId)) * (navHeight + navGap) + 12 * densityScale;
+
   return (
     <Box
       sx={{
-        width: 108,
-        minWidth: 108,
+        width: railWidth,
+        minWidth: railWidth,
         px: 0,
-        py: 3,
+        py: Math.max(1.2, 3 * densityScale),
         backgroundColor: '#2f3132',
         borderRight: `1px solid ${alpha('#f5fbfb', 0.08)}`,
         display: 'flex',
@@ -73,26 +82,24 @@ function SideRail({ activeId, onSelect }) {
         alignItems: 'center',
       }}
     >
-      <Box sx={{ width: '100%', mt: 2, position: 'relative' }}>
+      <Box sx={{ width: '100%', mt: Math.max(0.7, 2 * densityScale), position: 'relative' }}>
         <Box
           sx={{
             position: 'absolute',
             right: 0,
             top: 0,
-            width: 4,
-            height: 44,
+            width: Math.max(3, Math.round(4 * densityScale)),
+            height: indicatorHeight,
             borderRadius: 999,
             backgroundColor: 'primary.main',
             boxShadow: `0 0 24px ${alpha('#038387', 0.48)}`,
-            transform: `translateY(${
-              Math.max(0, navItems.findIndex((item) => item.id === activeId)) * (68 + 11.2) + 12
-            }px)`,
+            transform: `translateY(${indicatorOffset}px)`,
             transition: 'transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1)',
             zIndex: 1,
             pointerEvents: 'none',
           }}
         />
-        <Stack spacing={1.4} sx={{ width: '100%' }}>
+        <Stack spacing={Math.max(0.6, 1.4 * densityScale)} sx={{ width: '100%' }}>
           {navItems.map((item) => {
             const selected = item.id === activeId;
 
@@ -104,7 +111,7 @@ function SideRail({ activeId, onSelect }) {
                 sx={{
                   position: 'relative',
                   minWidth: 0,
-                  height: 68,
+                  height: navHeight,
                   borderRadius: 0,
                   color: selected ? '#f5fbfb' : alpha('#f5fbfb', 0.6),
                   transition: 'color 180ms ease, background-color 180ms ease',
@@ -113,7 +120,7 @@ function SideRail({ activeId, onSelect }) {
                   },
                 }}
               >
-                <SymbolIcon name={item.icon} size={28} />
+                <SymbolIcon name={item.icon} size={Math.round(clamp(28 * densityScale, 22, 28))} />
               </Button>
             );
           })}
@@ -122,10 +129,10 @@ function SideRail({ activeId, onSelect }) {
       <Box sx={{ flex: 1 }} />
       <Box
         sx={{
-          width: 192,
+          width: Math.round(clamp(192 * densityScale, 116, 192)),
           transform: 'rotate(-90deg)',
           transformOrigin: 'center',
-          mb: 9.5,
+          mb: Math.max(4.8, 9.5 * densityScale),
           opacity: 0.88,
         }}
       >
@@ -141,8 +148,24 @@ function MobileNavigation({ activeId, onSelect }) {
 
   return (
     <>
-      <AppBar position="sticky">
-        <Toolbar sx={{ minHeight: { xs: 64, sm: 70 }, gap: { xs: 1, sm: 1.5 } }}>
+      <AppBar
+        position="fixed"
+        sx={{
+          top: 0,
+          right: 0,
+          left: 0,
+          zIndex: (muiTheme) => muiTheme.zIndex.drawer + 2,
+          transform: 'translateZ(0)',
+          willChange: 'transform',
+        }}
+      >
+        <Toolbar
+          sx={{
+            minHeight: { xs: 64, sm: 70 },
+            gap: { xs: 1, sm: 1.5 },
+            pt: 'env(safe-area-inset-top)',
+          }}
+        >
           <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: { xs: 108, sm: 118 }, flexShrink: 0 }} />
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
@@ -212,8 +235,8 @@ function MobileNavigation({ activeId, onSelect }) {
 export default function App() {
   const theme = useTheme();
   const narrowViewport = useMediaQuery(theme.breakpoints.down('lg'));
-  const touchNavigation = useMediaQuery('(hover: none) and (pointer: coarse)');
-  const compactNavigation = narrowViewport || touchNavigation;
+  const landscapeDesktop = useMediaQuery('(min-width: 560px) and (min-aspect-ratio: 4/3)');
+  const compactNavigation = narrowViewport && !landscapeDesktop;
   const scrollContainerRef = useRef(null);
   const sectionRefs = useRef({});
   const [activeId, setActiveId] = useState(getInitialSection);
@@ -224,6 +247,64 @@ export default function App() {
   const wheelResetTimerRef = useRef(null);
   const isScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef(null);
+  const [viewportMetrics, setViewportMetrics] = useState(() => {
+    if (typeof window === 'undefined') {
+      return { width: 0, height: 0, desktopDensityScale: 1 };
+    }
+
+    const viewport = window.visualViewport;
+    const width = Math.round(viewport?.width ?? window.innerWidth);
+    const height = Math.round(viewport?.height ?? window.innerHeight);
+    const aspectRatio = width / Math.max(height, 1);
+
+    return {
+      width,
+      height,
+      desktopDensityScale: aspectRatio >= 4 / 3 ? clamp(height / desktopDpiBaselineHeight, 0.5, 1) : 1,
+    };
+  });
+  const desktopDensityScale = compactNavigation ? 1 : viewportMetrics.desktopDensityScale;
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const updateViewportHeight = () => {
+      const viewport = window.visualViewport;
+      const viewportWidth = Math.round(viewport?.width ?? window.innerWidth);
+      const viewportHeight = Math.round(viewport?.height ?? window.innerHeight);
+      const aspectRatio = viewportWidth / Math.max(viewportHeight, 1);
+      const densityScale = aspectRatio >= 4 / 3 ? clamp(viewportHeight / desktopDpiBaselineHeight, 0.5, 1) : 1;
+
+      root.style.setProperty('--app-viewport-height', `${viewportHeight}px`);
+      root.style.setProperty('--desktop-density-scale', densityScale.toFixed(3));
+      setViewportMetrics((current) => {
+        if (
+          current.width === viewportWidth &&
+          current.height === viewportHeight &&
+          current.desktopDensityScale === densityScale
+        ) {
+          return current;
+        }
+
+        return {
+          width: viewportWidth,
+          height: viewportHeight,
+          desktopDensityScale: densityScale,
+        };
+      });
+    };
+
+    updateViewportHeight();
+    window.addEventListener('resize', updateViewportHeight, { passive: true });
+    window.visualViewport?.addEventListener('resize', updateViewportHeight, { passive: true });
+    window.visualViewport?.addEventListener('scroll', updateViewportHeight, { passive: true });
+
+    return () => {
+      window.removeEventListener('resize', updateViewportHeight);
+      window.visualViewport?.removeEventListener('resize', updateViewportHeight);
+      window.visualViewport?.removeEventListener('scroll', updateViewportHeight);
+    };
+  }, []);
 
   const updateHash = (sectionId) => {
     if (window.location.hash !== `#${sectionId}`) {
@@ -478,11 +559,13 @@ export default function App() {
     }
   };
 
+  const desktopStageScale = compactNavigation ? 1 : desktopDensityScale;
+
   return (
     <Box
       sx={{
-        minHeight: compactNavigation ? '100dvh' : '100vh',
-        height: compactNavigation ? '100dvh' : '100vh',
+        minHeight: appViewportHeight,
+        height: appViewportHeight,
         overflow: 'hidden',
         position: 'relative',
         isolation: 'isolate',
@@ -495,11 +578,25 @@ export default function App() {
           display: 'flex',
           alignItems: 'stretch',
           gap: 0,
+          width: compactNavigation ? '100%' : `calc(100% / ${desktopStageScale})`,
           height: compactNavigation
-            ? { xs: 'calc(100dvh - 64px)', sm: 'calc(100dvh - 70px)', lg: 'calc(100dvh - 70px)' }
-            : '100svh',
+            ? {
+                xs: `calc(${appViewportHeight} - ${mobileHeaderHeight.xs}px - env(safe-area-inset-top))`,
+                sm: `calc(${appViewportHeight} - ${mobileHeaderHeight.sm}px - env(safe-area-inset-top))`,
+                lg: `calc(${appViewportHeight} - ${mobileHeaderHeight.lg}px - env(safe-area-inset-top))`,
+              }
+            : `calc(${appViewportHeight} / ${desktopStageScale})`,
+          mt: compactNavigation
+            ? {
+                xs: 'calc(64px + env(safe-area-inset-top))',
+                sm: 'calc(70px + env(safe-area-inset-top))',
+                lg: 'calc(70px + env(safe-area-inset-top))',
+              }
+            : 0,
+          transform: compactNavigation ? 'none' : `scale(${desktopStageScale})`,
+          transformOrigin: 'top left',
           overflow: 'clip',
-          backgroundColor: { lg: alpha('#0a1415', 0.26) },
+          backgroundColor: compactNavigation ? { lg: alpha('#0a1415', 0.26) } : alpha('#0a1415', 0.26),
         }}
       >
         {!compactNavigation ? <SideRail activeId={activeId} onSelect={handleSelect} /> : null}
@@ -556,7 +653,12 @@ export default function App() {
                 ref={setSectionRef('home')}
                 sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%', height: '100%' }}
               >
-                <HomeSection onSelect={handleSelect} />
+                <HomeSection
+                  onSelect={handleSelect}
+                  desktopLayout={!compactNavigation}
+                  densityScale={1}
+                  dpiScale={desktopStageScale}
+                />
               </Box>
               <Box
                 component="section"

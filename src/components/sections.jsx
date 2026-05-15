@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Collapse,
   Divider,
   Grid,
   Icon,
@@ -8,7 +9,16 @@ import {
   Typography,
 } from '@mui/material';
 import { alpha, keyframes } from '@mui/material/styles';
+import { QRCodeSVG } from 'qrcode.react';
+import { useState } from 'react';
 import heroShot from '../../ART/KIGTTS1.png';
+import subtitleScreen from '../../ART/ScreenShoot/便捷字幕.jpg';
+import boardScreen from '../../ART/ScreenShoot/画板.jpg';
+import cardScreen from '../../ART/ScreenShoot/快捷名片.jpg';
+import floatingScreen from '../../ART/ScreenShoot/悬浮窗.png';
+import trainerScreen from '../../ART/ScreenShoot/训练器.png';
+import soundScreen from '../../ART/ScreenShoot/音效板.jpg';
+import voicePackScreen from '../../ART/ScreenShoot/语音包.jpg';
 import logoWhite from '../../ART/LOGOWhite.svg';
 import lhtstudioLogo from '../../ART/lhtstudio.svg';
 
@@ -40,9 +50,14 @@ export const navItems = [
 ];
 
 const betaLines = ['尝试由Flutter构建', '的Beta版本'];
+const qrValue = 'www.kigtts.lhtstudio.com';
+const androidReleaseUrl = 'https://github.com/LHT02/KIGTTS/releases/tag/APP0.1.0';
+const androidApkUrl = 'https://github.com/LHT02/KIGTTS/releases/download/APP0.1.0/app-release.apk';
+const trainerModelScopeUrl = 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files';
+const trainerHuggingFaceUrl = 'https://huggingface.co/LHT02/kigtts-trainer/tree/main';
 
 const downloadNotes = [
-  '手机扫描二维码进行下载',
+  `手机扫描二维码访问 ${qrValue}`,
   '训练器与 APK 可分别接真实链接',
   '整个站点已经适配 GitHub Pages 静态部署',
 ];
@@ -51,6 +66,150 @@ const labItems = [
   '保留深色流光气质，但减少与主页面抢视觉。',
   '方便挂 Beta 下载、更新日志和实验说明。',
   '移动端沿用抽屉导航，不挤压主内容宽度。',
+];
+
+const downloadTabs = [
+  {
+    id: 'android',
+    label: '安卓端',
+    icon: 'android',
+    eyebrow: 'ANDROID / APP 0.1.0',
+    title: 'KIGTTS Android App',
+    summary: '现场字幕、TTS 朗读、快捷名片、画板、音效板和悬浮窗入口都在安卓端主应用里，适合手机直接部署使用。',
+    meta: [
+      ['格式', 'APK'],
+      ['版本', 'APP0.1.0'],
+      ['来源', 'GitHub Release'],
+    ],
+    bullets: ['主下载按钮直达 app-release.apk', '发行页保留版本说明和后续资产', '建议在 Android 设备浏览器中打开下载'],
+    actions: [
+      { label: '下载 APK', icon: 'download', href: androidApkUrl, primary: true },
+      { label: '查看发行页', icon: 'open_in_new', href: androidReleaseUrl },
+    ],
+  },
+  {
+    id: 'trainer',
+    label: '训练器',
+    icon: 'laptop_mac',
+    eyebrow: 'DESKTOP / TRAINER',
+    title: 'KIGTTS Trainer',
+    summary: '训练器用于整理语料、训练或蒸馏语音包，并把结果导出给 Android 端导入使用。当前提供魔搭和 Hugging Face 两个镜像入口。',
+    meta: [
+      ['平台', 'Windows / Desktop'],
+      ['镜像', 'ModelScope + Hugging Face'],
+      ['用途', '语音包制作'],
+    ],
+    bullets: ['魔搭适合国内网络直接访问', 'Hugging Face 保留国际镜像和版本树', '下载后按仓库内说明运行训练器'],
+    actions: [
+      { label: '魔搭下载', icon: 'deployed_code', href: trainerModelScopeUrl, primary: true },
+      { label: 'Hugging Face', icon: 'hub', href: trainerHuggingFaceUrl },
+    ],
+  },
+  {
+    id: 'beta',
+    label: 'Flutter Beta',
+    icon: 'flutter_dash',
+    eyebrow: 'FLUTTER / BETA',
+    title: '暂未上线，敬请期待',
+    summary: 'Flutter Beta 入口会在可公开测试后接入。现在先保留独立页签，避免用户误以为已有可下载构建。',
+    meta: [
+      ['状态', '未上线'],
+      ['入口', '预留'],
+      ['计划', '后续开放测试'],
+    ],
+    bullets: ['当前不提供安装包', '上线后会替换为真实下载地址', '正式入口会继续沿用这一张下载卡片'],
+    actions: [
+      { label: '暂未上线', icon: 'hourglass_empty', disabled: true, primary: true },
+      { label: '敬请期待', icon: 'notifications_active', disabled: true },
+    ],
+  },
+];
+
+const featureSlides = [
+  {
+    label: '便捷字幕',
+    icon: 'subtitles',
+    eyebrow: '01 / 便捷字幕',
+    title: '语音识别、快捷文本和 TTS 一键上屏',
+    summary:
+      'KIGTTS 面向 Kigurumi、头套、面具、舞台妆造和不方便直接说话的现场场景。便捷字幕把语音识别、手动输入、快捷文本、TTS 朗读、大字幕预览和预设分组整合在一个主入口里。',
+    bullets: ['减少频繁切 App', '降低现场打字压力', '一键上屏、朗读或发送常用语'],
+    note: '原项目定位与便捷字幕合并为一项：它是整套现场交流路径的主入口。',
+    image: subtitleScreen,
+    imageAlt: '便捷字幕功能截图',
+  },
+  {
+    label: '快捷名片',
+    icon: 'badge',
+    eyebrow: '02 / 快捷名片',
+    title: '个人信息、角色信息、链接和二维码展示',
+    summary:
+      '快捷名片用于展示主页、群入口、约拍信息或临时说明，支持横竖屏展示、背景图、主题色背景、装饰文字、链接按钮、分享和多张名片切换。',
+    bullets: ['互关和主页展示', '社交二维码与群入口', '角色设定和现场说明'],
+    note: '名片功能适合在不方便开口解释时快速完成信息交换。',
+    image: cardScreen,
+    imageAlt: '快捷名片功能截图',
+  },
+  {
+    label: '画板',
+    icon: 'draw',
+    eyebrow: '03 / 画板',
+    title: '现场手写、涂鸦和快速示意',
+    summary:
+      '画板用于在嘈杂环境或不方便打字时快速补充说明，支持现场手写、涂鸦、标注和简单示意，让交流不完全依赖语音或键盘输入。',
+    bullets: ['手写补充说明', '涂鸦和快速标注', '适合嘈杂现场兜底沟通'],
+    note: '画板从音效板中拆出为独立介绍，方便和现场手写场景对应。',
+    image: boardScreen,
+    imageAlt: '画板功能截图',
+  },
+  {
+    label: '音效板',
+    icon: 'library_music',
+    eyebrow: '04 / 音效板',
+    title: '接梗、反应音和关键词触发',
+    summary:
+      '音效板支持按分组管理音效、列表或宫格布局、点击播放/停止、关键词触发、音频导入转码和预设分享，适合角色互动、接梗和现场反馈。',
+    bullets: ['识别结果触发音效', '角色音效包导入导出', '列表或宫格布局切换'],
+    note: '音效板和字幕、TTS 可以组合使用，让现场互动更轻量。',
+    image: soundScreen,
+    imageAlt: '音效板功能截图',
+  },
+  {
+    label: '悬浮窗与热键',
+    icon: 'open_in_new',
+    eyebrow: '05 / 悬浮窗与联动',
+    title: '在其他 App 上方快速调出辅助功能',
+    summary:
+      '悬浮窗可以在微信、QQ、相机等 App 上方常驻，快速打开便捷字幕、快捷名片、画板、音效板、迷你控件和常用第三方应用。',
+    bullets: ['折叠、贴边、展开', '音量键序列热键', '微信/QQ/支付宝扫码联动'],
+    note: '开启无障碍辅助后，部分热键和直达操作会更稳定。',
+    image: floatingScreen,
+    imageAlt: '悬浮窗功能截图',
+  },
+  {
+    label: '语音包',
+    icon: 'record_voice_over',
+    eyebrow: '06 / 语音增强与变声链路',
+    title: '本地 ASR、TTS、VAD 和说话人验证适配复杂现场',
+    summary:
+      'Android 端优先本地处理，包含 ASR、系统 TTS 或本地语音包朗读、AI 语音增强、VAD、说话人验证和音频测试。',
+    bullets: ['语音识别 -> 文本 -> TTS 朗读', 'GTCRN / DPDFNet 增强模式', '减少旁人说话误触发'],
+    note: '适合能接受短暂延迟，但希望用 TTS 替代本人发声或增强外放的场景。',
+    image: voicePackScreen,
+    imageAlt: '语音包功能截图',
+  },
+  {
+    label: '设置',
+    icon: 'tune',
+    eyebrow: '07 / 设置与训练端',
+    title: '训练器、语音包制作和高级配置',
+    summary:
+      '桌面训练器用于整理语料、蒸馏、Piper 训练和语音包打包；设置区承载识别、朗读、热键、语音包和现场使用偏好的高级配置。',
+    bullets: ['Piper 标准训练', 'GPT-SoVITS / VoxCPM2 蒸馏', '训练器导出 Android 可导入语音包'],
+    note: '训练器截图已接入这一项，作为 Android 端语音包制作流程的配套说明。',
+    image: trainerScreen,
+    imageAlt: 'KIGTTS 训练器截图',
+  },
 ];
 
 const md2SurfaceShadow = '0 1px 2px rgba(0,0,0,0.28), 0 6px 18px rgba(0,0,0,0.16)';
@@ -92,6 +251,14 @@ const centeredContentSx = {
   mx: 'auto',
 };
 
+function clampValue(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function scaledPx(value, scale, min = 0) {
+  return Math.round(Math.max(min, value * scale));
+}
+
 export function SymbolIcon({ name, size = 24, sx }) {
   return (
     <Icon
@@ -108,60 +275,30 @@ export function SymbolIcon({ name, size = 24, sx }) {
   );
 }
 
-function PseudoQr({ compact = false }) {
+function RealQr({ compact = false, densityScale = 1 }) {
+  const compactSize = scaledPx(108, densityScale, 78);
+  const qrSize = scaledPx(96, densityScale, 68);
+
   return (
     <Box
       sx={{
-        width: compact ? 'clamp(84px, 24vw, 108px)' : { xs: 116, sm: 168 },
-        height: compact ? 'clamp(84px, 24vw, 108px)' : { xs: 116, sm: 168 },
+        width: compact ? compactSize : { xs: 116, sm: 168 },
+        height: compact ? compactSize : { xs: 116, sm: 168 },
         p: compact ? 0.75 : { xs: 0.85, sm: 1.25 },
         backgroundColor: '#fbfbfb',
         borderRadius: 0.5,
         boxShadow: '0 1px 2px rgba(0,0,0,0.16)',
       }}
     >
-      <Box
-        sx={{
-          width: '100%',
-          height: '100%',
-          backgroundColor: '#ffffff',
-          backgroundImage: `
-            linear-gradient(90deg, #111 0 14%, transparent 14% 21%, #111 21% 35%, transparent 35% 43%, #111 43% 49%, transparent 49% 57%, #111 57% 74%, transparent 74% 80%, #111 80% 100%),
-            linear-gradient(#111 0 12%, transparent 12% 18%, #111 18% 31%, transparent 31% 40%, #111 40% 48%, transparent 48% 61%, #111 61% 73%, transparent 73% 84%, #111 84% 100%)
-          `,
-          backgroundSize: '100% 100%',
-          position: 'relative',
-          overflow: 'hidden',
-          '&::before, &::after': {
-            content: '""',
-            position: 'absolute',
-            width: '28%',
-            height: '28%',
-            border: compact ? '6px solid #111' : { xs: '6px solid #111', sm: '8px solid #111' },
-            backgroundColor: '#fff',
-          },
-          '&::before': {
-            top: '7%',
-            left: '7%',
-          },
-          '&::after': {
-            top: '7%',
-            right: '7%',
-          },
-        }}
-      >
-        <Box
-          sx={{
-            position: 'absolute',
-            left: '7%',
-            bottom: '7%',
-            width: '28%',
-            height: '28%',
-            border: compact ? '6px solid #111' : { xs: '6px solid #111', sm: '8px solid #111' },
-            backgroundColor: '#fff',
-          }}
-        />
-      </Box>
+      <QRCodeSVG
+        value={qrValue}
+        size={compact ? qrSize : 144}
+        level="M"
+        bgColor="#ffffff"
+        fgColor="#111111"
+        marginSize={1}
+        style={{ display: 'block', width: '100%', height: '100%' }}
+      />
     </Box>
   );
 }
@@ -169,6 +306,41 @@ function PseudoQr({ compact = false }) {
 const rotateFlower = keyframes`
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+`;
+
+const featureVisualEnter = keyframes`
+  from {
+    opacity: 0;
+    transform: translate3d(28px, 0, 0) scale(0.985);
+    filter: drop-shadow(0 18px 28px rgba(0,0,0,0.18)) saturate(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: drop-shadow(0 18px 28px rgba(0,0,0,0.24)) saturate(0.98);
+  }
+`;
+
+const featurePanelEnter = keyframes`
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+`;
+
+const featureOverlayEnter = keyframes`
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 `;
 
 function Md3Clover8({ size, color, sx }) {
@@ -225,20 +397,23 @@ function Md3Cookie4({ size, color, sx }) {
   );
 }
 
-function BetaBubble({ onSelect, compact = false, banner = false }) {
+function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 1 }) {
   const isBanner = compact && banner;
+  const denseDesktop = !compact && densityScale < 0.75;
+  const scale = compact ? 1 : densityScale;
+  const dp = (value, min = 0) => scaledPx(value, scale, min);
 
   return (
     <Box
       sx={{
         position: compact ? 'relative' : 'absolute',
-        right: compact ? 'auto' : { lg: 42, xl: 56 },
-        top: compact ? 'auto' : { lg: 34, xl: 46 },
-        width: compact ? '100%' : { lg: 320, xl: 354 },
+        right: compact ? 'auto' : denseDesktop ? dp(24, 12) : { xs: dp(42, 12), lg: dp(42, 12), xl: dp(56, 16) },
+        top: compact ? 'auto' : denseDesktop ? dp(12, 6) : { xs: dp(34, 8), lg: dp(34, 8), xl: dp(46, 12) },
+        width: compact ? '100%' : denseDesktop ? dp(300, 180) : { xs: dp(320, 172), lg: dp(320, 172), xl: dp(354, 188) },
         maxWidth: isBanner ? '100%' : compact ? { xs: 274, sm: '100%' } : 'none',
-        minHeight: isBanner ? { xs: 58, sm: 64 } : compact ? 'auto' : 190,
-        px: isBanner ? { xs: 1.8, sm: 2.4 } : compact ? { xs: 1.6, sm: 3, md: 3.2 } : { xs: 3, md: 3.2 },
-        py: isBanner ? 0 : compact ? { xs: 1.15, sm: 2.6, md: 3 } : { xs: 2.6, md: 3 },
+        minHeight: isBanner ? { xs: 58, sm: 64 } : compact ? 'auto' : denseDesktop ? dp(104, 56) : dp(190, 76),
+        px: isBanner ? { xs: 1.8, sm: 2.4 } : compact ? { xs: 1.6, sm: 3, md: 3.2 } : denseDesktop ? Math.max(0.9, 2.1 * scale) : Math.max(1.1, 3.2 * scale),
+        py: isBanner ? 0 : compact ? { xs: 1.15, sm: 2.6, md: 3 } : denseDesktop ? Math.max(0.5, 1.2 * scale) : Math.max(0.85, 3 * scale),
         borderRadius: isBanner ? 0 : '28px',
         color: '#1a2a2a', // Dark text matching image
         backgroundColor: '#82cbcc', // Base teal background
@@ -265,7 +440,7 @@ function BetaBubble({ onSelect, compact = false, banner = false }) {
     >
       {/* Top right MD3 8-leaf clover */}
       <Md3Clover8
-        size={isBanner ? 92 : compact ? 118 : 150}
+        size={isBanner ? 92 : compact ? 118 : denseDesktop ? dp(96, 52) : dp(150, 64)}
         color="#9ad9d9"
         sx={{
           top: isBanner ? -28 : -40,
@@ -274,7 +449,7 @@ function BetaBubble({ onSelect, compact = false, banner = false }) {
       />
       {/* Bottom left MD3 4-sided cookie */}
       <Md3Cookie4
-        size={isBanner ? 104 : compact ? 132 : 170}
+        size={isBanner ? 104 : compact ? 132 : denseDesktop ? dp(108, 58) : dp(170, 72)}
         color="#6bb8b9"
         sx={{
           bottom: isBanner ? -46 : -60,
@@ -284,15 +459,15 @@ function BetaBubble({ onSelect, compact = false, banner = false }) {
         }}
       />
       <Stack
-        direction={isBanner ? 'row' : 'column'}
-        spacing={isBanner ? { xs: 1, sm: 1.5 } : compact ? { xs: 1.35, sm: 2.2 } : 2.2}
+        direction={isBanner || denseDesktop ? 'row' : 'column'}
+        spacing={isBanner ? { xs: 1, sm: 1.5 } : denseDesktop ? 0.8 : compact ? { xs: 1.35, sm: 2.2 } : 2.2}
         sx={{
           position: 'relative',
           zIndex: 2, // Ensure text is above state layer overlay
           width: '100%',
           alignItems: 'center',
-          justifyContent: isBanner ? 'space-between' : 'center',
-          textAlign: isBanner ? 'left' : 'center',
+          justifyContent: isBanner || denseDesktop ? 'space-between' : 'center',
+          textAlign: isBanner || denseDesktop ? 'left' : 'center',
           minHeight: isBanner ? '100%' : 'auto',
         }}
       >
@@ -304,17 +479,19 @@ function BetaBubble({ onSelect, compact = false, banner = false }) {
               ? { xs: '0.82rem', sm: '0.98rem', md: '1.06rem' }
               : compact
                 ? { xs: '0.94rem', sm: '1.15rem', md: '1.2rem' }
-                : { xs: '1.15rem', md: '1.2rem' },
-            lineHeight: isBanner ? 1.22 : compact ? 1.38 : 1.45,
+                : `clamp(0.72rem, ${1.2 * scale}rem, 1.2rem)`,
+            lineHeight: denseDesktop ? 1.12 : isBanner ? 1.22 : compact ? 1.38 : 1.45,
             fontWeight: 500,
             letterSpacing: '0.02em',
             textShadow: '0 1px 2px rgba(255,255,255,0.2)',
-            whiteSpace: isBanner ? 'nowrap' : 'normal',
-            overflow: isBanner ? 'hidden' : 'visible',
-            textOverflow: isBanner ? 'ellipsis' : 'clip',
+            whiteSpace: isBanner || denseDesktop ? 'nowrap' : 'normal',
+            overflow: isBanner || denseDesktop ? 'hidden' : 'visible',
+            textOverflow: isBanner || denseDesktop ? 'ellipsis' : 'clip',
           }}
         >
-          {isBanner
+          {denseDesktop
+            ? 'Flutter Beta'
+            : isBanner
             ? betaLines.join('')
             : betaLines.map((line) => (
                 <Box key={line} component="span" sx={{ display: 'block' }}>
@@ -326,14 +503,14 @@ function BetaBubble({ onSelect, compact = false, banner = false }) {
           onClick={() => onSelect('lab')}
           sx={{
             flexShrink: 0,
-            minWidth: isBanner ? { xs: 94, sm: 118 } : compact ? { xs: 138, sm: 148 } : 198,
-            minHeight: isBanner ? { xs: 38, sm: 42 } : compact ? { xs: 38, sm: 42 } : 54,
-            px: isBanner ? { xs: 1.45, sm: 2.2 } : compact ? 2.8 : 4,
+            minWidth: isBanner ? { xs: 94, sm: 118 } : compact ? { xs: 138, sm: 148 } : denseDesktop ? dp(92, 66) : dp(198, 116),
+            minHeight: isBanner ? { xs: 38, sm: 42 } : compact ? { xs: 38, sm: 42 } : denseDesktop ? dp(42, 30) : dp(54, 32),
+            px: isBanner ? { xs: 1.45, sm: 2.2 } : compact ? 2.8 : denseDesktop ? Math.max(1, 2 * scale) : Math.max(1.6, 4 * scale),
             borderRadius: 999,
             color: '#ffffff',
             backgroundColor: '#137174',
             boxShadow: '0 4px 12px rgba(19, 113, 116, 0.4), 0 2px 4px rgba(0,0,0,0.1)',
-            fontSize: isBanner ? { xs: '0.8rem', sm: '0.92rem' } : compact ? { xs: '0.88rem', sm: '0.95rem' } : '1.08rem',
+            fontSize: isBanner ? { xs: '0.8rem', sm: '0.92rem' } : compact ? { xs: '0.88rem', sm: '0.95rem' } : `clamp(0.72rem, ${1.08 * scale}rem, 1.08rem)`,
             fontWeight: 500,
             transition: 'box-shadow 0.2s ease',
             position: 'relative',
@@ -357,19 +534,25 @@ function BetaBubble({ onSelect, compact = false, banner = false }) {
             },
           }}
         >
-          {isBanner ? '前往Beta' : '前往Beta页面'}
+          {isBanner || denseDesktop ? '前往Beta' : '前往Beta页面'}
         </Button>
       </Stack>
     </Box>
   );
 }
 
-function DownloadPanel({ compact = false }) {
+function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 1 }) {
+  const scaledCompact = compact && densityScale < 0.98;
+  const panelMinHeight = scaledPx(244, densityScale, densityScale < 0.75 ? 108 : 132);
+  const primaryHeight = scaledPx(72, densityScale, 42);
+  const secondaryHeight = scaledPx(72, densityScale, 38);
+
   return (
     <Box
       sx={{
         flex: 1,
-        minHeight: compact ? { xs: 'auto', sm: 204, md: 244 } : { xs: 'auto', sm: 220, lg: 244 },
+        minWidth: 0,
+        minHeight: scaledCompact ? panelMinHeight : compact ? { xs: 'auto', sm: 204, md: 244 } : { xs: 'auto', sm: 220, lg: 244 },
         px: compact ? { xs: 1.05, sm: 2.2, md: 2.5 } : { xs: 1.5, sm: 2.2, md: 2.5 },
         py: compact ? { xs: 1.05, sm: 2.2, md: 2.5 } : { xs: 1.5, sm: 2.2, md: 2.5 },
         ...md2Surface,
@@ -378,12 +561,17 @@ function DownloadPanel({ compact = false }) {
       <Stack spacing={compact ? 1.1 : 1.8} sx={{ height: '100%' }}>
         <Button
           fullWidth
+          component="a"
+          href={androidApkUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           startIcon={<SymbolIcon name="android" size={compact ? 22 : 28} />}
           sx={{
             ...md2Button,
-            minHeight: compact ? { xs: 42, sm: 64, md: 72 } : { xs: 50, sm: 64, lg: 72 },
-            px: compact ? { xs: 1.35, sm: 2.8 } : 2.8,
-            fontSize: compact ? { xs: '0.78rem', sm: '1.08rem', md: '1.28rem' } : { xs: '1rem', sm: '1.18rem', md: '1.28rem' },
+            minWidth: 0,
+            minHeight: scaledCompact ? primaryHeight : compact ? { xs: 48, sm: 64, md: 72 } : { xs: 50, sm: 64, lg: 72 },
+            px: scaledCompact ? 1.05 : compact ? { xs: 1.35, sm: 2.8 } : 2.8,
+            fontSize: compact ? { xs: '1rem', sm: '1.08rem', md: '1.28rem' } : { xs: '1rem', sm: '1.18rem', md: '1.28rem' },
             justifyContent: compact ? 'center' : 'flex-start',
             whiteSpace: 'nowrap',
           }}
@@ -392,11 +580,17 @@ function DownloadPanel({ compact = false }) {
         </Button>
         <Button
           fullWidth
+          component="a"
+          href={trainerModelScopeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
           startIcon={<SymbolIcon name="laptop_mac" size={compact ? 22 : 28} />}
           sx={{
             ...md2Button,
-            minHeight: compact ? { xs: 42, sm: 64, md: 72 } : { xs: 50, sm: 64, lg: 72 },
-            px: compact ? { xs: 1.35, sm: 2.8 } : 2.8,
+            display: { xs: mobileApkOnly ? 'none' : 'inline-flex', sm: 'inline-flex' },
+            minWidth: 0,
+            minHeight: scaledCompact ? secondaryHeight : compact ? { xs: 42, sm: 64, md: 72 } : { xs: 50, sm: 64, lg: 72 },
+            px: scaledCompact ? 1.05 : compact ? { xs: 1.35, sm: 2.8 } : 2.8,
             fontSize: compact ? { xs: '0.78rem', sm: '1.08rem', md: '1.28rem' } : { xs: '1rem', sm: '1.18rem', md: '1.28rem' },
             justifyContent: compact ? 'center' : 'flex-start',
             whiteSpace: 'nowrap',
@@ -409,26 +603,31 @@ function DownloadPanel({ compact = false }) {
   );
 }
 
-function QrPanel({ compact = false }) {
+function QrPanel({ compact = false, hideOnMobile = false, densityScale = 1 }) {
+  const scaledCompact = compact && densityScale < 0.98;
+  const panelWidth = scaledPx(230, densityScale, densityScale < 0.75 ? 106 : 118);
+  const panelMinHeight = scaledPx(244, densityScale, densityScale < 0.75 ? 108 : 132);
+
   return (
     <Box
       sx={{
-        width: compact ? { xs: 112, sm: 214, md: 230 } : { xs: '100%', sm: 214, md: 230 },
-        minWidth: compact ? { xs: 112, sm: 214, md: 230 } : { sm: 214, md: 230 },
-        minHeight: compact ? { xs: 'auto', sm: 204, md: 244 } : { xs: 'auto', sm: 220, lg: 244 },
+        display: { xs: hideOnMobile ? 'none' : 'block', sm: 'block' },
+        width: scaledCompact ? panelWidth : compact ? { xs: 112, sm: 214, md: 230 } : { xs: '100%', sm: 214, md: 230 },
+        minWidth: scaledCompact ? panelWidth : compact ? { xs: 112, sm: 214, md: 230 } : { sm: 214, md: 230 },
+        minHeight: scaledCompact ? panelMinHeight : compact ? { xs: 'auto', sm: 204, md: 244 } : { xs: 'auto', sm: 220, lg: 244 },
         px: compact ? { xs: 0.95, sm: 2.2, md: 2.5 } : { xs: 1.4, sm: 2.2, md: 2.5 },
         py: compact ? { xs: 0.95, sm: 2.2, md: 2.5 } : { xs: 1.4, sm: 2.2, md: 2.5 },
         ...md2Surface,
       }}
     >
       <Stack spacing={compact ? 0.9 : 1.8} alignItems="center">
-        <PseudoQr compact={compact} />
+        <RealQr compact={compact} densityScale={densityScale} />
         <Typography
           variant="body2"
           sx={{
             textAlign: 'center',
             color: alpha('#f5fbfb', 0.64),
-            display: { xs: 'none', sm: 'block' },
+            display: compact && densityScale < 0.75 ? 'none' : { xs: 'none', sm: 'block' },
             fontSize: compact ? '0.72rem' : '0.92rem',
             lineHeight: compact ? 1.35 : 1.55,
           }}
@@ -440,20 +639,28 @@ function QrPanel({ compact = false }) {
   );
 }
 
-function HomeRightBlock({ onSelect, compact = false }) {
+function HomeRightBlock({ onSelect, compact = false, desktopLayout = false, densityScale = 1 }) {
+  const shortLandscapeFactor = densityScale < 0.75 ? 0.84 : 1;
+  const desktopBlockWidth = scaledPx(536, densityScale * shortLandscapeFactor, 312);
+  const desktopLogoWidth = scaledPx(474, densityScale * shortLandscapeFactor, 176);
+  const desktopTitleSize = densityScale < 0.75
+    ? `clamp(1.08rem, ${2.55 * densityScale}rem, 1.7rem)`
+    : `clamp(1.3rem, ${2.9 * densityScale}rem, 2.9rem)`;
+  const desktopActionGap = Math.max(0.85, 2 * densityScale);
+
   return (
     <Box
       sx={{
         position: 'relative',
         width: '100%',
-        maxWidth: { lg: 502, xl: 536 },
-        mt: compact ? { xs: -0.2, sm: 1.1, lg: 0 } : { xs: 2, lg: 0 },
-        ml: { lg: 'auto' },
-        mx: { xs: 'auto', lg: 0 },
-        textAlign: { xs: 'center', lg: 'left' },
+        maxWidth: desktopLayout ? desktopBlockWidth : { lg: 502, xl: 536 },
+        mt: desktopLayout ? 0 : compact ? { xs: -0.2, sm: 1.1, lg: 0 } : { xs: 2, lg: 0 },
+        ml: { lg: 0 },
+        mx: desktopLayout ? 0 : { xs: 'auto', lg: 0 },
+        textAlign: desktopLayout ? 'left' : { xs: 'center', lg: 'left' },
         display: 'flex',
         flexDirection: 'column',
-        alignItems: { xs: 'center', lg: 'flex-start' },
+        alignItems: desktopLayout ? 'flex-start' : { xs: 'center', lg: 'flex-start' },
       }}
     >
       <Box
@@ -461,14 +668,14 @@ function HomeRightBlock({ onSelect, compact = false }) {
         src={logoWhite}
         alt="KIGTTS"
         sx={{
-          width: compact ? { xs: '76%', sm: '100%' } : '100%',
-          maxWidth: compact ? { xs: 228, sm: 474 } : 474,
+          width: desktopLayout ? desktopLogoWidth : compact ? { xs: '76%', sm: '100%' } : '100%',
+          maxWidth: desktopLayout ? '100%' : compact ? { xs: 228, sm: 474 } : 474,
         }}
       />
       <Typography
         sx={{
-          mt: compact ? { xs: 0.45, sm: 1.6, md: 2 } : 2,
-          fontSize: compact ? { xs: '1.22rem', sm: '2rem', md: '2.6rem', xl: '2.9rem' } : { xs: '2rem', md: '2.6rem', xl: '2.9rem' },
+          mt: desktopLayout ? Math.max(0.35, 1.4 * densityScale) : compact ? { xs: 0.45, sm: 1.6, md: 2 } : 2,
+          fontSize: desktopLayout ? desktopTitleSize : compact ? { xs: '1.22rem', sm: '2rem', md: '2.6rem', xl: '2.9rem' } : { xs: '2rem', md: '2.6rem', xl: '2.9rem' },
           lineHeight: compact ? 1.12 : 1.18,
           letterSpacing: '0.03em',
           color: '#f1f4f4',
@@ -478,25 +685,32 @@ function HomeRightBlock({ onSelect, compact = false }) {
         变娃交流无阻碍
       </Typography>
       <Stack
-        direction={compact ? 'row' : { xs: 'column', sm: 'row' }}
-        spacing={compact ? 1.2 : 2}
+        direction={desktopLayout ? 'row' : compact ? { xs: 'column', sm: 'row' } : { xs: 'column', sm: 'row' }}
+        spacing={desktopLayout ? desktopActionGap : compact ? 1.2 : 2}
         sx={{
           width: '100%',
-          maxWidth: { xs: 338, sm: '100%' },
-          mx: { xs: 'auto', lg: 0 },
-          mt: compact ? { xs: 1.15, sm: 4, md: 5.2 } : { xs: 4, md: 5.2 },
+          maxWidth: desktopLayout ? '100%' : { xs: 338, sm: '100%' },
+          mx: desktopLayout ? 0 : { xs: 'auto', lg: 0 },
+          mt: desktopLayout ? Math.max(0.75, (densityScale < 0.75 ? 3 : 4.2) * densityScale) : compact ? { xs: 1.05, sm: 3.2, md: 4.2 } : { xs: 4, md: 5.2 },
           alignItems: 'stretch',
           justifyContent: 'center',
         }}
       >
-        <QrPanel compact={compact} />
-        <DownloadPanel compact={compact} />
+        <QrPanel compact={compact} hideOnMobile={!desktopLayout} densityScale={densityScale} />
+        <DownloadPanel compact={compact} mobileApkOnly={!desktopLayout} densityScale={densityScale} />
       </Stack>
     </Box>
   );
 }
 
-export function HomeSection({ onSelect }) {
+export function HomeSection({ onSelect, desktopLayout = false, densityScale = 1, dpiScale = 1 }) {
+  const shortDpiDesktop = desktopLayout && dpiScale < 0.75;
+  const shortLandscapeFactor = densityScale < 0.75 ? 0.84 : 1;
+  const desktopContentMaxWidth = scaledPx(1500, densityScale, 780);
+  const desktopRightColumn = scaledPx(420, densityScale * shortLandscapeFactor, 312);
+  const desktopLogoWidth = scaledPx(200, densityScale, 108);
+  const desktopHeroWidth = `min(46vw, calc(var(--app-viewport-height, 100svh) * ${densityScale < 0.75 ? 0.66 : 0.72}), ${scaledPx(840, densityScale, 250)}px)`;
+
   return (
     <Box
       sx={{
@@ -504,9 +718,9 @@ export function HomeSection({ onSelect }) {
         position: 'relative',
         flexDirection: 'column',
         alignItems: 'stretch',
-        px: { xs: 0, sm: 0, lg: 5.4, xl: 6.4 },
-        pt: { xs: 0, lg: 3.8 },
-        pb: { xs: 'max(10px, env(safe-area-inset-bottom))', sm: 2.2, lg: 5.2 },
+        px: desktopLayout ? Math.max(1.2, 4.2 * densityScale) : { xs: 0, sm: 0, lg: 5.4, xl: 6.4 },
+        pt: desktopLayout ? Math.max(1, 3.4 * densityScale) : { xs: 0, lg: 3.8 },
+        pb: desktopLayout ? Math.max(1.2, 3.8 * densityScale) : { xs: 'max(10px, env(safe-area-inset-bottom))', sm: 2.2, lg: 5.2 },
         scrollSnapAlign: 'start',
       }}
     >
@@ -515,46 +729,46 @@ export function HomeSection({ onSelect }) {
         src={lhtstudioLogo}
         alt="LHT Studio"
         sx={{
-          width: { xs: 108, sm: 170, md: 200 },
-          mb: { xs: 0.8, sm: 2.8, lg: 0 },
-          display: { xs: 'none', lg: 'block' },
-          alignSelf: { xs: 'center', lg: 'flex-start' },
+          width: desktopLayout ? desktopLogoWidth : { xs: 108, sm: 170, md: 200 },
+          mb: desktopLayout ? 0 : { xs: 0.8, sm: 2.8, lg: 0 },
+          display: desktopLayout ? 'block' : { xs: 'none', lg: 'block' },
+          alignSelf: desktopLayout ? 'flex-start' : { xs: 'center', lg: 'flex-start' },
         }}
       />
-      <Box sx={{ display: { xs: 'none', lg: 'block' } }}>
-        <BetaBubble onSelect={onSelect} />
+      <Box sx={{ display: desktopLayout ? 'block' : { xs: 'none', lg: 'block' } }}>
+        <BetaBubble onSelect={onSelect} densityScale={densityScale} />
       </Box>
       <Box
         sx={{
           ...centeredContentSx,
-          maxWidth: { xs: '100%', lg: 1500, xl: 1640 },
+          maxWidth: desktopLayout ? desktopContentMaxWidth : { xs: '100%', lg: 1500, xl: 1640 },
           flex: 1,
-          mt: { xs: 0, lg: 3.2 },
-          display: { xs: 'flex', lg: 'grid' },
+          mt: desktopLayout ? Math.max(0.6, 2.6 * densityScale) : { xs: 0, lg: 3.2 },
+          display: desktopLayout ? 'grid' : { xs: 'flex', lg: 'grid' },
           flexDirection: { xs: 'column', lg: 'row' },
-          gridTemplateColumns: {
-            lg: 'minmax(0, 1.1fr) minmax(380px, 0.82fr)',
-            xl: 'minmax(0, 1.14fr) minmax(420px, 0.86fr)',
+          gridTemplateColumns: desktopLayout ? `minmax(0, 1fr) minmax(${desktopRightColumn}px, 0.72fr)` : {
+            lg: 'minmax(520px, 0.95fr) minmax(420px, 0.72fr)',
+            xl: 'minmax(600px, 0.98fr) minmax(440px, 0.72fr)',
           },
           alignItems: 'center',
-          justifyContent: { xs: 'space-between', lg: 'initial' },
-          gap: { xs: 0, lg: 4.5, xl: 6.2 },
-          minHeight: { lg: 'calc(100svh - 158px)' },
+          justifyContent: desktopLayout ? 'initial' : { xs: 'flex-start', lg: 'initial' },
+          gap: desktopLayout ? Math.max(1.1, 2.4 * densityScale) : { xs: 0.2, sm: 0.4, lg: 2.4, xl: 3.2 },
+          minHeight: desktopLayout ? 0 : { lg: 'calc(100svh - 158px)' },
         }}
       >
-        <Box sx={{ width: '100%', display: { xs: 'flex', lg: 'none' }, justifyContent: 'center' }}>
+        <Box sx={{ width: '100%', display: desktopLayout ? 'none' : { xs: 'flex', lg: 'none' }, justifyContent: 'center' }}>
           <BetaBubble onSelect={onSelect} compact banner />
         </Box>
         <Box
           sx={{
             minWidth: 0,
             width: '100%',
-            px: { xs: 1.8, sm: 3.4, lg: 0 },
-            mt: { xs: 0.85, sm: 2.4, lg: 0 },
+            px: desktopLayout ? 0 : { xs: 1.8, sm: 3.4, lg: 0 },
+            mt: desktopLayout ? 0 : { xs: 0.85, sm: 2.4, lg: 0 },
             pointerEvents: 'none',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: { xs: 'center', lg: 'flex-start' },
+            justifyContent: desktopLayout ? 'flex-end' : { xs: 'center', lg: 'flex-end' },
           }}
         >
           <Box
@@ -562,9 +776,11 @@ export function HomeSection({ onSelect }) {
             src={heroShot}
             alt="KIGTTS 视觉主体"
             sx={{
-              width: { xs: 'auto', sm: '100%' },
-              maxWidth: { xs: '100%', sm: '100%', lg: 'min(58vw, 980px)', xl: 'min(56vw, 1080px)' },
-              maxHeight: { xs: 158, sm: 280, md: 360, lg: 'none' },
+              width: desktopLayout ? desktopHeroWidth : { xs: 'clamp(250px, 78vw, 340px)', sm: 'min(72vw, 520px)', md: 'min(68vw, 620px)', lg: 'min(48vw, 800px)', xl: 'min(46vw, 880px)' },
+              height: 'auto',
+              aspectRatio: '1 / 1',
+              objectFit: 'contain',
+              maxWidth: '100%',
               display: 'block',
               marginInline: 'auto',
               filter: 'drop-shadow(0 18px 34px rgba(0,0,0,0.26))',
@@ -575,12 +791,13 @@ export function HomeSection({ onSelect }) {
           sx={{
             minWidth: 0,
             width: '100%',
-            px: { xs: 1.8, sm: 3.4, lg: 0 },
+            px: desktopLayout ? 0 : { xs: 1.8, sm: 3.4, lg: 0 },
+            mt: shortDpiDesktop ? 2 : 0,
             display: 'flex',
-            justifyContent: { xs: 'center', lg: 'flex-end' },
+            justifyContent: desktopLayout ? 'flex-start' : { xs: 'center', lg: 'flex-start' },
           }}
         >
-          <HomeRightBlock onSelect={onSelect} compact />
+          <HomeRightBlock onSelect={onSelect} compact desktopLayout={desktopLayout} densityScale={densityScale} />
         </Box>
       </Box>
     </Box>
@@ -588,118 +805,1166 @@ export function HomeSection({ onSelect }) {
 }
 
 export function AboutSection() {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const currentFeature = featureSlides[activeSlide];
+  const slideNumber = String(activeSlide + 1).padStart(2, '0');
+  const totalSlides = String(featureSlides.length).padStart(2, '0');
+  const detailRows = [
+    ['模块', currentFeature.eyebrow.split('/')[1]?.trim() ?? '功能'],
+    ['场景', currentFeature.bullets[0]],
+    ['输入', currentFeature.bullets[1]],
+    ['输出', currentFeature.bullets[2]],
+  ];
+  const selectFeature = (index) => {
+    setDetailsOpen(false);
+    setActiveSlide(index);
+  };
+  const goToFeature = (offset) => {
+    setDetailsOpen(false);
+    setActiveSlide((current) => (current + offset + featureSlides.length) % featureSlides.length);
+  };
+
   return (
     <Box
       sx={{
         ...centeredSectionSx,
-        px: { xs: 1.8, sm: 3.6, lg: 6.4 },
-        py: { xs: 2, sm: 3.2, lg: 5.4 },
+        height: '100%',
+        alignItems: 'stretch',
+        px: { xs: 0.8, sm: 1.5, lg: 3.4, xl: 5.2 },
+        py: { xs: 0.8, sm: 1.2, lg: 2.4 },
+        overflow: 'hidden',
       }}
     >
       <Box
         sx={{
           width: '100%',
-          maxWidth: { xs: '100%', md: 820, lg: 920, xl: 980 },
+          maxWidth: { xs: '100%', lg: 1390, xl: 1540 },
           mx: 'auto',
-          minHeight: { xs: 330, sm: 420, md: 520, lg: 560 },
-          ...md2Surface,
-          boxShadow: md2RaisedShadow,
-          px: { xs: 2.4, sm: 3.2, md: 5.6 },
-          pt: { xs: 4.8, sm: 7, md: 8.5 },
+          display: 'flex',
+          alignItems: 'stretch',
+          minHeight: 0,
         }}
       >
-        <Typography
+        <Box
           sx={{
-            color: alpha('#ffffff', 0.82),
-            fontSize: '0.9rem',
-            letterSpacing: '0.18em',
-            textAlign: 'center',
+            width: '100%',
+            minHeight: 0,
+            display: 'grid',
+            gridTemplateColumns: { xs: '1fr', md: '78px minmax(0, 1.18fr) minmax(330px, 0.82fr)' },
+            gridTemplateRows: { xs: 'minmax(0, 1fr) auto', md: '1fr' },
+            gap: { xs: 0.8, sm: 1, md: 1.4, xl: 1.8 },
+            alignItems: 'stretch',
+            '@media (orientation: landscape)': {
+              gridTemplateColumns: '78px minmax(0, 1fr)',
+              gridTemplateRows: '1fr',
+              gap: 1.2,
+            },
+            '@media (orientation: landscape) and (max-height: 620px)': {
+              gridTemplateColumns: '62px minmax(0, 1fr)',
+              gap: 0.8,
+            },
           }}
         >
-          ABOUT
-        </Typography>
-        <Typography
-          sx={{
-            mt: { xs: 2.6, sm: 3.6, md: 5.8 },
-            textAlign: 'center',
-            color: '#f5f7f7',
-            fontSize: { xs: '1.28rem', sm: '1.55rem', md: '2.05rem' },
-            fontWeight: 400,
-            letterSpacing: '0.01em',
-          }}
-        >
-          这是MD2风格的介绍页面，随便加些什么
-        </Typography>
+          <Stack
+            direction={{ xs: 'row', md: 'column' }}
+            spacing={{ xs: 0.65, md: 0.85 }}
+            sx={{
+              gridColumn: { xs: '1', md: '1' },
+              gridRow: { xs: '2', md: '1' },
+              minWidth: 0,
+              minHeight: 0,
+              p: { xs: 0.65, md: 0.85 },
+              alignItems: 'center',
+              justifyContent: { xs: 'flex-start', md: 'center' },
+              overflowX: { xs: 'auto', md: 'hidden' },
+              overflowY: 'hidden',
+              backgroundColor: '#2f3132',
+              borderRadius: 0,
+              border: `1px solid ${alpha('#ffffff', 0.05)}`,
+              boxShadow: md2SurfaceShadow,
+              scrollbarWidth: 'thin',
+              '@media (orientation: landscape)': {
+                gridColumn: '1',
+                gridRow: '1',
+                flexDirection: 'column',
+                overflowX: 'hidden',
+                overflowY: 'hidden',
+                justifyContent: 'center',
+              },
+            }}
+          >
+            {featureSlides.map((feature, index) => {
+              const selected = activeSlide === index;
+
+              return (
+                <Button
+                  key={feature.eyebrow}
+                  title={feature.label}
+                  onClick={() => selectFeature(index)}
+                  sx={{
+                    flexShrink: 0,
+                    width: { xs: 66, sm: 72, md: 62 },
+                    minWidth: { xs: 66, sm: 72, md: 62 },
+                    height: { xs: 54, sm: 60, md: 64 },
+                    justifyContent: 'center',
+                    px: 0,
+                    py: 0,
+                    borderRadius: 0.8,
+                    color: selected ? '#f5fbfb' : alpha('#ffffff', 0.62),
+                    backgroundColor: selected ? alpha('#038387', 0.34) : alpha('#0a1415', 0.34),
+                    border: `1px solid ${selected ? alpha('#8ff5f7', 0.42) : 'transparent'}`,
+                    boxShadow: selected ? '0 2px 5px rgba(0,0,0,0.3)' : 'none',
+                    transform: selected ? 'translate3d(0, -2px, 0)' : 'translate3d(0, 0, 0)',
+                    transition: 'transform 180ms ease, background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease',
+                    '@media (orientation: landscape)': {
+                      width: 58,
+                      minWidth: 58,
+                      height: 58,
+                    },
+                    '@media (orientation: landscape) and (max-height: 620px)': {
+                      width: 46,
+                      minWidth: 46,
+                      height: 46,
+                    },
+                    '&:hover': {
+                      backgroundColor: selected ? alpha('#038387', 0.36) : alpha('#ffffff', 0.05),
+                    },
+                  }}
+                >
+                  <SymbolIcon
+                    name={feature.icon}
+                    size={27}
+                    sx={{
+                      color: selected ? '#8ff5f7' : alpha('#ffffff', 0.76),
+                      flexShrink: 0,
+                    }}
+                  />
+                </Button>
+              );
+            })}
+          </Stack>
+
+          <Box
+            sx={{
+              position: 'relative',
+              gridColumn: { xs: '1', md: '2' },
+              gridRow: { xs: '1', md: '1' },
+              minHeight: 0,
+              display: 'grid',
+              alignItems: { xs: 'start', md: 'center' },
+              overflow: 'hidden',
+              borderRadius: 1,
+              background: `
+                linear-gradient(120deg, ${alpha('#038387', 0.18)} 0%, transparent 36%, ${alpha('#038387', 0.08)} 100%),
+                repeating-linear-gradient(135deg, ${alpha('#ffffff', 0.035)} 0 1px, transparent 1px 18px),
+                ${alpha('#051112', 0.86)}
+              `,
+              border: `1px solid ${alpha('#ffffff', 0.06)}`,
+              boxShadow: md2RaisedShadow,
+              '&::before': {
+                content: '""',
+                position: 'absolute',
+                inset: { xs: 'auto -16% -20% -18%', md: 'auto -10% -24% -18%' },
+                height: { xs: 150, md: 240 },
+                background: `radial-gradient(circle, ${alpha('#038387', 0.34)}, transparent 68%)`,
+                pointerEvents: 'none',
+              },
+              '&::after': {
+                content: '""',
+                display: { xs: 'block', md: 'none' },
+                position: 'absolute',
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 2,
+                height: '34%',
+                background: `linear-gradient(180deg, ${alpha('#051112', 0)} 0%, ${alpha('#051112', 0.72)} 62%, ${alpha('#051112', 0.96)} 100%)`,
+                pointerEvents: 'none',
+                '@media (orientation: landscape)': {
+                  display: 'none',
+                },
+              },
+              '@media (orientation: landscape)': {
+                gridColumn: '2',
+                gridRow: '1',
+                alignItems: 'center',
+              },
+            }}
+          >
+            <Box
+              component="img"
+              src={logoWhite}
+              alt=""
+              aria-hidden="true"
+              sx={{
+                display: 'none',
+                pointerEvents: 'none',
+                userSelect: 'none',
+                '@media (orientation: landscape)': {
+                  display: 'block',
+                  position: 'absolute',
+                  zIndex: 0,
+                  left: '7%',
+                  top: '35%',
+                  width: 'min(78%, 980px)',
+                  opacity: 0.058,
+                  transform: 'translateY(-50%)',
+                  filter: 'none',
+                },
+                '@media (orientation: landscape) and (max-height: 620px)': {
+                  left: '6%',
+                  top: '32%',
+                  width: 'min(68%, 620px)',
+                },
+              }}
+            />
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={1}
+              sx={{
+                position: 'absolute',
+                top: { xs: 8, sm: 12, md: 16 },
+                left: { xs: 8, sm: 12, md: 16 },
+                zIndex: 2,
+                px: 1.1,
+                py: 0.65,
+                backgroundColor: alpha('#0a1415', 0.72),
+                border: `1px solid ${alpha('#ffffff', 0.08)}`,
+                borderRadius: 0.6,
+                boxShadow: '0 1px 3px rgba(0,0,0,0.24)',
+              }}
+            >
+              <Typography sx={{ color: '#f5fbfb', fontSize: { xs: '0.72rem', md: '0.78rem' }, fontWeight: 700 }}>
+                REC
+              </Typography>
+              <Divider orientation="vertical" flexItem sx={{ borderColor: alpha('#ffffff', 0.2) }} />
+              <Typography sx={{ color: alpha('#ffffff', 0.62), fontSize: { xs: '0.68rem', md: '0.72rem' }, letterSpacing: '0.1em' }}>
+                {slideNumber} / {totalSlides}
+              </Typography>
+            </Stack>
+
+            <Box
+              key={currentFeature.imageAlt}
+              component="img"
+              src={currentFeature.image}
+              alt={currentFeature.imageAlt}
+              sx={{
+                position: 'relative',
+                zIndex: 1,
+                width: '100%',
+                height: { xs: 'auto', md: '100%' },
+                minHeight: { xs: 'auto', md: 0 },
+                maxHeight: { xs: 'none', md: 'none' },
+                objectFit: 'contain',
+                objectPosition: { xs: 'top center', md: 'center' },
+                p: { xs: 0.8, sm: 1.2, md: 4.8, xl: 5.8 },
+                filter: 'drop-shadow(0 18px 28px rgba(0,0,0,0.24)) saturate(0.98)',
+                animation: `${featureVisualEnter} 430ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+                '@media (orientation: landscape)': {
+                  width: 'min(52%, 620px)',
+                  height: 'min(calc(100% - clamp(110px, 14vh, 150px)), 840px)',
+                  justifySelf: 'end',
+                  alignSelf: 'start',
+                  objectPosition: 'right center',
+                  mt: 'clamp(28px, 4vh, 48px)',
+                  p: '0 clamp(22px, 5vw, 76px) 0 0',
+                },
+                '@media (orientation: landscape) and (max-height: 620px)': {
+                  width: 'min(46%, 390px)',
+                  height: 'calc(100% - 42px)',
+                  mt: '10px',
+                  p: '0 20px 0 0',
+                },
+              }}
+            />
+
+            {currentFeature.secondaryImage ? (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  zIndex: 3,
+                  right: { xs: 10, sm: 14, md: 22 },
+                  bottom: { xs: 10, sm: 14, md: 22 },
+                  width: { xs: 118, sm: 156, md: 188 },
+                  aspectRatio: '16 / 10',
+                  overflow: 'hidden',
+                  borderRadius: 0.8,
+                  backgroundColor: '#151819',
+                  border: `1px solid ${alpha('#8ff5f7', 0.38)}`,
+                  boxShadow: '0 8px 20px rgba(0,0,0,0.36)',
+                }}
+              >
+                <Box
+                  component="img"
+                  src={currentFeature.secondaryImage}
+                  alt={currentFeature.secondaryImageAlt}
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'block',
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                  }}
+                />
+              </Box>
+            ) : null}
+          </Box>
+
+          <Box
+            sx={{
+              gridColumn: { xs: '1', md: '3' },
+              gridRow: { xs: '1', md: '1' },
+              alignSelf: { xs: 'end', md: 'stretch' },
+              zIndex: { xs: 4, md: 1 },
+              minHeight: 0,
+              display: 'grid',
+              gridTemplateRows: { xs: 'auto auto auto', md: 'auto auto minmax(0, 1fr) auto' },
+              gap: { xs: 0.55, sm: 0.7, md: 1.2 },
+              mx: { xs: 0.75, sm: 1.1, md: 0 },
+              mb: { xs: 0.75, sm: 1.1, md: 0 },
+              animation: { xs: `${featureOverlayEnter} 360ms cubic-bezier(0.2, 0.8, 0.2, 1)`, md: 'none' },
+              '@media (orientation: landscape)': {
+                gridColumn: '2',
+                gridRow: '1',
+                alignSelf: 'end',
+                justifySelf: 'start',
+                width: 'min(52%, 630px)',
+                maxHeight: 'calc(100% - 132px)',
+                mx: 'clamp(14px, 3vw, 42px)',
+                mb: 'clamp(76px, 12vh, 124px)',
+                zIndex: 4,
+                gridTemplateRows: 'auto auto minmax(0, auto) auto auto',
+                gap: 'clamp(6px, 1vh, 10px)',
+                animation: `${featureOverlayEnter} 360ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+              },
+              '@media (orientation: landscape) and (max-height: 620px)': {
+                width: 'min(54%, 460px)',
+                maxHeight: 'calc(100% - 72px)',
+                mx: 'clamp(10px, 2.4vw, 28px)',
+                mb: 'clamp(12px, 4vh, 32px)',
+                gap: 0.55,
+              },
+            }}
+          >
+            <Box
+              key={`${currentFeature.eyebrow}-title`}
+              sx={{
+                p: { xs: 1, sm: 1.25, md: 1.8 },
+                ...md2Surface,
+                boxShadow: md2RaisedShadow,
+                overflow: 'hidden',
+                backgroundColor: { xs: alpha('#2f3132', 0.9), md: '#2f3132' },
+                backdropFilter: { xs: 'blur(14px)', md: 'none' },
+                animation: `${featurePanelEnter} 360ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+                '@media (orientation: landscape)': {
+                  p: 'clamp(8px, 1.2vh, 12px)',
+                  backgroundColor: alpha('#2f3132', 0.9),
+                  backdropFilter: 'blur(14px)',
+                },
+                '@media (orientation: landscape) and (max-height: 620px)': {
+                  p: 1,
+                },
+              }}
+            >
+              <Stack direction="row" spacing={{ xs: 1, md: 1.25 }} alignItems="center">
+                <Box
+                  sx={{
+                    width: { xs: 40, md: 48 },
+                    height: { xs: 40, md: 48 },
+                    display: 'grid',
+                    placeItems: 'center',
+                    borderRadius: 0.8,
+                    backgroundColor: '#038387',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.28)',
+                    flexShrink: 0,
+                  }}
+                >
+                  <SymbolIcon name={currentFeature.icon} size={27} sx={{ color: '#ffffff' }} />
+                </Box>
+                <Box sx={{ minWidth: 0 }}>
+                  <Typography sx={{ color: alpha('#ffffff', 0.56), fontSize: { xs: '0.68rem', sm: '0.75rem' }, letterSpacing: '0.14em' }}>
+                    KIGTTS FEATURE / {slideNumber}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      mt: 0.35,
+                      color: '#f5f7f7',
+                      fontSize: { xs: '1.06rem', sm: '1.38rem', md: '1.9rem', xl: '2.16rem' },
+                      lineHeight: 1.05,
+                      fontWeight: 600,
+                      letterSpacing: '-0.02em',
+                      '@media (orientation: landscape)': {
+                        fontSize: 'clamp(1.08rem, 2.8vh, 1.58rem)',
+                      },
+                      '@media (orientation: landscape) and (max-height: 620px)': {
+                        fontSize: 'clamp(0.92rem, 4vh, 1.35rem)',
+                      },
+                    }}
+                  >
+                    {currentFeature.title}
+                  </Typography>
+                </Box>
+              </Stack>
+              <Stack direction="row" spacing={0.5} sx={{ mt: { xs: 1, md: 1.4 } }}>
+                <Box sx={{ height: 3, flex: 1.2, backgroundColor: '#038387' }} />
+                <Box sx={{ height: 3, flex: 0.45, backgroundColor: alpha('#ffffff', 0.62) }} />
+                <Box sx={{ height: 3, flex: 0.7, backgroundColor: alpha('#77d7d9', 0.72) }} />
+              </Stack>
+            </Box>
+
+            <Box
+              sx={{
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(4, 1fr)', md: '1fr 1fr' },
+                gap: { xs: 0.55, sm: 0.7 },
+                animation: `${featurePanelEnter} 420ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+                '@media (orientation: landscape)': {
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: 'clamp(4px, 0.7vh, 7px)',
+                },
+              }}
+            >
+              {detailRows.map(([label, value]) => (
+                <Box
+                  key={label}
+                  sx={{
+                    minWidth: 0,
+                    display: 'grid',
+                    gridTemplateColumns: 'auto minmax(0, 1fr)',
+                    alignItems: 'center',
+                    backgroundColor: alpha('#ffffff', 0.08),
+                    border: `1px solid ${alpha('#ffffff', 0.06)}`,
+                    borderRadius: 0.5,
+                    overflow: 'hidden',
+                    backdropFilter: { xs: 'blur(12px)', md: 'none' },
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      px: 0.85,
+                      py: 0.55,
+                      color: '#ffffff',
+                      backgroundColor: '#038387',
+                      fontSize: { xs: '0.68rem', sm: '0.72rem' },
+                    fontWeight: 700,
+                    lineHeight: 1.2,
+                      '@media (orientation: landscape)': {
+                        px: 0.7,
+                        py: 0.38,
+                        fontSize: '0.66rem',
+                      },
+                  }}
+                  >
+                    {label}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      px: 0.85,
+                      color: alpha('#ffffff', 0.78),
+                      fontSize: { xs: '0.68rem', sm: '0.76rem', md: '0.8rem' },
+                      lineHeight: 1.25,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      '@media (orientation: landscape)': {
+                        fontSize: '0.68rem',
+                      },
+                    }}
+                  >
+                    {value}
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
+
+            <Button
+              onClick={() => setDetailsOpen((open) => !open)}
+              endIcon={<SymbolIcon name={detailsOpen ? 'expand_less' : 'expand_more'} size={20} />}
+              sx={{
+                display: { xs: 'inline-flex', md: 'none' },
+                minHeight: 34,
+                justifyContent: 'space-between',
+                px: 1.15,
+                borderRadius: 0.5,
+                color: '#f5fbfb',
+                backgroundColor: alpha('#038387', 0.82),
+                boxShadow: '0 2px 5px rgba(0,0,0,0.28)',
+                '&:hover': {
+                  backgroundColor: alpha('#04959a', 0.9),
+                },
+                '@media (orientation: landscape)': {
+                  display: 'none',
+                },
+              }}
+            >
+              {detailsOpen ? '收起详情' : '展开详情'}
+            </Button>
+
+            <Box
+              sx={{
+                minHeight: 0,
+                p: { xs: 1.15, sm: 1.45, md: 1.7 },
+                ...md2Surface,
+                boxShadow: md2SurfaceShadow,
+                overflow: 'hidden',
+                display: { xs: 'none', md: 'block' },
+                animation: `${featurePanelEnter} 460ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+                '@media (orientation: landscape)': {
+                  display: 'block',
+                  p: 'clamp(8px, 1.2vh, 12px)',
+                  backgroundColor: alpha('#2f3132', 0.88),
+                  backdropFilter: 'blur(14px)',
+                },
+                '@media (orientation: landscape) and (max-height: 620px)': {
+                  p: 1,
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  color: alpha('#ffffff', 0.54),
+                  fontSize: { xs: '0.68rem', sm: '0.74rem' },
+                  letterSpacing: '0.16em',
+                  fontWeight: 700,
+                }}
+              >
+                CONTENT
+              </Typography>
+              <Typography
+                sx={{
+                  mt: { xs: 0.7, md: 1 },
+                  color: alpha('#ffffff', 0.78),
+                  lineHeight: { xs: 1.5, sm: 1.65, md: 1.72 },
+                  fontSize: { xs: '0.8rem', sm: '0.92rem', md: '0.98rem' },
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: { xs: 3, sm: 4, md: 6 },
+                  overflow: 'hidden',
+                  '@media (orientation: landscape)': {
+                    WebkitLineClamp: 3,
+                    mt: 0.6,
+                    fontSize: 'clamp(0.76rem, 1.5vh, 0.86rem)',
+                    lineHeight: 1.42,
+                  },
+                  '@media (orientation: landscape) and (max-height: 620px)': {
+                    WebkitLineClamp: 3,
+                    fontSize: '0.72rem',
+                    lineHeight: 1.42,
+                  },
+                }}
+              >
+                {currentFeature.summary}
+              </Typography>
+              <Divider
+                sx={{
+                  my: { xs: 1, md: 1.25 },
+                  borderColor: alpha('#ffffff', 0.08),
+                  '@media (orientation: landscape)': {
+                    my: 0.7,
+                  },
+                }}
+              />
+              <Stack
+                spacing={{ xs: 0.45, sm: 0.6 }}
+                sx={{
+                  '@media (orientation: landscape)': {
+                    gap: 0.25,
+                  },
+                }}
+              >
+                {currentFeature.bullets.map((item, index) => (
+                  <Stack key={item} direction="row" spacing={0.8} alignItems="center">
+                    <Typography
+                      sx={{
+                        width: 28,
+                        color: '#8ff5f7',
+                        fontSize: { xs: '0.68rem', sm: '0.76rem' },
+                        fontWeight: 700,
+                      }}
+                    >
+                      0{index + 1}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        minWidth: 0,
+                        color: alpha('#ffffff', 0.74),
+                        fontSize: { xs: '0.74rem', sm: '0.84rem', md: '0.9rem' },
+                        lineHeight: 1.38,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        '@media (orientation: landscape)': {
+                          fontSize: '0.76rem',
+                          lineHeight: 1.22,
+                        },
+                      }}
+                    >
+                      {item}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+
+            <Collapse
+              in={detailsOpen}
+              timeout={260}
+              sx={{
+                display: { xs: 'block', md: 'none' },
+                '@media (orientation: landscape)': {
+                  display: 'none',
+                },
+              }}
+            >
+              <Stack spacing={0.55}>
+                <Box
+                  sx={{
+                    minHeight: 0,
+                    p: { xs: 1.05, sm: 1.25 },
+                    ...md2Surface,
+                    backgroundColor: alpha('#2f3132', 0.92),
+                    boxShadow: md2SurfaceShadow,
+                    overflow: 'hidden',
+                    backdropFilter: 'blur(14px)',
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      color: alpha('#ffffff', 0.54),
+                      fontSize: { xs: '0.66rem', sm: '0.72rem' },
+                      letterSpacing: '0.16em',
+                      fontWeight: 700,
+                    }}
+                  >
+                    CONTENT
+                  </Typography>
+                  <Typography
+                    sx={{
+                      mt: 0.65,
+                      color: alpha('#ffffff', 0.78),
+                      lineHeight: 1.5,
+                      fontSize: { xs: '0.76rem', sm: '0.86rem' },
+                    }}
+                  >
+                    {currentFeature.summary}
+                  </Typography>
+                  <Divider sx={{ my: 0.9, borderColor: alpha('#ffffff', 0.08) }} />
+                  <Stack spacing={0.4}>
+                    {currentFeature.bullets.map((item, index) => (
+                      <Stack key={item} direction="row" spacing={0.8} alignItems="center">
+                        <Typography sx={{ width: 28, color: '#8ff5f7', fontSize: '0.68rem', fontWeight: 700 }}>
+                          0{index + 1}
+                        </Typography>
+                        <Typography
+                          sx={{
+                            minWidth: 0,
+                            color: alpha('#ffffff', 0.74),
+                            fontSize: { xs: '0.72rem', sm: '0.8rem' },
+                            lineHeight: 1.35,
+                          }}
+                        >
+                          {item}
+                        </Typography>
+                      </Stack>
+                    ))}
+                  </Stack>
+                </Box>
+                <Box
+                  sx={{
+                    p: { xs: 0.95, sm: 1.1 },
+                    backgroundColor: alpha('#038387', 0.74),
+                    border: `1px solid ${alpha('#8ff5f7', 0.18)}`,
+                    borderLeft: `3px solid ${alpha('#8ff5f7', 0.82)}`,
+                    borderRadius: 0.5,
+                    backdropFilter: 'blur(12px)',
+                  }}
+                >
+                  <Typography sx={{ color: alpha('#ffffff', 0.84), lineHeight: 1.42, fontSize: { xs: '0.7rem', sm: '0.78rem' } }}>
+                    {currentFeature.note}
+                  </Typography>
+                </Box>
+              </Stack>
+            </Collapse>
+
+            <Box
+              sx={{
+                p: { xs: 1, sm: 1.2, md: 1.35 },
+                backgroundColor: alpha('#038387', 0.16),
+                border: `1px solid ${alpha('#8ff5f7', 0.16)}`,
+                borderLeft: `3px solid ${alpha('#8ff5f7', 0.76)}`,
+                borderRadius: 0.5,
+                display: { xs: 'none', md: 'block' },
+                animation: `${featurePanelEnter} 500ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+                '@media (orientation: landscape)': {
+                  display: 'block',
+                  p: 'clamp(7px, 1vh, 10px) clamp(10px, 1.4vw, 16px)',
+                  backgroundColor: alpha('#038387', 0.36),
+                  backdropFilter: 'blur(12px)',
+                },
+                '@media (orientation: landscape) and (max-height: 620px)': {
+                  display: 'none',
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  color: alpha('#ffffff', 0.76),
+                  lineHeight: 1.45,
+                  fontSize: { xs: '0.72rem', sm: '0.82rem', md: '0.88rem' },
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: { xs: 2, md: 3 },
+                  overflow: 'hidden',
+                  '@media (orientation: landscape)': {
+                    fontSize: '0.74rem',
+                    lineHeight: 1.25,
+                    WebkitLineClamp: 1,
+                  },
+                }}
+              >
+                {currentFeature.note}
+              </Typography>
+            </Box>
+
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={1}
+              sx={{
+                '@media (orientation: landscape)': {
+                  minHeight: 30,
+                },
+              }}
+            >
+              <Button
+                onClick={() => goToFeature(-1)}
+                startIcon={<SymbolIcon name="chevron_left" size={22} />}
+                sx={{
+                  ...md2Button,
+                  minHeight: { xs: 34, sm: 38 },
+                  px: { xs: 1.15, sm: 1.7 },
+                  fontSize: { xs: '0.72rem', sm: '0.84rem' },
+                  borderRadius: 0.7,
+                  '@media (orientation: landscape)': {
+                    minHeight: 30,
+                    px: 1.2,
+                    fontSize: '0.72rem',
+                  },
+                }}
+              >
+                上一项
+              </Button>
+              <Stack direction="row" spacing={0.55} alignItems="center" sx={{ flexShrink: 0 }}>
+                {featureSlides.map((feature, index) => (
+                  <Box
+                    key={feature.eyebrow}
+                    component="button"
+                    type="button"
+                    aria-label={`切换到第 ${index + 1} 项`}
+                    onClick={() => selectFeature(index)}
+                    sx={{
+                      width: activeSlide === index ? 24 : 8,
+                      height: 8,
+                      p: 0,
+                      border: 0,
+                      borderRadius: 999,
+                      cursor: 'pointer',
+                      backgroundColor: activeSlide === index ? '#8ff5f7' : alpha('#ffffff', 0.3),
+                      transition: 'width 180ms ease, background-color 180ms ease',
+                    }}
+                  />
+                ))}
+              </Stack>
+              <Button
+                onClick={() => goToFeature(1)}
+                endIcon={<SymbolIcon name="chevron_right" size={22} />}
+                sx={{
+                  ...md2Button,
+                  minHeight: { xs: 34, sm: 38 },
+                  px: { xs: 1.15, sm: 1.7 },
+                  fontSize: { xs: '0.72rem', sm: '0.84rem' },
+                  borderRadius: 0.7,
+                  justifyContent: 'center',
+                  '@media (orientation: landscape)': {
+                    minHeight: 30,
+                    px: 1.2,
+                    fontSize: '0.72rem',
+                  },
+                }}
+              >
+                下一项
+              </Button>
+            </Stack>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
 }
 
 export function DownloadSection() {
+  const [activeTabId, setActiveTabId] = useState(downloadTabs[0].id);
+  const activeIndex = downloadTabs.findIndex((item) => item.id === activeTabId);
+  const currentDownload = downloadTabs[activeIndex] ?? downloadTabs[0];
+
+  const goToDownloadTab = (offset) => {
+    const nextIndex = (activeIndex + offset + downloadTabs.length) % downloadTabs.length;
+    setActiveTabId(downloadTabs[nextIndex].id);
+  };
+
   return (
     <Box
       sx={{
         ...centeredSectionSx,
-        px: { xs: 1.8, sm: 3.6, lg: 5.8 },
-        py: { xs: 2, sm: 3.2, lg: 4.4 },
+        px: { xs: 1.2, sm: 2.8, lg: 5.8 },
+        py: { xs: 1.4, sm: 3.2, lg: 4.4 },
       }}
     >
-      <Box sx={{ ...centeredContentSx, maxWidth: { xs: '100%', lg: 1260, xl: 1380 } }}>
+      <Box sx={{ ...centeredContentSx, maxWidth: { xs: '100%', lg: 1180, xl: 1320 } }}>
         <Typography
           sx={{
             color: alpha('#ffffff', 0.82),
             fontSize: { xs: '0.78rem', sm: '0.9rem' },
             letterSpacing: '0.18em',
-            textAlign: { xs: 'center', lg: 'left' },
+            textAlign: 'center',
           }}
         >
           DOWNLOAD
         </Typography>
         <Typography
           sx={{
-            mt: { xs: 1, sm: 1.8 },
-            maxWidth: 680,
-            mx: { xs: 'auto', lg: 0 },
-            fontSize: { xs: '1.36rem', sm: '2rem', md: '2.7rem' },
+            mt: { xs: 0.8, sm: 1.4 },
+            maxWidth: 760,
+            mx: 'auto',
+            fontSize: { xs: '1.12rem', sm: '2rem', md: '2.55rem' },
             lineHeight: { xs: 1.18, sm: 1.1 },
             color: '#f5f7f7',
-            textAlign: { xs: 'center', lg: 'left' },
+            textAlign: 'center',
           }}
         >
-          下载区保持跟首页同一套块面逻辑，只把重点压到二维码和按钮入口。
+          按设备类型选择下载入口，真实链接集中在同一张翻页卡片里。
         </Typography>
-        <Grid container spacing={{ xs: 1.6, sm: 3 }} justifyContent="center" sx={{ mt: { xs: 1.7, sm: 3.2 } }}>
-          <Grid size={{ xs: 12, lg: 7.2 }}>
-            <Box
+
+        <Box
+          sx={{
+            mt: { xs: 1.6, sm: 3 },
+            mx: 'auto',
+            ...md2Surface,
+            maxWidth: 1040,
+            overflow: 'hidden',
+            boxShadow: md2RaisedShadow,
+            background: `
+              linear-gradient(135deg, ${alpha('#038387', 0.22)} 0%, transparent 36%, ${alpha('#038387', 0.1)} 100%),
+              repeating-linear-gradient(135deg, ${alpha('#ffffff', 0.035)} 0 1px, transparent 1px 18px),
+              ${alpha('#2f3132', 0.96)}
+            `,
+          }}
+        >
+          <Box
+            role="tablist"
+            aria-label="下载类型"
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              backgroundColor: alpha('#0a1415', 0.52),
+              borderBottom: `1px solid ${alpha('#ffffff', 0.08)}`,
+            }}
+          >
+            {downloadTabs.map((tab) => {
+              const selected = tab.id === currentDownload.id;
+
+              return (
+                <Button
+                  key={tab.id}
+                  role="tab"
+                  aria-selected={selected}
+                  onClick={() => setActiveTabId(tab.id)}
+                  startIcon={<SymbolIcon name={tab.icon} size={23} />}
+                  sx={{
+                    minHeight: { xs: 44, sm: 58 },
+                    borderRadius: 0,
+                    justifyContent: 'center',
+                    color: selected ? '#ffffff' : alpha('#ffffff', 0.66),
+                    backgroundColor: selected ? alpha('#038387', 0.34) : 'transparent',
+                    borderRight: `1px solid ${alpha('#ffffff', 0.06)}`,
+                    fontWeight: selected ? 700 : 500,
+                    fontSize: { xs: '0.72rem', sm: '0.875rem' },
+                    px: { xs: 0.3, sm: 1.2 },
+                    '&:last-of-type': {
+                      borderRight: 'none',
+                    },
+                    '&:hover': {
+                      backgroundColor: selected ? alpha('#038387', 0.38) : alpha('#ffffff', 0.05),
+                    },
+                  }}
+                >
+                  {tab.label}
+                </Button>
+              );
+            })}
+          </Box>
+
+          <Grid
+            key={currentDownload.id}
+            container
+            spacing={{ xs: 1.4, md: 2.4 }}
+            sx={{
+              p: { xs: 1, sm: 2.2, md: 3 },
+              minHeight: { xs: 'auto', sm: 420, md: 430 },
+              animation: `${featurePanelEnter} 360ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
+            }}
+          >
+            <Grid size={{ xs: 12, md: 7.2 }}>
+              <Stack spacing={{ xs: 1.25, sm: 1.8 }} sx={{ height: '100%' }}>
+                <Box
+                  sx={{
+                    p: { xs: 1, sm: 2.1, md: 2.4 },
+                    backgroundColor: alpha('#0a1415', 0.5),
+                    border: `1px solid ${alpha('#ffffff', 0.07)}`,
+                    borderRadius: 0.7,
+                    boxShadow: md2SurfaceShadow,
+                  }}
+                >
+                  <Stack direction="row" spacing={1.25} alignItems="center">
+                    <Box
+                      sx={{
+                        width: { xs: 40, sm: 52 },
+                        height: { xs: 40, sm: 52 },
+                        display: 'grid',
+                        placeItems: 'center',
+                        borderRadius: 0.7,
+                        backgroundColor: currentDownload.id === 'beta' ? alpha('#ffffff', 0.13) : '#038387',
+                        boxShadow: '0 2px 5px rgba(0,0,0,0.28)',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <SymbolIcon name={currentDownload.icon} size={28} sx={{ color: '#ffffff' }} />
+                    </Box>
+                    <Box sx={{ minWidth: 0 }}>
+                      <Typography sx={{ color: alpha('#ffffff', 0.52), fontSize: { xs: '0.62rem', sm: '0.76rem' }, letterSpacing: '0.14em', fontWeight: 700 }}>
+                        {currentDownload.eyebrow}
+                      </Typography>
+                      <Typography sx={{ mt: 0.25, color: '#f5f7f7', fontSize: { xs: '1.24rem', sm: '2rem', md: '2.35rem' }, lineHeight: 1.04, fontWeight: 700 }}>
+                        {currentDownload.title}
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Box>
+
+                <Grid container spacing={{ xs: 0.7, sm: 1 }}>
+                  {currentDownload.meta.map(([label, value]) => (
+                    <Grid key={label} size={{ xs: 4, sm: 4 }}>
+                      <Box
+                        sx={{
+                          minHeight: { xs: 46, sm: 54 },
+                          p: { xs: 0.7, sm: 1.15 },
+                          backgroundColor: alpha('#ffffff', 0.07),
+                          border: `1px solid ${alpha('#ffffff', 0.06)}`,
+                          borderRadius: 0.5,
+                        }}
+                      >
+                        <Typography sx={{ color: '#8ff5f7', fontSize: { xs: '0.62rem', sm: '0.68rem' }, fontWeight: 700, letterSpacing: '0.08em' }}>
+                          {label}
+                        </Typography>
+                        <Typography sx={{ mt: 0.25, color: alpha('#ffffff', 0.78), fontSize: { xs: '0.72rem', sm: '0.9rem' }, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {value}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+
+                <Box
+                  sx={{
+                    flex: 1,
+                    minHeight: { xs: 124, sm: 154 },
+                    p: { xs: 1, sm: 1.8 },
+                    backgroundColor: alpha('#2f3132', 0.86),
+                    border: `1px solid ${alpha('#ffffff', 0.07)}`,
+                    borderRadius: 0.7,
+                    boxShadow: md2SurfaceShadow,
+                  }}
+                >
+                  <Typography sx={{ color: alpha('#ffffff', 0.52), fontSize: '0.72rem', letterSpacing: '0.16em', fontWeight: 700 }}>
+                    CONTENT
+                  </Typography>
+                  <Typography
+                    sx={{
+                      mt: 0.65,
+                      color: alpha('#ffffff', 0.8),
+                      fontSize: { xs: '0.78rem', sm: '0.98rem' },
+                      lineHeight: { xs: 1.45, sm: 1.68 },
+                      display: '-webkit-box',
+                      WebkitBoxOrient: 'vertical',
+                      WebkitLineClamp: { xs: 2, sm: 4 },
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {currentDownload.summary}
+                  </Typography>
+                  <Divider sx={{ my: { xs: 0.75, sm: 1.2 }, borderColor: alpha('#ffffff', 0.08) }} />
+                  <Stack spacing={{ xs: 0.3, sm: 0.55 }}>
+                    {currentDownload.bullets.map((item, index) => (
+                      <Stack key={item} direction="row" spacing={1} alignItems="center">
+                        <Typography sx={{ width: 28, color: '#8ff5f7', fontSize: { xs: '0.68rem', sm: '0.76rem' }, fontWeight: 700 }}>
+                          0{index + 1}
+                        </Typography>
+                        <Typography sx={{ color: alpha('#ffffff', 0.74), fontSize: { xs: '0.7rem', sm: '0.88rem' }, lineHeight: { xs: 1.25, sm: 1.38 } }}>
+                          {item}
+                        </Typography>
+                      </Stack>
+                    ))}
+                  </Stack>
+                </Box>
+              </Stack>
+            </Grid>
+
+            <Grid size={{ xs: 12, md: 4.8 }}>
+              <Stack spacing={1.3} sx={{ height: '100%' }}>
+                <Box
+                  sx={{
+                    display: { xs: 'none', sm: 'grid' },
+                    flex: 1,
+                    minHeight: { xs: 156, md: 'auto' },
+                    p: { xs: 1.4, sm: 1.8, md: 2.2 },
+                    backgroundColor: alpha('#0a1415', 0.48),
+                    border: `1px solid ${alpha('#ffffff', 0.08)}`,
+                    borderRadius: 0.7,
+                    placeItems: 'center',
+                    textAlign: 'center',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    '&::before': {
+                      content: '""',
+                      position: 'absolute',
+                      inset: '-30%',
+                      background: `radial-gradient(circle, ${alpha('#038387', 0.34)}, transparent 62%)`,
+                      pointerEvents: 'none',
+                    },
+                  }}
+                >
+                  <Stack spacing={1} alignItems="center" sx={{ position: 'relative', zIndex: 1 }}>
+                    <SymbolIcon
+                      name={currentDownload.id === 'beta' ? 'pending' : currentDownload.id === 'android' ? 'apk_install' : 'folder_zip'}
+                      size={58}
+                      sx={{ color: currentDownload.id === 'beta' ? alpha('#ffffff', 0.52) : '#8ff5f7' }}
+                    />
+                    <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '1.2rem', sm: '1.42rem' }, fontWeight: 700 }}>
+                      {currentDownload.id === 'android' ? 'APK 直链' : currentDownload.id === 'trainer' ? '双镜像下载' : '入口预留'}
+                    </Typography>
+                    <Typography sx={{ maxWidth: 280, color: alpha('#ffffff', 0.62), fontSize: { xs: '0.78rem', sm: '0.9rem' }, lineHeight: 1.5 }}>
+                      {currentDownload.id === 'android'
+                        ? '点击主按钮会直接下载 GitHub Release 中的 app-release.apk。'
+                        : currentDownload.id === 'trainer'
+                          ? '优先使用魔搭；需要国际镜像时使用 Hugging Face。'
+                          : 'Flutter Beta 尚未开放公开构建。'}
+                    </Typography>
+                  </Stack>
+                </Box>
+
+                <Stack spacing={1}>
+                  {currentDownload.actions.map((action) => (
+                    <Button
+                      key={action.label}
+                      fullWidth
+                      component={action.href ? 'a' : 'button'}
+                      href={action.href}
+                      target={action.href ? '_blank' : undefined}
+                      rel={action.href ? 'noopener noreferrer' : undefined}
+                      disabled={action.disabled}
+                      startIcon={<SymbolIcon name={action.icon} size={24} />}
+                      sx={{
+                        ...(action.primary ? md2Button : {
+                          color: alpha('#ffffff', 0.82),
+                          backgroundColor: alpha('#ffffff', 0.08),
+                          border: `1px solid ${alpha('#ffffff', 0.1)}`,
+                          '&:hover': {
+                            backgroundColor: alpha('#ffffff', 0.12),
+                          },
+                        }),
+                        minHeight: { xs: 46, sm: 54 },
+                        justifyContent: 'center',
+                        borderRadius: 0.7,
+                        fontSize: { xs: '0.92rem', sm: '1.04rem' },
+                        '&.Mui-disabled': {
+                          color: alpha('#ffffff', 0.45),
+                          backgroundColor: alpha('#ffffff', 0.06),
+                          border: `1px solid ${alpha('#ffffff', 0.08)}`,
+                        },
+                      }}
+                    >
+                      {action.label}
+                    </Button>
+                  ))}
+                </Stack>
+              </Stack>
+            </Grid>
+          </Grid>
+
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            sx={{
+              px: { xs: 1.35, sm: 2.2, md: 3 },
+              py: { xs: 1.15, sm: 1.4 },
+              borderTop: `1px solid ${alpha('#ffffff', 0.08)}`,
+              backgroundColor: alpha('#0a1415', 0.34),
+            }}
+          >
+            <Button
+              onClick={() => goToDownloadTab(-1)}
+              startIcon={<SymbolIcon name="chevron_left" size={22} />}
               sx={{
-                minHeight: { xs: 196, sm: 280, lg: 360 },
-                p: { xs: 2, sm: 2.8, md: 3.6 },
-                ...md2Surface,
+                ...md2Button,
+                minHeight: { xs: 34, sm: 38 },
+                px: { xs: 1.15, sm: 1.7 },
+                fontSize: { xs: '0.72rem', sm: '0.84rem' },
+                borderRadius: 0.7,
               }}
             >
-              <Stack spacing={{ xs: 1.35, sm: 2.4 }}>
-                {downloadNotes.map((item, index) => (
-                  <Box key={item} sx={{ display: 'flex', gap: { xs: 1.2, sm: 2 } }}>
-                    <Typography sx={{ minWidth: { xs: 26, sm: 34 }, color: '#79d6d9', fontSize: { xs: '0.95rem', sm: '1.2rem' } }}>
-                      0{index + 1}
-                    </Typography>
-                    <Typography sx={{ color: alpha('#ffffff', 0.76), lineHeight: { xs: 1.55, sm: 1.8 }, fontSize: { xs: '0.86rem', sm: '1rem' } }}>{item}</Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Box>
-          </Grid>
-          <Grid size={{ xs: 12, lg: 4.8 }}>
-            <Stack
-              direction={{ xs: 'row', sm: 'row', lg: 'column' }}
-              spacing={{ xs: 1.2, sm: 2.2 }}
-              sx={{ alignItems: 'stretch', justifyContent: 'center' }}
-            >
-              <QrPanel />
-              <DownloadPanel />
+              上一项
+            </Button>
+            <Stack direction="row" spacing={0.55} alignItems="center">
+              {downloadTabs.map((tab) => (
+                <Box
+                  key={tab.id}
+                  component="button"
+                  type="button"
+                  aria-label={`切换到${tab.label}`}
+                  onClick={() => setActiveTabId(tab.id)}
+                  sx={{
+                    width: tab.id === currentDownload.id ? 24 : 8,
+                    height: 8,
+                    p: 0,
+                    border: 0,
+                    borderRadius: 999,
+                    cursor: 'pointer',
+                    backgroundColor: tab.id === currentDownload.id ? '#8ff5f7' : alpha('#ffffff', 0.3),
+                    transition: 'width 180ms ease, background-color 180ms ease',
+                  }}
+                />
+              ))}
             </Stack>
-          </Grid>
-        </Grid>
+            <Button
+              onClick={() => goToDownloadTab(1)}
+              endIcon={<SymbolIcon name="chevron_right" size={22} />}
+              sx={{
+                ...md2Button,
+                minHeight: { xs: 34, sm: 38 },
+                px: { xs: 1.15, sm: 1.7 },
+                fontSize: { xs: '0.72rem', sm: '0.84rem' },
+                borderRadius: 0.7,
+                justifyContent: 'center',
+              }}
+            >
+              下一项
+            </Button>
+          </Stack>
+        </Box>
       </Box>
     </Box>
   );
