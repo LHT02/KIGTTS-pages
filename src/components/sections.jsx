@@ -108,7 +108,7 @@ const downloadTabs = [
   {
     id: 'beta',
     label: 'Flutter Beta',
-    icon: 'flutter_dash',
+    icon: 'flutter',
     eyebrow: 'FLUTTER / BETA',
     title: '暂未上线，敬请期待',
     summary: 'Flutter Beta 入口会在可公开测试后接入。现在先保留独立页签，避免用户误以为已有可下载构建。',
@@ -260,6 +260,28 @@ function scaledPx(value, scale, min = 0) {
 }
 
 export function SymbolIcon({ name, size = 24, sx }) {
+  if (name === 'flutter') {
+    return (
+      <Box
+        component="svg"
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        sx={{
+          width: size,
+          height: size,
+          display: 'inline-block',
+          flexShrink: 0,
+          color: 'inherit',
+          ...sx,
+        }}
+      >
+        <path d="M14.45 2 4 12.45l3.2 3.2L20.85 2h-6.4Z" fill="currentColor" />
+        <path d="m11.62 16.22 3.18-3.18 6.05 6.05H14.5l-2.88-2.87Z" fill="currentColor" opacity="0.72" />
+        <path d="m8.08 16.5 3.2 3.2 3.18-3.18-3.2-3.2-3.18 3.18Z" fill="currentColor" opacity="0.9" />
+      </Box>
+    );
+  }
+
   return (
     <Icon
       baseClassName="material-symbols-sharp"
@@ -541,11 +563,23 @@ function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 
   );
 }
 
-function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 1 }) {
+function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 1, onSelectDownloadTab }) {
   const scaledCompact = compact && densityScale < 0.98;
   const panelMinHeight = scaledPx(244, densityScale, densityScale < 0.75 ? 108 : 132);
   const primaryHeight = scaledPx(72, densityScale, 42);
   const secondaryHeight = scaledPx(72, densityScale, 38);
+  const getDownloadButtonProps = (tabId, href) => {
+    if (onSelectDownloadTab) {
+      return { onClick: () => onSelectDownloadTab(tabId) };
+    }
+
+    return {
+      component: 'a',
+      href,
+      target: '_blank',
+      rel: 'noopener noreferrer',
+    };
+  };
 
   return (
     <Box
@@ -561,10 +595,7 @@ function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 
       <Stack spacing={compact ? 1.1 : 1.8} sx={{ height: '100%' }}>
         <Button
           fullWidth
-          component="a"
-          href={androidApkUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...getDownloadButtonProps('android', androidApkUrl)}
           startIcon={<SymbolIcon name="android" size={compact ? 22 : 28} />}
           sx={{
             ...md2Button,
@@ -580,10 +611,7 @@ function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 
         </Button>
         <Button
           fullWidth
-          component="a"
-          href={trainerModelScopeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          {...getDownloadButtonProps('trainer', trainerModelScopeUrl)}
           startIcon={<SymbolIcon name="laptop_mac" size={compact ? 22 : 28} />}
           sx={{
             ...md2Button,
@@ -639,7 +667,7 @@ function QrPanel({ compact = false, hideOnMobile = false, densityScale = 1 }) {
   );
 }
 
-function HomeRightBlock({ onSelect, compact = false, desktopLayout = false, densityScale = 1 }) {
+function HomeRightBlock({ onSelect, onSelectDownloadTab, compact = false, desktopLayout = false, densityScale = 1 }) {
   const shortLandscapeFactor = densityScale < 0.75 ? 0.84 : 1;
   const desktopBlockWidth = scaledPx(536, densityScale * shortLandscapeFactor, 312);
   const desktopLogoWidth = scaledPx(474, densityScale * shortLandscapeFactor, 176);
@@ -697,13 +725,18 @@ function HomeRightBlock({ onSelect, compact = false, desktopLayout = false, dens
         }}
       >
         <QrPanel compact={compact} hideOnMobile={!desktopLayout} densityScale={densityScale} />
-        <DownloadPanel compact={compact} mobileApkOnly={!desktopLayout} densityScale={densityScale} />
+        <DownloadPanel
+          compact={compact}
+          mobileApkOnly={!desktopLayout}
+          densityScale={densityScale}
+          onSelectDownloadTab={onSelectDownloadTab}
+        />
       </Stack>
     </Box>
   );
 }
 
-export function HomeSection({ onSelect, desktopLayout = false, densityScale = 1, dpiScale = 1 }) {
+export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = false, densityScale = 1, dpiScale = 1 }) {
   const shortDpiDesktop = desktopLayout && dpiScale < 0.75;
   const shortLandscapeFactor = densityScale < 0.75 ? 0.84 : 1;
   const desktopContentMaxWidth = scaledPx(1500, densityScale, 780);
@@ -797,7 +830,13 @@ export function HomeSection({ onSelect, desktopLayout = false, densityScale = 1,
             justifyContent: desktopLayout ? 'flex-start' : { xs: 'center', lg: 'flex-start' },
           }}
         >
-          <HomeRightBlock onSelect={onSelect} compact desktopLayout={desktopLayout} densityScale={densityScale} />
+          <HomeRightBlock
+            onSelect={onSelect}
+            onSelectDownloadTab={onSelectDownloadTab}
+            compact
+            desktopLayout={desktopLayout}
+            densityScale={densityScale}
+          />
         </Box>
       </Box>
     </Box>
@@ -1605,14 +1644,19 @@ export function AboutSection() {
   );
 }
 
-export function DownloadSection() {
-  const [activeTabId, setActiveTabId] = useState(downloadTabs[0].id);
+export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
+  const [localActiveTabId, setLocalActiveTabId] = useState(downloadTabs[0].id);
+  const activeTabId = activeTabIdProp ?? localActiveTabId;
   const activeIndex = downloadTabs.findIndex((item) => item.id === activeTabId);
   const currentDownload = downloadTabs[activeIndex] ?? downloadTabs[0];
+  const setActiveDownloadTab = (tabId) => {
+    setLocalActiveTabId(tabId);
+    onTabChange?.(tabId);
+  };
 
   const goToDownloadTab = (offset) => {
     const nextIndex = (activeIndex + offset + downloadTabs.length) % downloadTabs.length;
-    setActiveTabId(downloadTabs[nextIndex].id);
+    setActiveDownloadTab(downloadTabs[nextIndex].id);
   };
 
   return (
@@ -1681,7 +1725,7 @@ export function DownloadSection() {
                   key={tab.id}
                   role="tab"
                   aria-selected={selected}
-                  onClick={() => setActiveTabId(tab.id)}
+                  onClick={() => setActiveDownloadTab(tab.id)}
                   startIcon={<SymbolIcon name={tab.icon} size={23} />}
                   sx={{
                     minHeight: { xs: 44, sm: 58 },
@@ -1848,7 +1892,7 @@ export function DownloadSection() {
                 >
                   <Stack spacing={1} alignItems="center" sx={{ position: 'relative', zIndex: 1 }}>
                     <SymbolIcon
-                      name={currentDownload.id === 'beta' ? 'pending' : currentDownload.id === 'android' ? 'apk_install' : 'folder_zip'}
+                      name={currentDownload.id === 'beta' ? currentDownload.icon : currentDownload.id === 'android' ? 'apk_install' : 'folder_zip'}
                       size={58}
                       sx={{ color: currentDownload.id === 'beta' ? alpha('#ffffff', 0.52) : '#8ff5f7' }}
                     />
@@ -1935,7 +1979,7 @@ export function DownloadSection() {
                   component="button"
                   type="button"
                   aria-label={`切换到${tab.label}`}
-                  onClick={() => setActiveTabId(tab.id)}
+                  onClick={() => setActiveDownloadTab(tab.id)}
                   sx={{
                     width: tab.id === currentDownload.id ? 24 : 8,
                     height: 8,

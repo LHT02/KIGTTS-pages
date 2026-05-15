@@ -240,6 +240,7 @@ export default function App() {
   const scrollContainerRef = useRef(null);
   const sectionRefs = useRef({});
   const [activeId, setActiveId] = useState(getInitialSection);
+  const [downloadTabId, setDownloadTabId] = useState('android');
   const activeIdRef = useRef(getInitialSection());
   const targetIdRef = useRef(null);
   const animationFrameRef = useRef(0);
@@ -426,6 +427,11 @@ export default function App() {
 
   const handleSelect = (nextId) => {
     animateToSection(nextId);
+  };
+
+  const handleDownloadSelect = (tabId) => {
+    setDownloadTabId(tabId);
+    animateToSection('download');
   };
 
   useEffect(() => {
@@ -655,6 +661,7 @@ export default function App() {
               >
                 <HomeSection
                   onSelect={handleSelect}
+                  onSelectDownloadTab={handleDownloadSelect}
                   desktopLayout={!compactNavigation}
                   densityScale={1}
                   dpiScale={desktopStageScale}
@@ -676,7 +683,7 @@ export default function App() {
                 ref={setSectionRef('download')}
                 sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%', height: '100%' }}
               >
-                <DownloadSection />
+                <DownloadSection activeTabId={downloadTabId} onTabChange={setDownloadTabId} />
               </Box>
               <Box
                 component="section"
