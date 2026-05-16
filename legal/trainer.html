@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>KIGTTS 训练端许可证与使用协议</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <div class="topbar">
+        <div class="brand">KIGTTS</div>
+        <a class="back" href="../">返回网站首页</a>
+      </div>
+
+      <section class="hero">
+        <div class="eyebrow">TRAINER / LICENSE & TERMS</div>
+        <h1>训练端许可证与使用协议</h1>
+        <p class="summary">
+          本页面适用于 KIGTTS Electron 训练端和配套 Python 后端。训练端用于整理语料、蒸馏、Piper 训练与导出 Android 端可导入的 .kigvpk 语音包。
+        </p>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h2>开源许可证</h2>
+          <p>KIGTTS 训练端随项目源码以 GPL-3.0 发布。你可以在遵守 GPL-3.0 条款的前提下使用、复制、修改和分发训练端代码及其修改版本。</p>
+          <ul>
+            <li>源码仓库：<a href="https://github.com/LHT02/KIGTTS" target="_blank" rel="noopener noreferrer">LHT02/KIGTTS</a></li>
+            <li>训练器下载：<a href="https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files" target="_blank" rel="noopener noreferrer">ModelScope</a> / <a href="https://huggingface.co/LHT02/kigtts-trainer/tree/main" target="_blank" rel="noopener noreferrer">Hugging Face</a></li>
+            <li>分发修改版时，应保留许可证文本、版权声明与第三方组件声明。</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>主要第三方组件</h2>
+          <p>训练端涉及 Electron、React、Python、PyTorch、Piper、piper-phonemize、eSpeak NG、sherpa-onnx、ONNX Runtime 和 Python 依赖树等组件。</p>
+          <ul>
+            <li>Piper vendored snapshot：仓库声明本地许可证为 MIT，活跃上游为 OHF-Voice/piper1-gpl。</li>
+            <li>eSpeak NG：上游许可证族为 GPL v3+，用于语音包相关发音数据。</li>
+            <li>ONNX Runtime：MIT；Python 依赖树各自遵循对应 dist-info 或 LICENSE 文件。</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>训练素材与语音包</h2>
+          <p>训练端处理的录音、文本、参考音频、蒸馏语料、模型权重和导出的 voicepack.kigvpk 均由用户自行确认来源、授权范围和可分发范围。</p>
+          <ul>
+            <li>请勿使用未获授权的人声、角色语音、商业音色或受限制数据集训练并公开分发。</li>
+            <li>使用 GPT-SoVITS、VoxCPM2 或其他外部模型蒸馏时，应额外遵守对应模型与数据许可证。</li>
+            <li>导出的语音包不自动继承 KIGTTS 项目授权；其授权取决于用户素材和训练链路。</li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>免责声明</h2>
+          <p>训练端按“现状”提供，不保证训练结果、音质、兼容性、运行速度或第三方模型下载源始终可用。用户应自行备份训练项目和原始素材。</p>
+          <p>最后更新：2026-05-17</p>
+        </article>
+      </section>
+
+      <p class="note">如需重新打包或分发训练端，请同步检查仓库中的 THIRD_PARTY_LICENSES.md、NOTICE、pc_trainer 依赖目录和各 Python 包许可证。</p>
+      <footer>ICP备案号：待填写　公网安备：待填写</footer>
+    </main>
+  </body>
+</html>
