@@ -368,10 +368,12 @@ export default function App() {
     const height = Math.round(viewport?.height ?? window.innerHeight);
     const aspectRatio = width / Math.max(height, 1);
 
+    const minDesktopScale = aspectRatio >= 4 / 3 && width < 920 ? 0.68 : 0.5;
+
     return {
       width,
       height,
-      desktopDensityScale: aspectRatio >= 4 / 3 ? clamp(height / desktopDpiBaselineHeight, 0.5, 1) : 1,
+      desktopDensityScale: aspectRatio >= 4 / 3 ? clamp(height / desktopDpiBaselineHeight, minDesktopScale, 1) : 1,
     };
   });
   const desktopDensityScale = compactNavigation ? 1 : viewportMetrics.desktopDensityScale;
@@ -422,7 +424,8 @@ export default function App() {
       const viewportWidth = Math.round(viewport?.width ?? window.innerWidth);
       const viewportHeight = Math.round(viewport?.height ?? window.innerHeight);
       const aspectRatio = viewportWidth / Math.max(viewportHeight, 1);
-      const densityScale = aspectRatio >= 4 / 3 ? clamp(viewportHeight / desktopDpiBaselineHeight, 0.5, 1) : 1;
+      const minDesktopScale = aspectRatio >= 4 / 3 && viewportWidth < 920 ? 0.68 : 0.5;
+      const densityScale = aspectRatio >= 4 / 3 ? clamp(viewportHeight / desktopDpiBaselineHeight, minDesktopScale, 1) : 1;
 
       root.style.setProperty('--app-viewport-height', `${viewportHeight}px`);
       root.style.setProperty('--desktop-density-scale', densityScale.toFixed(3));
@@ -634,6 +637,17 @@ export default function App() {
     const handleWheel = (event) => {
       if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) {
         return;
+      }
+
+      const innerScrollRoot = event.target instanceof Element
+        ? event.target.closest('[data-inner-scroll="true"]')
+        : null;
+      if (innerScrollRoot) {
+        const canScrollDown = innerScrollRoot.scrollTop + innerScrollRoot.clientHeight < innerScrollRoot.scrollHeight - 2;
+        const canScrollUp = innerScrollRoot.scrollTop > 2;
+        if ((event.deltaY > 0 && canScrollDown) || (event.deltaY < 0 && canScrollUp)) {
+          return;
+        }
       }
 
       event.preventDefault();

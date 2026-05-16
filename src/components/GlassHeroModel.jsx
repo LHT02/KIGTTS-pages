@@ -2,22 +2,57 @@ import { Box, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import bxzmModelUrl from '../assets/bxzm.glb?url';
 
 const glassMaterialSettings = {
-  color: 0x8ddcde,
-  metalness: 0.05,
-  roughness: 0.22,
-  transmission: 0.62,
-  thickness: 0.52,
-  ior: 1.36,
+  color: 0xffffff,
+  metalness: 0,
+  roughness: 0.38,
+  transmission: 0.88,
+  thickness: 0.84,
+  ior: 1.46,
   transparent: true,
-  opacity: 0.54,
-  clearcoat: 0.55,
-  clearcoatRoughness: 0.18,
+  opacity: 0.42,
+  clearcoat: 1,
+  clearcoatRoughness: 0.14,
+  specularIntensity: 1,
+  emissive: 0xdffeff,
+  emissiveIntensity: 0.045,
+  attenuationColor: 0xbffcff,
+  attenuationDistance: 2.2,
 };
+
+function createFresnelGlassMaterial(settings = glassMaterialSettings, rimStrength = 0.38) {
+  const material = new THREE.MeshPhysicalMaterial(settings);
+  material.onBeforeCompile = (shader) => {
+    shader.vertexShader = shader.vertexShader.replace(
+      '#include <common>',
+      '#include <common>\nvarying float vKigttsFresnel;',
+    );
+    shader.vertexShader = shader.vertexShader.replace(
+      '#include <fog_vertex>',
+      `#include <fog_vertex>
+      vec3 kigttsFresnelNormal = normalize(normalMatrix * normal);
+      vec3 kigttsFresnelView = normalize(-mvPosition.xyz);
+      vKigttsFresnel = pow(1.0 - clamp(abs(dot(kigttsFresnelNormal, kigttsFresnelView)), 0.0, 1.0), 2.35);`,
+    );
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <common>',
+      '#include <common>\nvarying float vKigttsFresnel;',
+    );
+    shader.fragmentShader = shader.fragmentShader.replace(
+      '#include <dithering_fragment>',
+      `gl_FragColor.rgb += vec3(0.72, 0.96, 1.0) * vKigttsFresnel * ${rimStrength.toFixed(3)};
+      gl_FragColor.a = min(gl_FragColor.a + vKigttsFresnel * 0.3, 0.72);
+      #include <dithering_fragment>`,
+    );
+  };
+  material.customProgramCacheKey = () => `kigtts-fresnel-${rimStrength}`;
+  return material;
+}
 
 function disposeObject3d(object3d) {
   object3d.traverse((child) => {
@@ -34,13 +69,14 @@ function disposeObject3d(object3d) {
 
 function createFallbackModel() {
   const group = new THREE.Group();
-  const glass = new THREE.MeshPhysicalMaterial(glassMaterialSettings);
-  const darkGlass = new THREE.MeshPhysicalMaterial({
+  const glass = createFresnelGlassMaterial(glassMaterialSettings);
+  const darkGlass = createFresnelGlassMaterial({
     ...glassMaterialSettings,
-    color: 0x071112,
-    opacity: 0.82,
-    transmission: 0.28,
-  });
+    color: 0xdffeff,
+    opacity: 0.24,
+    transmission: 0.72,
+    roughness: 0.5,
+  }, 0.52);
 
   const panel = new THREE.Mesh(new THREE.BoxGeometry(1.9, 2.72, 0.08, 4, 4, 1), darkGlass.clone());
   panel.position.set(0.22, 0.02, 0);
@@ -62,11 +98,11 @@ function createFallbackModel() {
   mask.scale.set(1.12, 0.82, 0.72);
   group.add(mask);
 
-  const penMaterial = new THREE.MeshPhysicalMaterial({
+  const penMaterial = createFresnelGlassMaterial({
     ...glassMaterialSettings,
-    color: 0x6fcfd2,
-    opacity: 0.38,
-  });
+    color: 0xffffff,
+    opacity: 0.28,
+  }, 0.44);
 
   for (let index = 0; index < 2; index += 1) {
     const pen = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1.9, 20), penMaterial.clone());
@@ -78,7 +114,7 @@ function createFallbackModel() {
   return group;
 }
 
-export function GlassHeroModel({ densityScale = 1, sx }) {
+export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
   const mountRef = useRef(null);
   const modelRef = useRef(null);
   const targetTiltRef = useRef({ x: 0, y: 0 });
@@ -93,7 +129,8 @@ export function GlassHeroModel({ densityScale = 1, sx }) {
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-    camera.position.set(0, 0.12, 6.2);
+    camera.position.set(2.35, 0.46, 6.15);
+    camera.lookAt(0.08, 0.04, 0);
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -103,32 +140,45 @@ export function GlassHeroModel({ densityScale = 1, sx }) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.58;
     mountNode.appendChild(renderer.domElement);
 
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    const environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environment = environment;
+
     const root = new THREE.Group();
-    root.rotation.set(-0.08, -0.18, 0.02);
+    root.rotation.set(-0.06, 0.24, 0.02);
     scene.add(root);
 
-    scene.add(new THREE.HemisphereLight(0xbdfcff, 0x041011, 2.1));
-    const keyLight = new THREE.DirectionalLight(0xbdfcff, 3.2);
-    keyLight.position.set(3.4, 4.8, 5.2);
+    scene.add(new THREE.HemisphereLight(0xf2ffff, 0x041011, 2.85));
+    const keyLight = new THREE.DirectionalLight(0xffffff, 4.2);
+    keyLight.position.set(4.4, 5.4, 5.6);
     scene.add(keyLight);
-    const rimLight = new THREE.DirectionalLight(0x038387, 2.4);
-    rimLight.position.set(-3.4, 1.2, -3.2);
+    const fillLight = new THREE.DirectionalLight(0xc8ffff, 2.4);
+    fillLight.position.set(-2.2, 1.6, 3.6);
+    scene.add(fillLight);
+    const rimLight = new THREE.DirectionalLight(0x8ff5f7, 3.6);
+    rimLight.position.set(-3.8, 1.6, -3.2);
     scene.add(rimLight);
+    const cursorLight = new THREE.PointLight(0xffffff, 0, 4.6, 1.45);
+    cursorLight.position.set(0.8, 0.4, 2.6);
+    scene.add(cursorLight);
+    const cursorState = { x: 0.8, y: 0.4, targetX: 0.8, targetY: 0.4, hover: 0 };
 
     const fallbackModel = createFallbackModel();
+    fallbackModel.scale.setScalar(modelScale);
     fallbackModel.visible = false;
     root.add(fallbackModel);
 
-    const material = new THREE.MeshPhysicalMaterial(glassMaterialSettings);
-    const accentMaterial = new THREE.MeshPhysicalMaterial({
+    const materialSettings = { ...glassMaterialSettings };
+    const accentMaterialSettings = {
       ...glassMaterialSettings,
-      color: 0x038387,
-      opacity: 0.46,
-      transmission: 0.42,
-    });
+      color: 0xdffeff,
+      opacity: 0.28,
+      transmission: 0.76,
+      roughness: 0.46,
+    };
 
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
@@ -151,13 +201,14 @@ export function GlassHeroModel({ densityScale = 1, sx }) {
         const maxAxis = Math.max(size.x, size.y, size.z, 0.001);
 
         model.position.sub(center);
-        model.scale.setScalar(3.75 / maxAxis);
-        model.rotation.set(0.08, -0.18, 0.02);
+        model.scale.setScalar((3.75 * modelScale) / maxAxis);
+        model.rotation.set(0.06, 0.2, 0.02);
         model.traverse((child) => {
           if (child.isMesh) {
             child.castShadow = false;
             child.receiveShadow = false;
-            child.material = child.name.toLowerCase().includes('circle') ? accentMaterial.clone() : material.clone();
+            const isAccent = child.name.toLowerCase().includes('circle');
+            child.material = createFresnelGlassMaterial(isAccent ? accentMaterialSettings : materialSettings, isAccent ? 0.56 : 0.42);
           }
         });
 
@@ -202,6 +253,17 @@ export function GlassHeroModel({ densityScale = 1, sx }) {
         x: THREE.MathUtils.clamp(normalizedY, -1, 1),
         y: THREE.MathUtils.clamp(normalizedX, -1, 1),
       };
+      cursorState.targetX = THREE.MathUtils.clamp(normalizedX, -1, 1) * 1.7 + 0.34;
+      cursorState.targetY = THREE.MathUtils.clamp(-normalizedY, -1, 1) * 1.35 + 0.12;
+      cursorState.hover = 1;
+    };
+
+    const handlePointerEnter = () => {
+      cursorState.hover = 1;
+    };
+
+    const handlePointerLeave = () => {
+      cursorState.hover = 0;
     };
 
     const handleDeviceOrientation = (event) => {
@@ -215,7 +277,9 @@ export function GlassHeroModel({ densityScale = 1, sx }) {
       };
     };
 
-    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    mountNode.addEventListener('pointermove', handlePointerMove, { passive: true });
+    mountNode.addEventListener('pointerenter', handlePointerEnter, { passive: true });
+    mountNode.addEventListener('pointerleave', handlePointerLeave, { passive: true });
     window.addEventListener('deviceorientation', handleDeviceOrientation, { passive: true });
 
     let frameId = 0;
@@ -223,10 +287,14 @@ export function GlassHeroModel({ densityScale = 1, sx }) {
     const renderFrame = () => {
       const elapsed = clock.getElapsedTime();
       const targetTilt = targetTiltRef.current;
-      root.rotation.x += (-0.08 + targetTilt.x * 0.11 - root.rotation.x) * 0.055;
-      root.rotation.y += (-0.18 + targetTilt.y * 0.18 - root.rotation.y) * 0.055;
+      root.rotation.x += (-0.06 + targetTilt.x * 0.11 - root.rotation.x) * 0.055;
+      root.rotation.y += (0.24 - targetTilt.y * 0.18 - root.rotation.y) * 0.055;
       root.rotation.z = Math.sin(elapsed * 0.45) * 0.018;
       root.position.y = Math.sin(elapsed * 0.75) * 0.045;
+      cursorState.x += (cursorState.targetX - cursorState.x) * 0.16;
+      cursorState.y += (cursorState.targetY - cursorState.y) * 0.16;
+      cursorLight.position.set(cursorState.x, cursorState.y, 2.55);
+      cursorLight.intensity += ((cursorState.hover ? 3.8 : 0.15) - cursorLight.intensity) * 0.12;
 
       renderer.render(scene, camera);
       frameId = window.requestAnimationFrame(renderFrame);
@@ -236,15 +304,19 @@ export function GlassHeroModel({ densityScale = 1, sx }) {
     return () => {
       disposed = true;
       window.cancelAnimationFrame(frameId);
-      window.removeEventListener('pointermove', handlePointerMove);
+      mountNode.removeEventListener('pointermove', handlePointerMove);
+      mountNode.removeEventListener('pointerenter', handlePointerEnter);
+      mountNode.removeEventListener('pointerleave', handlePointerLeave);
       window.removeEventListener('deviceorientation', handleDeviceOrientation);
       resizeObserver.disconnect();
       dracoLoader.dispose();
       disposeObject3d(root);
+      environment.dispose();
+      pmremGenerator.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };
-  }, []);
+  }, [modelScale]);
 
   return (
     <Box

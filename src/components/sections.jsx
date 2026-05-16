@@ -57,8 +57,11 @@ const androidApkUrl = 'https://github.com/LHT02/KIGTTS/releases/download/APP0.1.
 const trainerModelScopeUrl = 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files';
 const trainerHuggingFaceUrl = 'https://huggingface.co/LHT02/kigtts-trainer/tree/main';
 const projectUrl = 'https://github.com/LHT02/KIGTTS';
-const androidLegalUrl = './legal/android.html';
-const trainerLegalUrl = './legal/trainer.html';
+const authorUrl = 'https://github.com/LHT02';
+const androidLicenseUrl = './legal/android-license.html';
+const androidPrivacyUrl = './legal/android-privacy.html';
+const trainerLicenseUrl = './legal/trainer-license.html';
+const trainerPrivacyUrl = './legal/trainer-privacy.html';
 
 const downloadNotes = [
   `手机扫描二维码访问 ${qrValue}`,
@@ -67,9 +70,21 @@ const downloadNotes = [
 ];
 
 const producerCredits = [
-  ['LHT02 / LHT Studio', '项目发起、Android 主线、训练器流程与站点维护'],
-  ['KIGTTS Contributors', '功能测试、问题反馈、文档补充与场景验证'],
-  ['Flutter Beta Branch', '并行重构探索，后续公开构建会在下载页接入'],
+  {
+    name: 'LHT02',
+    role: '软件作者，负责 KIGTTS Android 主线、训练器流程与网页维护',
+    href: authorUrl,
+  },
+  {
+    name: 'LHT Studio',
+    role: '项目视觉、发布与文档维护标识',
+    href: authorUrl,
+  },
+  {
+    name: 'KIGTTS Contributors',
+    role: '功能测试、问题反馈、文档补充与现场场景验证',
+    href: projectUrl,
+  },
 ];
 
 const acknowledgementLibraries = [
@@ -80,23 +95,23 @@ const acknowledgementLibraries = [
     href: projectUrl,
     featured: true,
   },
-  { name: 'Android', role: 'Android 客户端平台', simpleIcon: 'android', href: 'https://developer.android.com/' },
-  { name: 'Kotlin', role: 'Android 主线语言', simpleIcon: 'kotlin', href: 'https://kotlinlang.org/' },
-  { name: 'Jetpack Compose', role: 'Android UI 框架', simpleIcon: 'jetpackcompose', href: 'https://developer.android.com/compose' },
-  { name: 'Flutter', role: 'Beta 重构分支', simpleIcon: 'flutter', href: 'https://flutter.dev/' },
-  { name: 'Material Symbols', role: '图标体系', simpleIcon: 'materialdesignicons', href: 'https://fonts.google.com/icons' },
-  { name: 'sherpa-onnx', role: '离线 ASR / 说话人验证', logo: 'https://github.com/k2-fsa.png?size=96', href: 'https://github.com/k2-fsa/sherpa-onnx', monochrome: true },
-  { name: 'ONNX Runtime', role: '模型推理运行时', simpleIcon: 'onnx', href: 'https://onnxruntime.ai/' },
-  { name: 'Piper', role: '离线 TTS / 训练链路', logo: 'https://github.com/OHF-Voice.png?size=96', href: 'https://github.com/OHF-Voice/piper1-gpl', monochrome: true },
-  { name: 'piper-phonemize', role: '音素转换', logo: 'https://github.com/rhasspy.png?size=96', href: 'https://github.com/rhasspy/piper-phonemize', monochrome: true },
-  { name: 'eSpeak NG', role: 'Piper 发音数据', logo: 'https://github.com/espeak-ng.png?size=96', href: 'https://github.com/espeak-ng/espeak-ng', monochrome: true },
-  { name: 'Electron', role: '桌面训练器壳层', simpleIcon: 'electron', href: 'https://www.electronjs.org/' },
-  { name: 'React', role: '训练器与网页 UI', simpleIcon: 'react', href: 'https://react.dev/' },
-  { name: 'Python', role: '训练器后端流程', simpleIcon: 'python', href: 'https://www.python.org/' },
-  { name: 'PyTorch', role: '训练与蒸馏依赖', simpleIcon: 'pytorch', href: 'https://pytorch.org/' },
-  { name: 'Hugging Face', role: '训练器镜像', simpleIcon: 'huggingface', href: 'https://huggingface.co/LHT02/kigtts-trainer/tree/main' },
-  { name: 'ModelScope', role: '训练器国内镜像', logo: 'https://modelscope.cn/favicon.ico', href: 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files' },
-  { name: 'GitHub', role: '源码与发行页', simpleIcon: 'github', href: projectUrl, monochrome: true },
+  { name: 'Android', role: 'Android 客户端平台', logo: './logos/android.svg', href: 'https://developer.android.com/' },
+  { name: 'Kotlin', role: 'Android 主线语言', logo: './logos/kotlin.svg', href: 'https://kotlinlang.org/' },
+  { name: 'Jetpack Compose', role: 'Android UI 框架', logo: './logos/jetpackcompose.svg', href: 'https://developer.android.com/compose' },
+  { name: 'Flutter', role: 'Beta 重构分支', logo: './logos/flutter.svg', href: 'https://flutter.dev/' },
+  { name: 'Material Symbols', role: '图标体系', logo: './logos/materialdesign.svg', href: 'https://fonts.google.com/icons' },
+  { name: 'sherpa-onnx', role: '离线 ASR / 说话人验证', logo: './logos/k2-fsa.png', href: 'https://github.com/k2-fsa/sherpa-onnx', monochrome: true },
+  { name: 'ONNX Runtime', role: '模型推理运行时', logo: './logos/onnx.svg', href: 'https://onnxruntime.ai/' },
+  { name: 'Piper', role: '离线 TTS / 训练链路', logo: './logos/piper.svg', href: 'https://github.com/OHF-Voice/piper1-gpl', monochrome: true, wide: true },
+  { name: 'piper-phonemize', role: '音素转换', logo: './logos/rhasspy.png', href: 'https://github.com/rhasspy/piper-phonemize', monochrome: true },
+  { name: 'eSpeak NG', role: 'Piper 发音数据', logo: './logos/espeak-ng.png', href: 'https://github.com/espeak-ng/espeak-ng', monochrome: true },
+  { name: 'Electron', role: '桌面训练器壳层', logo: './logos/electron.svg', href: 'https://www.electronjs.org/' },
+  { name: 'React', role: '训练器与网页 UI', logo: './logos/react.svg', href: 'https://react.dev/' },
+  { name: 'Python', role: '训练器后端流程', logo: './logos/python.svg', href: 'https://www.python.org/' },
+  { name: 'PyTorch', role: '训练与蒸馏依赖', logo: './logos/pytorch.svg', href: 'https://pytorch.org/' },
+  { name: 'Hugging Face', role: '训练器镜像', logo: './logos/huggingface.svg', href: 'https://huggingface.co/LHT02/kigtts-trainer/tree/main' },
+  { name: 'ModelScope', role: '训练器国内镜像', logo: './logos/modelscope.ico', href: 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files' },
+  { name: 'GitHub', role: '源码与发行页', logo: './logos/github.svg', href: projectUrl },
 ];
 
 const downloadTabs = [
@@ -333,7 +348,7 @@ function ProgressiveImage({ src, alt, sx, eager = false }) {
 }
 
 function CreditLogo({ item }) {
-  const source = item.simpleIcon ? `https://cdn.simpleicons.org/${item.simpleIcon}/white` : item.logo;
+  const source = item.logo;
   const [imageVisible, setImageVisible] = useState(Boolean(source));
   const content = (
     <Stack
@@ -368,11 +383,11 @@ function CreditLogo({ item }) {
             component="img"
             src={source}
             alt={`${item.name} logo`}
-            loading="lazy"
+            loading="eager"
             decoding="async"
             onError={() => setImageVisible(false)}
             sx={{
-              width: item.featured ? { xs: 104, sm: 132 } : { xs: 34, sm: 40 },
+              width: item.featured ? { xs: 104, sm: 132 } : item.wide ? { xs: 78, sm: 96 } : { xs: 34, sm: 40 },
               maxHeight: item.featured ? { xs: 36, sm: 42 } : { xs: 34, sm: 40 },
               objectFit: 'contain',
               objectPosition: 'left center',
@@ -858,7 +873,9 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
   const desktopContentMaxWidth = scaledPx(1500, densityScale, 780);
   const desktopRightColumn = scaledPx(420, densityScale * shortLandscapeFactor, 312);
   const desktopLogoWidth = scaledPx(200, densityScale, 108);
-  const desktopHeroWidth = `min(46vw, calc(var(--app-viewport-height, 100svh) * ${densityScale < 0.75 ? 0.66 : 0.72}), ${scaledPx(840, densityScale, 250)}px)`;
+  const desktopHeroWidth = densityScale < 0.75
+    ? `clamp(440px, 56vw, ${scaledPx(920, densityScale, 620)}px)`
+    : `min(46vw, calc(var(--app-viewport-height, 100svh) * 0.72), ${scaledPx(840, densityScale, 250)}px)`;
 
   return (
     <Box
@@ -914,7 +931,7 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
             width: '100%',
             px: desktopLayout ? 0 : { xs: 1.8, sm: 3.4, lg: 0 },
             mt: desktopLayout ? 0 : { xs: 0.85, sm: 2.4, lg: 0 },
-            pointerEvents: 'none',
+            pointerEvents: 'auto',
             display: 'flex',
             alignItems: 'center',
             justifyContent: desktopLayout ? 'flex-end' : { xs: 'center', lg: 'flex-end' },
@@ -942,7 +959,11 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
                 />
               }
             >
-              <GlassHeroModel densityScale={densityScale} sx={{ width: '100%', height: '100%', minHeight: 0 }} />
+              <GlassHeroModel
+                densityScale={densityScale}
+                modelScale={desktopLayout && densityScale < 0.75 ? 2.25 : 1}
+                sx={{ width: '100%', height: '100%', minHeight: 0 }}
+              />
             </Suspense>
           </Box>
         </Box>
@@ -1002,6 +1023,7 @@ export function AboutSection() {
       }}
     >
       <Box
+        data-inner-scroll="true"
         sx={{
           width: '100%',
           maxWidth: { xs: '100%', lg: 1390, xl: 1540 },
@@ -1247,6 +1269,7 @@ export function AboutSection() {
 
             {currentFeature.secondaryImage ? (
               <Box
+                data-inner-scroll="true"
                 sx={{
                   position: 'absolute',
                   zIndex: 3,
@@ -1787,12 +1810,17 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
   return (
     <Box
       sx={{
-        ...centeredSectionSx,
+        height: '100%',
+        width: '100%',
+        boxSizing: 'border-box',
+        display: 'grid',
+        gridTemplateRows: 'auto minmax(0, 1fr)',
         px: { xs: 1.2, sm: 2.8, lg: 5.8 },
         py: { xs: 1.4, sm: 3.2, lg: 4.4 },
+        overflow: 'hidden',
       }}
     >
-      <Box sx={{ ...centeredContentSx, maxWidth: { xs: '100%', lg: 1180, xl: 1320 } }}>
+      <Box sx={{ ...centeredContentSx, maxWidth: { xs: '100%', lg: 1180, xl: 1320 }, flexShrink: 0 }}>
         <Typography
           sx={{
             color: alpha('#ffffff', 0.82),
@@ -1816,10 +1844,28 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
         >
           按设备类型选择下载入口，真实链接集中在同一张翻页卡片里。
         </Typography>
+      </Box>
 
+      <Box
+        data-inner-scroll="true"
+        sx={{
+          ...centeredContentSx,
+          maxWidth: { xs: '100%', lg: 1180, xl: 1320 },
+          minHeight: 0,
+          mt: { xs: 1.25, sm: 2.4, lg: 3 },
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          pb: { xs: 1, sm: 1.4 },
+          scrollbarWidth: 'thin',
+          '&::-webkit-scrollbar': { width: 7 },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: alpha('#77d7d9', 0.28),
+            borderRadius: 999,
+          },
+        }}
+      >
         <Box
           sx={{
-            mt: { xs: 1.6, sm: 3 },
             mx: 'auto',
             ...md2Surface,
             maxWidth: 1040,
@@ -2187,6 +2233,7 @@ export function CreditsSection() {
       </Box>
 
       <Box
+        data-inner-scroll="true"
         sx={{
           ...centeredContentSx,
           maxWidth: { xs: '100%', lg: 1420, xl: 1580 },
@@ -2218,18 +2265,29 @@ export function CreditsSection() {
                   PRODUCER
                 </Typography>
                 <Stack spacing={{ xs: 0.7, sm: 1.05 }} sx={{ mt: { xs: 0.75, sm: 1.5 } }}>
-                  {producerCredits.map(([name, role], index) => (
+                  {producerCredits.map((producer, index) => (
                     <Box
-                      key={name}
+                      key={producer.name}
+                      component={producer.href ? 'a' : 'div'}
+                      href={producer.href}
+                      target={producer.href ? '_blank' : undefined}
+                      rel={producer.href ? 'noopener noreferrer' : undefined}
                       sx={{
                         display: 'grid',
                         gridTemplateColumns: 'auto minmax(0, 1fr)',
                         gap: 1,
                         alignItems: 'center',
                         p: { xs: 0.7, sm: 1.05 },
+                        color: 'inherit',
+                        textDecoration: 'none',
                         backgroundColor: alpha('#0a1415', 0.48),
                         border: `1px solid ${alpha('#ffffff', 0.07)}`,
                         borderRadius: 0.6,
+                        transition: 'border-color 180ms ease, background-color 180ms ease',
+                        '&:hover': producer.href ? {
+                          backgroundColor: alpha('#0a1415', 0.62),
+                          borderColor: alpha('#8ff5f7', 0.28),
+                        } : undefined,
                       }}
                     >
                       <Box
@@ -2248,10 +2306,10 @@ export function CreditsSection() {
                       </Box>
                       <Box sx={{ minWidth: 0 }}>
                         <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.86rem', sm: '1.05rem' }, fontWeight: 700 }}>
-                          {name}
+                          {producer.name}
                         </Typography>
                         <Typography sx={{ mt: 0.2, color: alpha('#ffffff', 0.62), fontSize: { xs: '0.66rem', sm: '0.8rem' }, lineHeight: 1.32 }}>
-                          {role}
+                          {producer.role}
                         </Typography>
                       </Box>
                     </Box>
@@ -2264,30 +2322,36 @@ export function CreditsSection() {
                   LEGAL
                 </Typography>
                 <Typography sx={{ mt: 0.65, color: alpha('#ffffff', 0.76), lineHeight: 1.44, fontSize: { xs: '0.68rem', sm: '0.9rem' } }}>
-                  KIGTTS 源码以 GPL-3.0 发布；安卓端与训练端分别包含不同第三方依赖、模型资源和使用边界，已拆成独立页面。
+                  开源许可和隐私政策均使用软件内嵌文档原文。Android 与 Trainer 分别提供独立页面，方便从网页直接跳转核对。
                 </Typography>
-                <Stack direction={{ xs: 'column', sm: 'row', lg: 'column' }} spacing={1} sx={{ mt: 1.25 }}>
-                  <Button
-                    component="a"
-                    href={androidLegalUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    startIcon={<SymbolIcon name="android" size={22} />}
-                    sx={{ ...md2Button, minHeight: { xs: 38, sm: 42 }, justifyContent: 'center', fontSize: { xs: '0.78rem', sm: '0.88rem' } }}
-                  >
-                    安卓端许可证与协议
-                  </Button>
-                  <Button
-                    component="a"
-                    href={trainerLegalUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    startIcon={<SymbolIcon name="laptop_mac" size={22} />}
-                    sx={{ ...md2Button, minHeight: { xs: 38, sm: 42 }, justifyContent: 'center', fontSize: { xs: '0.78rem', sm: '0.88rem' } }}
-                  >
-                    训练端许可证与协议
-                  </Button>
-                </Stack>
+                <Grid container spacing={0.8} sx={{ mt: 1.25 }}>
+                  {[
+                    ['Android 开源许可', 'android', androidLicenseUrl],
+                    ['Android 隐私政策', 'policy', androidPrivacyUrl],
+                    ['训练端开源许可', 'laptop_mac', trainerLicenseUrl],
+                    ['训练端隐私政策', 'privacy_tip', trainerPrivacyUrl],
+                  ].map(([label, icon, href]) => (
+                    <Grid key={label} size={{ xs: 12, sm: 6, lg: 12 }}>
+                      <Button
+                        fullWidth
+                        component="a"
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        startIcon={<SymbolIcon name={icon} size={20} />}
+                        sx={{
+                          ...md2Button,
+                          minHeight: { xs: 36, sm: 40 },
+                          px: 1.1,
+                          justifyContent: 'center',
+                          fontSize: { xs: '0.74rem', sm: '0.82rem' },
+                        }}
+                      >
+                        {label}
+                      </Button>
+                    </Grid>
+                  ))}
+                </Grid>
               </Box>
             </Stack>
           </Grid>
@@ -2315,6 +2379,7 @@ export function CreditsSection() {
                 </Box>
               </Stack>
               <Box
+                data-inner-scroll="true"
                 sx={{
                   height: 'calc(100% - 54px)',
                   minHeight: { xs: 280, sm: 320, lg: 0 },
