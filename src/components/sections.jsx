@@ -260,28 +260,6 @@ function scaledPx(value, scale, min = 0) {
 }
 
 export function SymbolIcon({ name, size = 24, sx }) {
-  if (name === 'flutter') {
-    return (
-      <Box
-        component="svg"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-        sx={{
-          width: size,
-          height: size,
-          display: 'inline-block',
-          flexShrink: 0,
-          color: 'inherit',
-          ...sx,
-        }}
-      >
-        <path d="M14.45 2 4 12.45l3.2 3.2L20.85 2h-6.4Z" fill="currentColor" />
-        <path d="m11.62 16.22 3.18-3.18 6.05 6.05H14.5l-2.88-2.87Z" fill="currentColor" opacity="0.72" />
-        <path d="m8.08 16.5 3.2 3.2 3.18-3.18-3.2-3.2-3.18 3.18Z" fill="currentColor" opacity="0.9" />
-      </Box>
-    );
-  }
-
   return (
     <Icon
       baseClassName="material-symbols-sharp"
