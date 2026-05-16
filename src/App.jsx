@@ -19,9 +19,9 @@ import logoWhite from '../ART/LOGOWhite.svg';
 import { BackgroundEffects } from './components/BackgroundEffects';
 import {
   AboutSection,
+  CreditsSection,
   DownloadSection,
   HomeSection,
-  LabSection,
   navItems,
   SymbolIcon,
 } from './components/sections';
@@ -43,6 +43,21 @@ const WHEEL_INTENT_RESET_MS = 180;
 const mobileHeaderHeight = { xs: 64, sm: 70, lg: 70 };
 const appViewportHeight = 'var(--app-viewport-height, 100svh)';
 const desktopDpiBaselineHeight = 720;
+
+const loadingPulse = keyframes`
+  0% {
+    opacity: 0.35;
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    opacity: 0.9;
+    transform: translate3d(8px, 0, 0);
+  }
+  100% {
+    opacity: 0.35;
+    transform: translate3d(0, 0, 0);
+  }
+`;
 
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
@@ -232,6 +247,99 @@ function MobileNavigation({ activeId, onSelect }) {
   );
 }
 
+function LoadingScreen({ progress, visible }) {
+  if (!visible) {
+    return null;
+  }
+
+  return (
+    <Box
+      sx={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        background: `
+          radial-gradient(circle at 72% 42%, ${alpha('#038387', 0.18)} 0, transparent 30%),
+          linear-gradient(135deg, #151617 0%, #101213 48%, #17191a 100%)
+        `,
+        overflow: 'hidden',
+        opacity: progress >= 100 ? 0 : 1,
+        pointerEvents: progress >= 100 ? 'none' : 'auto',
+        transition: 'opacity 420ms ease',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          width: { xs: 8, sm: 12 },
+          height: `${progress}%`,
+          backgroundColor: '#8ff5f7',
+          boxShadow: `0 0 28px ${alpha('#8ff5f7', 0.72)}`,
+          transition: 'height 260ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+        },
+        '&::after': {
+          content: '""',
+          position: 'absolute',
+          inset: 0,
+          opacity: 0.08,
+          backgroundImage: `
+            linear-gradient(135deg, rgba(255,255,255,0.12) 0 1px, transparent 1px),
+            radial-gradient(circle at 55% 50%, rgba(255,255,255,0.12) 0 1px, transparent 1px)
+          `,
+          backgroundSize: '28px 28px, 8px 8px',
+        },
+      }}
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          left: { xs: 24, sm: 34 },
+          top: '50%',
+          transform: 'translateY(-50%)',
+          zIndex: 1,
+        }}
+      >
+        <Typography sx={{ color: '#8ff5f7', fontSize: { xs: '2.2rem', sm: '3rem' }, lineHeight: 0.92, fontWeight: 700 }}>
+          {Math.min(100, Math.round(progress))}%
+        </Typography>
+        <Stack direction="row" spacing={0.35} sx={{ mt: 1.1 }}>
+          {[0, 1].map((item) => (
+            <Box
+              key={item}
+              sx={{
+                width: 6,
+                height: 6,
+                backgroundColor: alpha('#ffffff', 0.45),
+                animation: `${loadingPulse} 1.2s ease-in-out ${item * 140}ms infinite`,
+              }}
+            />
+          ))}
+        </Stack>
+        <Typography sx={{ mt: 0.45, color: alpha('#ffffff', 0.38), fontSize: '0.76rem' }}>Loading assets...</Typography>
+      </Box>
+
+      <Stack
+        spacing={2.4}
+        sx={{
+          position: 'absolute',
+          zIndex: 1,
+          right: { xs: '10%', sm: '14%', lg: '18%' },
+          top: '50%',
+          transform: 'translateY(-50%)',
+          width: { xs: 210, sm: 330 },
+          alignItems: 'flex-start',
+        }}
+      >
+        <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: '100%', maxWidth: 330, filter: 'drop-shadow(0 18px 26px rgba(0,0,0,0.22))' }} />
+        <Box sx={{ width: '100%', height: 1, backgroundColor: alpha('#ffffff', 0.12) }} />
+        <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.78rem', sm: '0.92rem' }, letterSpacing: '0.05em', fontWeight: 700 }}>
+          OVER THE VOICE / INTO THE FRONT
+        </Typography>
+      </Stack>
+    </Box>
+  );
+}
+
 export default function App() {
   const theme = useTheme();
   const narrowViewport = useMediaQuery(theme.breakpoints.down('lg'));
@@ -241,6 +349,8 @@ export default function App() {
   const sectionRefs = useRef({});
   const [activeId, setActiveId] = useState(getInitialSection);
   const [downloadTabId, setDownloadTabId] = useState('android');
+  const [loadingProgress, setLoadingProgress] = useState(1);
+  const [loadingVisible, setLoadingVisible] = useState(true);
   const activeIdRef = useRef(getInitialSection());
   const targetIdRef = useRef(null);
   const animationFrameRef = useRef(0);
@@ -265,6 +375,44 @@ export default function App() {
     };
   });
   const desktopDensityScale = compactNavigation ? 1 : viewportMetrics.desktopDensityScale;
+
+  useEffect(() => {
+    let currentProgress = 1;
+    let finished = false;
+
+    const tickId = window.setInterval(() => {
+      if (finished) {
+        return;
+      }
+      currentProgress = Math.min(92, currentProgress + Math.max(1.2, (94 - currentProgress) * 0.11));
+      setLoadingProgress(currentProgress);
+    }, 90);
+
+    const finishLoading = () => {
+      if (finished) {
+        return;
+      }
+      finished = true;
+      window.clearInterval(tickId);
+      setLoadingProgress(100);
+      window.setTimeout(() => setLoadingVisible(false), 460);
+    };
+
+    const readyTimerId = window.setTimeout(() => {
+      if (document.readyState === 'complete') {
+        finishLoading();
+      }
+    }, 680);
+    const hardTimerId = window.setTimeout(finishLoading, 3200);
+    window.addEventListener('load', finishLoading, { once: true });
+
+    return () => {
+      window.clearInterval(tickId);
+      window.clearTimeout(readyTimerId);
+      window.clearTimeout(hardTimerId);
+      window.removeEventListener('load', finishLoading);
+    };
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -578,6 +726,7 @@ export default function App() {
       }}
     >
       <BackgroundEffects />
+      <LoadingScreen progress={loadingProgress} visible={loadingVisible} />
       {compactNavigation ? <MobileNavigation activeId={activeId} onSelect={handleSelect} /> : null}
       <Box
         sx={{
@@ -687,12 +836,12 @@ export default function App() {
               </Box>
               <Box
                 component="section"
-                id="lab"
-                data-section-id="lab"
-                ref={setSectionRef('lab')}
+                id="credits"
+                data-section-id="credits"
+                ref={setSectionRef('credits')}
                 sx={{ scrollSnapAlign: 'start', scrollSnapStop: 'always', minHeight: '100%', height: '100%' }}
               >
-                <LabSection onSelect={handleSelect} />
+                <CreditsSection />
               </Box>
             </Box>
           </Box>

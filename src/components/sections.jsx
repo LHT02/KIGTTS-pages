@@ -10,8 +10,7 @@ import {
 } from '@mui/material';
 import { alpha, keyframes } from '@mui/material/styles';
 import { QRCodeSVG } from 'qrcode.react';
-import { useState } from 'react';
-import heroShot from '../../ART/KIGTTS1.png';
+import { lazy, Suspense, useState } from 'react';
 import subtitleScreen from '../../ART/ScreenShoot/便捷字幕.jpg';
 import boardScreen from '../../ART/ScreenShoot/画板.jpg';
 import cardScreen from '../../ART/ScreenShoot/快捷名片.jpg';
@@ -21,6 +20,8 @@ import soundScreen from '../../ART/ScreenShoot/音效板.jpg';
 import voicePackScreen from '../../ART/ScreenShoot/语音包.jpg';
 import logoWhite from '../../ART/LOGOWhite.svg';
 import lhtstudioLogo from '../../ART/lhtstudio.svg';
+
+const GlassHeroModel = lazy(() => import('./GlassHeroModel').then((module) => ({ default: module.GlassHeroModel })));
 
 export const navItems = [
   {
@@ -42,10 +43,10 @@ export const navItems = [
     icon: 'download',
   },
   {
-    id: 'lab',
-    label: '实验',
-    caption: 'Lab',
-    icon: 'tune',
+    id: 'credits',
+    label: '鸣谢',
+    caption: 'Credits',
+    icon: 'volunteer_activism',
   },
 ];
 
@@ -55,17 +56,47 @@ const androidReleaseUrl = 'https://github.com/LHT02/KIGTTS/releases/tag/APP0.1.0
 const androidApkUrl = 'https://github.com/LHT02/KIGTTS/releases/download/APP0.1.0/app-release.apk';
 const trainerModelScopeUrl = 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files';
 const trainerHuggingFaceUrl = 'https://huggingface.co/LHT02/kigtts-trainer/tree/main';
+const projectUrl = 'https://github.com/LHT02/KIGTTS';
+const androidLegalUrl = './legal/android.html';
+const trainerLegalUrl = './legal/trainer.html';
 
 const downloadNotes = [
   `手机扫描二维码访问 ${qrValue}`,
-  '训练器与 APK 可分别接真实链接',
-  '整个站点已经适配 GitHub Pages 静态部署',
+  'APK 指向 GitHub Release APP0.1.0',
+  '训练器提供 ModelScope 与 Hugging Face 镜像',
 ];
 
-const labItems = [
-  '保留深色流光气质，但减少与主页面抢视觉。',
-  '方便挂 Beta 下载、更新日志和实验说明。',
-  '移动端沿用抽屉导航，不挤压主内容宽度。',
+const producerCredits = [
+  ['LHT02 / LHT Studio', '项目发起、Android 主线、训练器流程与站点维护'],
+  ['KIGTTS Contributors', '功能测试、问题反馈、文档补充与场景验证'],
+  ['Flutter Beta Branch', '并行重构探索，后续公开构建会在下载页接入'],
+];
+
+const acknowledgementLibraries = [
+  {
+    name: 'KIGTTS',
+    role: '项目主页',
+    logo: logoWhite,
+    href: projectUrl,
+    featured: true,
+  },
+  { name: 'Android', role: 'Android 客户端平台', simpleIcon: 'android', href: 'https://developer.android.com/' },
+  { name: 'Kotlin', role: 'Android 主线语言', simpleIcon: 'kotlin', href: 'https://kotlinlang.org/' },
+  { name: 'Jetpack Compose', role: 'Android UI 框架', simpleIcon: 'jetpackcompose', href: 'https://developer.android.com/compose' },
+  { name: 'Flutter', role: 'Beta 重构分支', simpleIcon: 'flutter', href: 'https://flutter.dev/' },
+  { name: 'Material Symbols', role: '图标体系', simpleIcon: 'materialdesignicons', href: 'https://fonts.google.com/icons' },
+  { name: 'sherpa-onnx', role: '离线 ASR / 说话人验证', logo: 'https://github.com/k2-fsa.png?size=96', href: 'https://github.com/k2-fsa/sherpa-onnx', monochrome: true },
+  { name: 'ONNX Runtime', role: '模型推理运行时', simpleIcon: 'onnx', href: 'https://onnxruntime.ai/' },
+  { name: 'Piper', role: '离线 TTS / 训练链路', logo: 'https://github.com/OHF-Voice.png?size=96', href: 'https://github.com/OHF-Voice/piper1-gpl', monochrome: true },
+  { name: 'piper-phonemize', role: '音素转换', logo: 'https://github.com/rhasspy.png?size=96', href: 'https://github.com/rhasspy/piper-phonemize', monochrome: true },
+  { name: 'eSpeak NG', role: 'Piper 发音数据', logo: 'https://github.com/espeak-ng.png?size=96', href: 'https://github.com/espeak-ng/espeak-ng', monochrome: true },
+  { name: 'Electron', role: '桌面训练器壳层', simpleIcon: 'electron', href: 'https://www.electronjs.org/' },
+  { name: 'React', role: '训练器与网页 UI', simpleIcon: 'react', href: 'https://react.dev/' },
+  { name: 'Python', role: '训练器后端流程', simpleIcon: 'python', href: 'https://www.python.org/' },
+  { name: 'PyTorch', role: '训练与蒸馏依赖', simpleIcon: 'pytorch', href: 'https://pytorch.org/' },
+  { name: 'Hugging Face', role: '训练器镜像', simpleIcon: 'huggingface', href: 'https://huggingface.co/LHT02/kigtts-trainer/tree/main' },
+  { name: 'ModelScope', role: '训练器国内镜像', logo: 'https://modelscope.cn/favicon.ico', href: 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files' },
+  { name: 'GitHub', role: '源码与发行页', simpleIcon: 'github', href: projectUrl, monochrome: true },
 ];
 
 const downloadTabs = [
@@ -111,13 +142,13 @@ const downloadTabs = [
     icon: 'flutter',
     eyebrow: 'FLUTTER / BETA',
     title: '暂未上线，敬请期待',
-    summary: 'Flutter Beta 入口会在可公开测试后接入。现在先保留独立页签，避免用户误以为已有可下载构建。',
+    summary: 'Flutter Beta 是并行重构探索分支，当前尚未发布公开测试构建。可下载版本上线后会接入这一页签，安卓主线仍以 Kotlin + Jetpack Compose 版本为准。',
     meta: [
       ['状态', '未上线'],
       ['入口', '预留'],
       ['计划', '后续开放测试'],
     ],
-    bullets: ['当前不提供安装包', '上线后会替换为真实下载地址', '正式入口会继续沿用这一张下载卡片'],
+    bullets: ['当前不提供安装包', '上线后会替换为真实下载地址', '安卓主线问题仍以 Android 软件为准'],
     actions: [
       { label: '暂未上线', icon: 'hourglass_empty', disabled: true, primary: true },
       { label: '敬请期待', icon: 'notifications_active', disabled: true },
@@ -272,6 +303,113 @@ export function SymbolIcon({ name, size = 24, sx }) {
     >
       {name}
     </Icon>
+  );
+}
+
+function ProgressiveImage({ src, alt, sx, eager = false }) {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <Box
+      component="img"
+      src={src}
+      alt={alt}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      onLoad={() => setLoaded(true)}
+      sx={[
+        {
+          opacity: loaded ? 1 : 0.18,
+          transition: 'opacity 420ms ease, filter 520ms ease, transform 520ms ease',
+        },
+        sx,
+        !loaded && {
+          filter: 'blur(18px) saturate(0.72)',
+          transform: 'scale(0.985)',
+        },
+      ]}
+    />
+  );
+}
+
+function CreditLogo({ item }) {
+  const source = item.simpleIcon ? `https://cdn.simpleicons.org/${item.simpleIcon}/white` : item.logo;
+  const [imageVisible, setImageVisible] = useState(Boolean(source));
+  const content = (
+    <Stack
+      spacing={1.05}
+      sx={{
+        height: '100%',
+        minHeight: { xs: 104, sm: 116 },
+        p: { xs: 1.15, sm: 1.35 },
+        ...md2Surface,
+        borderRadius: 0.7,
+        backgroundColor: item.featured ? alpha('#038387', 0.24) : alpha('#2f3132', 0.92),
+        borderColor: item.featured ? alpha('#8ff5f7', 0.28) : alpha('#ffffff', 0.06),
+        justifyContent: 'space-between',
+        transition: 'transform 180ms ease, border-color 180ms ease, background-color 180ms ease',
+        '&:hover': {
+          transform: 'translate3d(0, -2px, 0)',
+          borderColor: alpha('#8ff5f7', 0.34),
+          backgroundColor: item.featured ? alpha('#038387', 0.3) : alpha('#364044', 0.92),
+        },
+      }}
+    >
+      <Box
+        sx={{
+          height: { xs: 38, sm: 46 },
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+        }}
+      >
+        {imageVisible ? (
+          <Box
+            component="img"
+            src={source}
+            alt={`${item.name} logo`}
+            loading="lazy"
+            decoding="async"
+            onError={() => setImageVisible(false)}
+            sx={{
+              width: item.featured ? { xs: 104, sm: 132 } : { xs: 34, sm: 40 },
+              maxHeight: item.featured ? { xs: 36, sm: 42 } : { xs: 34, sm: 40 },
+              objectFit: 'contain',
+              objectPosition: 'left center',
+              filter: item.monochrome ? 'grayscale(1) brightness(0) invert(1)' : 'none',
+            }}
+          />
+        ) : (
+          <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '1rem', sm: '1.12rem' }, fontWeight: 700 }}>
+            {item.name}
+          </Typography>
+        )}
+      </Box>
+      <Box>
+        <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.9rem', sm: '1rem' }, fontWeight: 700, lineHeight: 1.18 }}>
+          {item.name}
+        </Typography>
+        <Typography sx={{ mt: 0.45, color: alpha('#ffffff', 0.62), fontSize: { xs: '0.68rem', sm: '0.76rem' }, lineHeight: 1.35 }}>
+          {item.role}
+        </Typography>
+      </Box>
+    </Stack>
+  );
+
+  if (!item.href) {
+    return content;
+  }
+
+  return (
+    <Box
+      component="a"
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      sx={{ display: 'block', height: '100%', color: 'inherit', textDecoration: 'none' }}
+    >
+      {content}
+    </Box>
   );
 }
 
@@ -500,7 +638,7 @@ function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 
               ))}
         </Typography>
         <Button
-          onClick={() => onSelect('lab')}
+          onClick={() => onSelect?.()}
           sx={{
             flexShrink: 0,
             minWidth: isBanner ? { xs: 94, sm: 118 } : compact ? { xs: 138, sm: 148 } : denseDesktop ? dp(92, 66) : dp(198, 116),
@@ -747,7 +885,7 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
         }}
       />
       <Box sx={{ display: desktopLayout ? 'block' : { xs: 'none', lg: 'block' } }}>
-        <BetaBubble onSelect={onSelect} densityScale={densityScale} />
+        <BetaBubble onSelect={() => onSelectDownloadTab?.('beta')} densityScale={densityScale} />
       </Box>
       <Box
         sx={{
@@ -768,7 +906,7 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
         }}
       >
         <Box sx={{ width: '100%', display: desktopLayout ? 'none' : { xs: 'flex', lg: 'none' }, justifyContent: 'center' }}>
-          <BetaBubble onSelect={onSelect} compact banner />
+          <BetaBubble onSelect={() => onSelectDownloadTab?.('beta')} compact banner />
         </Box>
         <Box
           sx={{
@@ -783,20 +921,30 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
           }}
         >
           <Box
-            component="img"
-            src={heroShot}
-            alt="KIGTTS 视觉主体"
             sx={{
               width: desktopLayout ? desktopHeroWidth : { xs: 'clamp(250px, 78vw, 340px)', sm: 'min(72vw, 520px)', md: 'min(68vw, 620px)', lg: 'min(48vw, 800px)', xl: 'min(46vw, 880px)' },
               height: 'auto',
               aspectRatio: '1 / 1',
-              objectFit: 'contain',
               maxWidth: '100%',
-              display: 'block',
               marginInline: 'auto',
-              filter: 'drop-shadow(0 18px 34px rgba(0,0,0,0.26))',
             }}
-          />
+          >
+            <Suspense
+              fallback={
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    borderRadius: '50%',
+                    background: `radial-gradient(circle, ${alpha('#038387', 0.22)} 0%, transparent 68%)`,
+                    filter: 'blur(10px)',
+                  }}
+                />
+              }
+            >
+              <GlassHeroModel densityScale={densityScale} sx={{ width: '100%', height: '100%', minHeight: 0 }} />
+            </Suspense>
+          </Box>
         </Box>
         <Box
           sx={{
@@ -1062,11 +1210,11 @@ export function AboutSection() {
               </Typography>
             </Stack>
 
-            <Box
+            <ProgressiveImage
               key={currentFeature.imageAlt}
-              component="img"
               src={currentFeature.image}
               alt={currentFeature.imageAlt}
+              eager={activeSlide === 0}
               sx={{
                 position: 'relative',
                 zIndex: 1,
@@ -1113,8 +1261,7 @@ export function AboutSection() {
                   boxShadow: '0 8px 20px rgba(0,0,0,0.36)',
                 }}
               >
-                <Box
-                  component="img"
+                <ProgressiveImage
                   src={currentFeature.secondaryImage}
                   alt={currentFeature.secondaryImageAlt}
                   sx={{
@@ -1992,16 +2139,21 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
   );
 }
 
-export function LabSection({ onSelect }) {
+export function CreditsSection() {
   return (
     <Box
       sx={{
-        ...centeredSectionSx,
-        px: { xs: 1.8, sm: 3.6, lg: 5.8 },
-        py: { xs: 2, sm: 3.2, lg: 4.4 },
+        height: '100%',
+        width: '100%',
+        boxSizing: 'border-box',
+        display: 'grid',
+        gridTemplateRows: 'auto minmax(0, 1fr) auto',
+        px: { xs: 0.85, sm: 2.4, lg: 5.4, xl: 6.4 },
+        py: { xs: 0.8, sm: 2.2, lg: 3.6 },
+        overflow: 'hidden',
       }}
     >
-      <Box sx={{ ...centeredContentSx, maxWidth: { xs: '100%', lg: 1260, xl: 1380 } }}>
+      <Box sx={{ ...centeredContentSx, maxWidth: { xs: '100%', lg: 1420, xl: 1580 } }}>
         <Typography
           sx={{
             color: alpha('#ffffff', 0.82),
@@ -2010,89 +2162,200 @@ export function LabSection({ onSelect }) {
             textAlign: { xs: 'center', lg: 'left' },
           }}
         >
-          BETA / LAB
+          CREDITS / REFERENCES
         </Typography>
-        <Grid container spacing={{ xs: 1.6, sm: 3 }} justifyContent="center" sx={{ mt: { xs: 1.2, sm: 1.6 } }}>
-          <Grid size={{ xs: 12, lg: 7.2 }}>
-            <Box
-              sx={{
-                minHeight: { xs: 'auto', sm: 360, lg: 430 },
-                p: { xs: 2, sm: 2.8, md: 3.6 },
-                background: `linear-gradient(155deg, ${alpha('#152425', 0.98)} 0%, ${alpha(
-                  '#0f6f73',
-                  0.28,
-                )} 100%)`,
-                border: `1px solid ${alpha('#ffffff', 0.04)}`,
-                borderRadius: 1,
-                boxShadow: md2RaisedShadow,
-              }}
-            >
-              <Typography
-                sx={{
-                  maxWidth: 720,
-                  mx: { xs: 'auto', lg: 0 },
-                  fontSize: { xs: '1.42rem', sm: '2rem', md: '2.8rem' },
-                  lineHeight: { xs: 1.16, sm: 1.08 },
-                  color: '#f5f7f7',
-                  textAlign: { xs: 'center', lg: 'left' },
-                }}
-              >
-                这里留给 Flutter Beta、实验功能和未来路线图，不跟首页抢同一个视觉中心。
-              </Typography>
-              <Grid container spacing={{ xs: 1.2, sm: 2 }} justifyContent="center" sx={{ mt: { xs: 1.8, sm: 3.4 } }}>
-                {labItems.map((item) => (
-                  <Grid key={item} size={{ xs: 12, md: 4 }}>
-                    <Box
-                      sx={{
-                        height: '100%',
-                        p: { xs: 1.5, sm: 2.2 },
-                        backgroundColor: alpha('#0a1415', 0.54),
-                        border: `1px solid ${alpha('#ffffff', 0.06)}`,
-                        borderRadius: 1,
-                      }}
-                    >
-                      <Typography sx={{ color: alpha('#ffffff', 0.72), lineHeight: { xs: 1.5, sm: 1.8 }, fontSize: { xs: '0.84rem', sm: '1rem' } }}>{item}</Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          </Grid>
-          <Grid size={{ xs: 12, lg: 4.8 }}>
-            <Stack spacing={{ xs: 1.4, sm: 2.2 }} sx={{ alignItems: 'stretch', justifyContent: 'center' }}>
-              <Box sx={{ display: 'block' }}>
-                <BetaBubble onSelect={() => onSelect?.('home')} compact />
-              </Box>
+        <Typography
+          sx={{
+            mt: { xs: 0.65, sm: 1 },
+            maxWidth: 840,
+            mx: { xs: 'auto', lg: 0 },
+            color: '#f5f7f7',
+            fontSize: { xs: '1.62rem', sm: '2.1rem', lg: '2.58rem' },
+            lineHeight: { xs: 1.12, sm: 1.08 },
+            fontWeight: 700,
+            letterSpacing: '-0.03em',
+            textAlign: { xs: 'center', lg: 'left' },
+          }}
+        >
+          <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+            鸣谢制作人与 KIGTTS 引用的开源项目。
+          </Box>
+          <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
+            鸣谢与引用
+          </Box>
+        </Typography>
+      </Box>
+
+      <Box
+        sx={{
+          ...centeredContentSx,
+          maxWidth: { xs: '100%', lg: 1420, xl: 1580 },
+          minHeight: 0,
+          mt: { xs: 0.75, sm: 1.8, lg: 2.4 },
+          overflowY: { xs: 'auto', lg: 'hidden' },
+          overflowX: 'hidden',
+          pb: { xs: 1.2, lg: 0 },
+          scrollbarWidth: 'thin',
+        }}
+      >
+        <Grid container spacing={{ xs: 1.05, sm: 1.6, lg: 2.2 }} sx={{ height: '100%', minHeight: 0 }}>
+          <Grid size={{ xs: 12, lg: 4 }}>
+            <Stack spacing={{ xs: 1.05, sm: 1.35 }} sx={{ height: '100%', minHeight: 0 }}>
               <Box
                 sx={{
-                  p: { xs: 2, sm: 2.8, md: 3.2 },
+                  p: { xs: 0.95, sm: 2, lg: 2.35 },
                   ...md2Surface,
+                  borderRadius: 0.8,
+                  boxShadow: md2RaisedShadow,
+                  background: `
+                    linear-gradient(145deg, ${alpha('#038387', 0.26)} 0%, transparent 42%),
+                    repeating-linear-gradient(135deg, ${alpha('#ffffff', 0.035)} 0 1px, transparent 1px 16px),
+                    ${alpha('#2f3132', 0.95)}
+                  `,
                 }}
               >
-                <Stack spacing={2}>
-                  <Typography sx={{ fontSize: { xs: '1.12rem', sm: '1.4rem' }, color: '#f5f7f7' }}>可继续接入</Typography>
-                  <Divider sx={{ borderColor: alpha('#ffffff', 0.08) }} />
-                  <Typography sx={{ color: alpha('#ffffff', 0.72), lineHeight: { xs: 1.55, sm: 1.8 }, fontSize: { xs: '0.86rem', sm: '1rem' } }}>
-                    后续把 Beta 的真实入口、更新日志和测试说明接进来就可以，不需要再改整套布局。
-                  </Typography>
+                <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: '0.72rem', letterSpacing: '0.16em', fontWeight: 700 }}>
+                  PRODUCER
+                </Typography>
+                <Stack spacing={{ xs: 0.7, sm: 1.05 }} sx={{ mt: { xs: 0.75, sm: 1.5 } }}>
+                  {producerCredits.map(([name, role], index) => (
+                    <Box
+                      key={name}
+                      sx={{
+                        display: 'grid',
+                        gridTemplateColumns: 'auto minmax(0, 1fr)',
+                        gap: 1,
+                        alignItems: 'center',
+                        p: { xs: 0.7, sm: 1.05 },
+                        backgroundColor: alpha('#0a1415', 0.48),
+                        border: `1px solid ${alpha('#ffffff', 0.07)}`,
+                        borderRadius: 0.6,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          width: { xs: 30, sm: 40 },
+                          height: { xs: 30, sm: 40 },
+                          display: 'grid',
+                          placeItems: 'center',
+                          color: '#ffffff',
+                          backgroundColor: index === 0 ? '#038387' : alpha('#ffffff', 0.1),
+                          borderRadius: 0.45,
+                          fontWeight: 700,
+                        }}
+                      >
+                        {String(index + 1).padStart(2, '0')}
+                      </Box>
+                      <Box sx={{ minWidth: 0 }}>
+                        <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.86rem', sm: '1.05rem' }, fontWeight: 700 }}>
+                          {name}
+                        </Typography>
+                        <Typography sx={{ mt: 0.2, color: alpha('#ffffff', 0.62), fontSize: { xs: '0.66rem', sm: '0.8rem' }, lineHeight: 1.32 }}>
+                          {role}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  ))}
+                </Stack>
+              </Box>
+
+              <Box sx={{ p: { xs: 0.95, sm: 1.8 }, ...md2Surface, borderRadius: 0.8 }}>
+                <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: '0.72rem', letterSpacing: '0.16em', fontWeight: 700 }}>
+                  LEGAL
+                </Typography>
+                <Typography sx={{ mt: 0.65, color: alpha('#ffffff', 0.76), lineHeight: 1.44, fontSize: { xs: '0.68rem', sm: '0.9rem' } }}>
+                  KIGTTS 源码以 GPL-3.0 发布；安卓端与训练端分别包含不同第三方依赖、模型资源和使用边界，已拆成独立页面。
+                </Typography>
+                <Stack direction={{ xs: 'column', sm: 'row', lg: 'column' }} spacing={1} sx={{ mt: 1.25 }}>
                   <Button
-                    startIcon={<SymbolIcon name="deployed_code" size={22} />}
-                    sx={{
-                      alignSelf: { xs: 'center', sm: 'flex-start' },
-                      px: 3.4,
-                      ...md2Button,
-                      minHeight: { xs: 40, sm: 44 },
-                      justifyContent: 'center',
-                    }}
+                    component="a"
+                    href={androidLegalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    startIcon={<SymbolIcon name="android" size={22} />}
+                    sx={{ ...md2Button, minHeight: { xs: 38, sm: 42 }, justifyContent: 'center', fontSize: { xs: '0.78rem', sm: '0.88rem' } }}
                   >
-                    保留实验入口
+                    安卓端许可证与协议
+                  </Button>
+                  <Button
+                    component="a"
+                    href={trainerLegalUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    startIcon={<SymbolIcon name="laptop_mac" size={22} />}
+                    sx={{ ...md2Button, minHeight: { xs: 38, sm: 42 }, justifyContent: 'center', fontSize: { xs: '0.78rem', sm: '0.88rem' } }}
+                  >
+                    训练端许可证与协议
                   </Button>
                 </Stack>
               </Box>
             </Stack>
           </Grid>
+
+          <Grid size={{ xs: 12, lg: 8 }}>
+            <Box
+              sx={{
+                height: '100%',
+                minHeight: 0,
+                p: { xs: 1.05, sm: 1.35, lg: 1.6 },
+                ...md2Surface,
+                borderRadius: 0.8,
+                overflow: 'hidden',
+              }}
+            >
+              <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: { xs: 1, sm: 1.25 } }}>
+                <Box sx={{ width: 4, height: 28, backgroundColor: '#038387', boxShadow: `0 0 18px ${alpha('#038387', 0.72)}` }} />
+                <Box>
+                  <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '1.02rem', sm: '1.2rem' }, fontWeight: 700 }}>
+                    Reference Stack
+                  </Typography>
+                  <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: { xs: '0.68rem', sm: '0.76rem' } }}>
+                    真实项目、框架、模型链路与下载镜像入口
+                  </Typography>
+                </Box>
+              </Stack>
+              <Box
+                sx={{
+                  height: 'calc(100% - 54px)',
+                  minHeight: { xs: 280, sm: 320, lg: 0 },
+                  overflowY: 'auto',
+                  pr: { xs: 0.3, sm: 0.6 },
+                  scrollbarWidth: 'thin',
+                  '&::-webkit-scrollbar': { width: 7 },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: alpha('#77d7d9', 0.28),
+                    borderRadius: 999,
+                  },
+                }}
+              >
+                <Grid container spacing={{ xs: 0.85, sm: 1.1, xl: 1.35 }}>
+                  {acknowledgementLibraries.map((item) => (
+                    <Grid key={item.name} size={{ xs: 6, sm: 4, md: 3, lg: item.featured ? 3.2 : 2.4, xl: item.featured ? 3 : 2 }}>
+                      <CreditLogo item={item} />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            </Box>
+          </Grid>
         </Grid>
       </Box>
+
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={{ xs: 0.35, sm: 2.2 }}
+        alignItems="center"
+        justifyContent="center"
+        sx={{
+          mt: { xs: 0.9, sm: 1.3 },
+          color: alpha('#ffffff', 0.48),
+          fontSize: { xs: '0.66rem', sm: '0.76rem' },
+          letterSpacing: '0.04em',
+        }}
+      >
+        <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>ICP备案号：待填写</Typography>
+        <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>公网安备：待填写</Typography>
+      </Stack>
     </Box>
   );
 }
