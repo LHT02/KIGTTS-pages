@@ -59,6 +59,29 @@ a:hover {
   letter-spacing: -0.06em;
 }
 
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  width: clamp(132px, 22vw, 220px);
+}
+
+.brand-logo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.document-topbar {
+  align-items: center;
+}
+
+.doc-nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
 .back {
   min-height: 42px;
   padding: 0 18px;
@@ -69,6 +92,11 @@ a:hover {
   color: #fff;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.28), 0 8px 18px rgba(0, 0, 0, 0.2);
+}
+
+.back.ghost {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border);
 }
 
 .back:hover {
@@ -123,6 +151,20 @@ h1 {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28), 0 8px 20px rgba(0, 0, 0, 0.16);
 }
 
+.link-card {
+  display: block;
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.link-card:hover {
+  transform: translateY(-2px);
+  text-decoration: none;
+  border-color: rgba(143, 245, 247, 0.28);
+  background: rgba(55, 62, 63, 0.92);
+}
+
 .card h2 {
   margin: 0 0 12px;
   font-size: 20px;
@@ -147,6 +189,33 @@ h1 {
   color: rgba(245, 251, 251, 0.76);
 }
 
+.document-shell {
+  width: min(100%, 1240px);
+}
+
+.document-hero {
+  margin-bottom: 18px;
+}
+
+.document-card {
+  padding: clamp(14px, 2.4vw, 24px);
+  background: rgba(47, 49, 50, 0.94);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.28), 0 10px 26px rgba(0, 0, 0, 0.2);
+}
+
+.document-card pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  color: rgba(245, 251, 251, 0.82);
+  font-family: "Google Sans", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", sans-serif;
+  font-size: clamp(13px, 1.6vw, 15px);
+  line-height: 1.76;
+}
+
 footer {
   margin-top: 28px;
   color: rgba(245, 251, 251, 0.42);
@@ -162,6 +231,12 @@ footer {
   .topbar {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .document-topbar,
+  .doc-nav {
+    align-items: flex-start;
+    justify-content: flex-start;
   }
 
   .grid {
