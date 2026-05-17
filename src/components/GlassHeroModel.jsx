@@ -5,38 +5,71 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { RectAreaLightUniformsLib } from 'three/examples/jsm/lights/RectAreaLightUniformsLib.js';
 import bxzmModelUrl from '../assets/bxzm.glb?url';
 
 const glassMaterialSettings = {
-  color: 0xe2ffff,
+  color: 0xbff6f3,
   metalness: 0,
-  roughness: 0.46,
-  transmission: 0.72,
-  thickness: 1.32,
-  ior: 1.42,
-  dispersion: 0.62,
+  roughness: 0.16,
+  transmission: 0.96,
+  thickness: 1.52,
+  ior: 1.51,
+  dispersion: 0.38,
   transparent: true,
-  opacity: 0.42,
+  opacity: 0.34,
   clearcoat: 1,
-  clearcoatRoughness: 0.18,
-  specularIntensity: 1.55,
+  clearcoatRoughness: 0.065,
+  specularIntensity: 1.85,
+  specularColor: 0xffffff,
   envMapIntensity: 2.85,
-  sheen: 0.24,
-  sheenColor: 0xcfffff,
-  sheenRoughness: 0.6,
-  iridescence: 0.38,
-  iridescenceIOR: 1.2,
-  iridescenceThicknessRange: [80, 520],
-  emissive: 0xeaffff,
-  emissiveIntensity: 0.026,
-  attenuationColor: 0xbffcff,
-  attenuationDistance: 1.55,
+  sheen: 0.08,
+  sheenColor: 0xd8ffff,
+  sheenRoughness: 0.36,
+  iridescence: 0.24,
+  iridescenceIOR: 1.32,
+  iridescenceThicknessRange: [120, 460],
+  emissive: 0xdfffff,
+  emissiveIntensity: 0.006,
+  attenuationColor: 0x8ff5f7,
+  attenuationDistance: 4.8,
 };
 
-function createFresnelGlassMaterial(settings = glassMaterialSettings, rimStrength = 0.38) {
+function createLiquidNormalTexture(size = 160) {
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const context = canvas.getContext('2d');
+  const image = context.createImageData(size, size);
+
+  for (let y = 0; y < size; y += 1) {
+    for (let x = 0; x < size; x += 1) {
+      const offset = (y * size + x) * 4;
+      const waveA = Math.sin(x * 0.12 + y * 0.045);
+      const waveB = Math.cos(y * 0.1 - x * 0.055);
+      const ripple = Math.sin((x + y) * 0.037) * Math.cos((x - y) * 0.031);
+      image.data[offset] = 128 + waveA * 14 + ripple * 8;
+      image.data[offset + 1] = 128 + waveB * 14 - ripple * 7;
+      image.data[offset + 2] = 232 + Math.sin(x * 0.021) * 8;
+      image.data[offset + 3] = 255;
+    }
+  }
+
+  context.putImageData(image, 0, 0);
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.wrapS = THREE.RepeatWrapping;
+  texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set(2.1, 2.1);
+  texture.anisotropy = 4;
+  texture.colorSpace = THREE.NoColorSpace;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function createFresnelGlassMaterial(settings = glassMaterialSettings, rimStrength = 0.34) {
   const material = new THREE.MeshPhysicalMaterial(settings);
   material.side = THREE.FrontSide;
-  material.depthWrite = true;
+  material.depthWrite = false;
   material.depthTest = true;
   material.forceSinglePass = true;
   material.premultipliedAlpha = true;
@@ -59,18 +92,18 @@ function createFresnelGlassMaterial(settings = glassMaterialSettings, rimStrengt
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <dithering_fragment>',
       `float kigttsFrostNoise = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
-      float kigttsFrostGrain = smoothstep(0.32, 1.0, kigttsFrostNoise);
+      float kigttsFrostGrain = smoothstep(0.48, 1.0, kigttsFrostNoise);
       float kigttsChroma = vKigttsFresnel * ${rimStrength.toFixed(3)};
       float kigttsLiquidWave = sin(gl_FragCoord.x * 0.026 - gl_FragCoord.y * 0.018) * 0.5 + 0.5;
-      float kigttsSpecularStreak = smoothstep(0.9, 1.0, kigttsLiquidWave) * (0.08 + vKigttsFresnel * 0.28);
-      gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.82, 0.985, 1.0), 0.08 + kigttsFrostGrain * 0.024);
-      gl_FragColor.r += kigttsChroma * 0.14;
-      gl_FragColor.g += kigttsChroma * 0.012;
-      gl_FragColor.b += kigttsChroma * 0.19;
-      gl_FragColor.rgb += vec3(0.0, 0.72, 0.66) * vKigttsFresnel * 0.12;
-      gl_FragColor.rgb += vec3(1.0, 1.0, 1.0) * pow(vKigttsFresnel, 1.35) * 0.22;
-      gl_FragColor.rgb += vec3(0.9, 1.0, 1.0) * kigttsSpecularStreak;
-      gl_FragColor.a = clamp(gl_FragColor.a + 0.06 + vKigttsFresnel * 0.28 + kigttsFrostGrain * 0.025, 0.26, 0.68);
+      float kigttsSpecularStreak = smoothstep(0.92, 1.0, kigttsLiquidWave) * (0.035 + vKigttsFresnel * 0.16);
+      gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.86, 1.0, 0.985), 0.025 + kigttsFrostGrain * 0.012);
+      gl_FragColor.r += kigttsChroma * 0.07;
+      gl_FragColor.g += kigttsChroma * 0.014;
+      gl_FragColor.b += kigttsChroma * 0.115;
+      gl_FragColor.rgb += vec3(0.0, 0.66, 0.60) * vKigttsFresnel * 0.075;
+      gl_FragColor.rgb += vec3(1.0, 1.0, 1.0) * pow(vKigttsFresnel, 1.5) * 0.16;
+      gl_FragColor.rgb += vec3(0.86, 1.0, 0.98) * kigttsSpecularStreak;
+      gl_FragColor.a = clamp(gl_FragColor.a * 0.72 + 0.055 + vKigttsFresnel * 0.28 + kigttsFrostGrain * 0.018, 0.14, 0.46);
       #include <dithering_fragment>`,
     );
   };
@@ -167,28 +200,60 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.58;
+    renderer.toneMappingExposure = 1.18;
     mountNode.appendChild(renderer.domElement);
 
+    RectAreaLightUniformsLib.init();
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
-    const environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.04).texture;
+    const environment = pmremGenerator.fromScene(new RoomEnvironment(), 0.02).texture;
     scene.environment = environment;
 
     const root = new THREE.Group();
     root.rotation.set(-0.06, 0.24, 0.02);
     scene.add(root);
 
-    scene.add(new THREE.HemisphereLight(0xf2ffff, 0x041011, 2.85));
-    const keyLight = new THREE.DirectionalLight(0xffffff, 4.2);
-    keyLight.position.set(4.4, 5.4, 5.6);
-    scene.add(keyLight);
-    const fillLight = new THREE.DirectionalLight(0xc8ffff, 2.4);
-    fillLight.position.set(-2.2, 1.6, 3.6);
-    scene.add(fillLight);
-    const rimLight = new THREE.DirectionalLight(0x8ff5f7, 3.6);
-    rimLight.position.set(-3.8, 1.6, -3.2);
-    scene.add(rimLight);
-    const cursorLight = new THREE.PointLight(0xffffff, 0, 4.6, 1.45);
+    scene.add(new THREE.HemisphereLight(0xf4ffff, 0x020808, 0.42));
+    const createAreaLight = ({ color, intensity, width, height, position, target }) => {
+      const light = new THREE.RectAreaLight(color, intensity, width, height);
+      light.position.set(...position);
+      light.lookAt(...target);
+      scene.add(light);
+      return light;
+    };
+
+    createAreaLight({
+      color: 0x003b3e,
+      intensity: 2.9,
+      width: 2.2,
+      height: 2.2,
+      position: [-2.0, 1.25, 2.15],
+      target: [0.0, 0.0, 0.0],
+    });
+    createAreaLight({
+      color: 0x003b3e,
+      intensity: 2.75,
+      width: 2.2,
+      height: 2.2,
+      position: [2.75, 0.16, 2.55],
+      target: [0.15, -0.06, 0.0],
+    });
+    createAreaLight({
+      color: 0x003b3e,
+      intensity: 1.7,
+      width: 2.4,
+      height: 2.4,
+      position: [4.2, -2.6, 2.45],
+      target: [0.15, -0.1, 0.0],
+    });
+    createAreaLight({
+      color: 0xffffff,
+      intensity: 6.8,
+      width: 2.4,
+      height: 2.4,
+      position: [-0.72, -3.15, 2.8],
+      target: [0.05, 0.04, 0.0],
+    });
+    const cursorLight = new THREE.PointLight(0xffffff, 0, 4.8, 1.35);
     cursorLight.position.set(0.8, 0.4, 2.6);
     scene.add(cursorLight);
     const cursorState = { x: 0.8, y: 0.4, targetX: 0.8, targetY: 0.4, hover: 0 };
@@ -198,14 +263,22 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     fallbackModel.visible = false;
     root.add(fallbackModel);
 
-    const materialSettings = { ...glassMaterialSettings };
-    const accentMaterialSettings = {
+    const liquidNormalMap = createLiquidNormalTexture();
+    const materialSettings = {
       ...glassMaterialSettings,
-      color: 0xebffff,
-      opacity: 0.5,
-      transmission: 0.64,
-      roughness: 0.5,
-      emissiveIntensity: 0.04,
+      normalMap: liquidNormalMap,
+      normalScale: new THREE.Vector2(0.2, 0.2),
+      clearcoatNormalMap: liquidNormalMap,
+      clearcoatNormalScale: new THREE.Vector2(0.08, 0.08),
+    };
+    const accentMaterialSettings = {
+      ...materialSettings,
+      color: 0xffffff,
+      transmission: 0.94,
+      roughness: 0.2,
+      thickness: 1.35,
+      opacity: 0.42,
+      emissiveIntensity: 0.012,
     };
 
     const loader = new GLTFLoader();
@@ -242,7 +315,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
             child.castShadow = false;
             child.receiveShadow = false;
             const isAccent = lowerName.includes('circle');
-            child.material = createFresnelGlassMaterial(isAccent ? accentMaterialSettings : materialSettings, isAccent ? 0.56 : 0.42);
+            child.material = createFresnelGlassMaterial(isAccent ? accentMaterialSettings : materialSettings, isAccent ? 0.48 : 0.34);
           }
         });
 
@@ -328,7 +401,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       cursorState.x += (cursorState.targetX - cursorState.x) * 0.16;
       cursorState.y += (cursorState.targetY - cursorState.y) * 0.16;
       cursorLight.position.set(cursorState.x, cursorState.y, 2.55);
-      cursorLight.intensity += ((cursorState.hover ? 3.8 : 0.15) - cursorLight.intensity) * 0.12;
+      cursorLight.intensity += ((cursorState.hover ? 5.2 : 0.22) - cursorLight.intensity) * 0.12;
 
       renderer.render(scene, camera);
       frameId = window.requestAnimationFrame(renderFrame);
@@ -345,6 +418,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       resizeObserver.disconnect();
       dracoLoader.dispose();
       disposeObject3d(root);
+      liquidNormalMap.dispose();
       environment.dispose();
       pmremGenerator.dispose();
       renderer.dispose();
@@ -406,7 +480,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
           }}
         >
           <Typography sx={{ color: '#8ff5f7', fontSize: '0.72rem', letterSpacing: '0.12em', fontWeight: 700 }}>
-            MODEL {loadProgress || 1}%
+            模型加载 {loadProgress || 1}%
           </Typography>
         </Box>
       ) : null}

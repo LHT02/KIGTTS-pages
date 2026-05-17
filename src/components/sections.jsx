@@ -93,7 +93,7 @@ const producerCredits = [
 ];
 
 const friendLinks = [
-  { name: 'KIGTTS GitHub', caption: '项目源码与发行页', icon: 'code', href: projectUrl },
+  { name: 'KIGTTS GitHub', caption: '项目主页与版本发布', icon: 'code', href: projectUrl },
   { name: 'Android Release', caption: 'APP0.1.0 下载入口', icon: 'android', href: androidReleaseUrl },
   { name: 'ModelScope Trainer', caption: '训练器下载入口', icon: 'deployed_code', href: trainerModelScopeUrl },
   { name: 'Hugging Face Trainer', caption: '训练器备用下载', icon: 'hub', href: trainerHuggingFaceUrl },
@@ -113,7 +113,7 @@ const acknowledgementLibraries = [
   { name: 'Android', role: 'Android 客户端平台', logo: './logos/android.svg', href: 'https://developer.android.com/' },
   { name: 'Kotlin', role: 'Android 主线语言', logo: './logos/kotlin.svg', href: 'https://kotlinlang.org/' },
   { name: 'Jetpack Compose', role: 'Android UI 框架', logo: './logos/jetpackcompose.svg', href: 'https://developer.android.com/compose' },
-  { name: 'Flutter', role: 'Beta 重构分支', logo: './logos/flutter.svg', href: 'https://flutter.dev/' },
+  { name: 'Flutter', role: 'Beta 版本技术栈', logo: './logos/flutter.svg', href: 'https://flutter.dev/' },
   { name: 'Material Symbols', role: '图标体系', logo: './logos/materialdesign.svg', href: 'https://fonts.google.com/icons' },
   { name: 'sherpa-onnx', role: '离线 ASR / 说话人验证', logo: './logos/k2-fsa.png', href: 'https://github.com/k2-fsa/sherpa-onnx', monochrome: true },
   { name: 'ONNX Runtime', role: '模型推理运行时', logo: './logos/onnx.svg', href: 'https://onnxruntime.ai/' },
@@ -126,7 +126,7 @@ const acknowledgementLibraries = [
   { name: 'PyTorch', role: '训练与蒸馏依赖', logo: './logos/pytorch.svg', href: 'https://pytorch.org/' },
   { name: 'Hugging Face', role: '训练器镜像', logo: './logos/huggingface.svg', href: 'https://huggingface.co/LHT02/kigtts-trainer/tree/main' },
   { name: 'ModelScope', role: '训练器国内镜像', logo: './logos/modelscope.ico', href: 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files' },
-  { name: 'GitHub', role: '源码与发行页', logo: './logos/github.svg', href: projectUrl },
+  { name: 'GitHub', role: '版本发布与问题反馈', logo: './logos/github.svg', href: projectUrl },
 ];
 
 const downloadTabs = [
@@ -160,7 +160,7 @@ const downloadTabs = [
       ['镜像', 'ModelScope + Hugging Face'],
       ['用途', '语音包制作'],
     ],
-    bullets: ['魔搭适合国内网络直接访问', 'Hugging Face 保留国际镜像和版本树', '下载后按仓库内说明运行训练器'],
+    bullets: ['魔搭适合国内网络直接访问', 'Hugging Face 保留国际下载入口', '下载后按训练器页面提示解压并启动'],
     actions: [
       { label: '魔搭下载', icon: 'deployed_code', href: trainerModelScopeUrl, primary: true },
       { label: 'Hugging Face', icon: 'hub', href: trainerHuggingFaceUrl },
@@ -172,13 +172,13 @@ const downloadTabs = [
     icon: 'flutter',
     eyebrow: 'FLUTTER / BETA',
     title: '暂未上线，敬请期待',
-    summary: 'Flutter Beta 是并行重构探索分支，当前尚未发布公开测试构建。可下载版本上线后会接入这一页签，安卓主线仍以 Kotlin + Jetpack Compose 版本为准。',
+    summary: 'Flutter Beta 是后续版本入口，当前尚未发布公开测试构建。可下载版本上线后会在这一页签提供，安卓主线仍以 Kotlin + Jetpack Compose 版本为准。',
     meta: [
       ['状态', '未上线'],
       ['入口', '预留'],
       ['计划', '后续开放测试'],
     ],
-    bullets: ['当前不提供安装包', '上线后会替换为真实下载地址', '安卓主线问题仍以 Android 软件为准'],
+    bullets: ['当前不提供安装包', '上线后会在此提供下载', '安卓主线问题仍以 Android 软件为准'],
     actions: [
       { label: '暂未上线', icon: 'hourglass_empty', disabled: true, primary: true },
       { label: '敬请期待', icon: 'notifications_active', disabled: true },
@@ -267,7 +267,7 @@ const featureSlides = [
     summary:
       '桌面训练器用于整理语料、蒸馏、Piper 训练和语音包打包；设置区承载识别、朗读、热键、语音包和现场使用偏好的高级配置。',
     bullets: ['Piper 标准训练', 'GPT-SoVITS / VoxCPM2 蒸馏', '训练器导出 Android 可导入语音包'],
-    note: '训练器截图已接入这一项，作为 Android 端语音包制作流程的配套说明。',
+    note: '训练器用于完成语料整理、训练配置和语音包导出，配合 Android 端完成完整制作流程。',
     image: trainerScreen,
     imageAlt: 'KIGTTS 训练器截图',
   },
