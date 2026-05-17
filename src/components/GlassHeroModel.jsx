@@ -8,29 +8,29 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import bxzmModelUrl from '../assets/bxzm.glb?url';
 
 const glassMaterialSettings = {
-  color: 0xecffff,
+  color: 0xe2ffff,
   metalness: 0,
-  roughness: 0.76,
-  transmission: 0.36,
-  thickness: 1.95,
-  ior: 1.2,
-  dispersion: 0.38,
+  roughness: 0.46,
+  transmission: 0.72,
+  thickness: 1.32,
+  ior: 1.42,
+  dispersion: 0.62,
   transparent: true,
-  opacity: 0.74,
-  clearcoat: 0.92,
-  clearcoatRoughness: 0.38,
-  specularIntensity: 1.12,
-  envMapIntensity: 2.25,
-  sheen: 0.42,
+  opacity: 0.42,
+  clearcoat: 1,
+  clearcoatRoughness: 0.18,
+  specularIntensity: 1.55,
+  envMapIntensity: 2.85,
+  sheen: 0.24,
   sheenColor: 0xcfffff,
-  sheenRoughness: 0.84,
-  iridescence: 0.3,
-  iridescenceIOR: 1.14,
-  iridescenceThicknessRange: [90, 420],
+  sheenRoughness: 0.6,
+  iridescence: 0.38,
+  iridescenceIOR: 1.2,
+  iridescenceThicknessRange: [80, 520],
   emissive: 0xeaffff,
-  emissiveIntensity: 0.08,
+  emissiveIntensity: 0.026,
   attenuationColor: 0xbffcff,
-  attenuationDistance: 0.52,
+  attenuationDistance: 1.55,
 };
 
 function createFresnelGlassMaterial(settings = glassMaterialSettings, rimStrength = 0.38) {
@@ -59,15 +59,18 @@ function createFresnelGlassMaterial(settings = glassMaterialSettings, rimStrengt
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <dithering_fragment>',
       `float kigttsFrostNoise = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
-      float kigttsFrostGrain = smoothstep(0.18, 1.0, kigttsFrostNoise);
+      float kigttsFrostGrain = smoothstep(0.32, 1.0, kigttsFrostNoise);
       float kigttsChroma = vKigttsFresnel * ${rimStrength.toFixed(3)};
-      gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.9, 0.995, 1.0), 0.26 + kigttsFrostGrain * 0.052);
-      gl_FragColor.r += kigttsChroma * 0.17;
-      gl_FragColor.g += kigttsChroma * 0.026;
-      gl_FragColor.b += kigttsChroma * 0.24;
-      gl_FragColor.rgb += vec3(0.0, 0.68, 0.6) * vKigttsFresnel * 0.075;
-      gl_FragColor.rgb += vec3(1.0, 1.0, 1.0) * pow(vKigttsFresnel, 1.55) * 0.09;
-      gl_FragColor.a = min(gl_FragColor.a + 0.24 + vKigttsFresnel * 0.3, 0.94);
+      float kigttsLiquidWave = sin(gl_FragCoord.x * 0.026 - gl_FragCoord.y * 0.018) * 0.5 + 0.5;
+      float kigttsSpecularStreak = smoothstep(0.9, 1.0, kigttsLiquidWave) * (0.08 + vKigttsFresnel * 0.28);
+      gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.82, 0.985, 1.0), 0.08 + kigttsFrostGrain * 0.024);
+      gl_FragColor.r += kigttsChroma * 0.14;
+      gl_FragColor.g += kigttsChroma * 0.012;
+      gl_FragColor.b += kigttsChroma * 0.19;
+      gl_FragColor.rgb += vec3(0.0, 0.72, 0.66) * vKigttsFresnel * 0.12;
+      gl_FragColor.rgb += vec3(1.0, 1.0, 1.0) * pow(vKigttsFresnel, 1.35) * 0.22;
+      gl_FragColor.rgb += vec3(0.9, 1.0, 1.0) * kigttsSpecularStreak;
+      gl_FragColor.a = clamp(gl_FragColor.a + 0.06 + vKigttsFresnel * 0.28 + kigttsFrostGrain * 0.025, 0.26, 0.68);
       #include <dithering_fragment>`,
     );
   };
@@ -93,11 +96,11 @@ function createFallbackModel() {
   const glass = createFresnelGlassMaterial(glassMaterialSettings);
   const darkGlass = createFresnelGlassMaterial({
     ...glassMaterialSettings,
-    color: 0xf4ffff,
-    opacity: 0.8,
-    transmission: 0.28,
-    roughness: 0.82,
-    emissiveIntensity: 0.085,
+    color: 0xe8ffff,
+    opacity: 0.52,
+    transmission: 0.62,
+    roughness: 0.54,
+    emissiveIntensity: 0.038,
   }, 0.52);
 
   const panel = new THREE.Mesh(new THREE.BoxGeometry(1.9, 2.72, 0.08, 4, 4, 1), darkGlass.clone());
@@ -123,9 +126,9 @@ function createFallbackModel() {
   const penMaterial = createFresnelGlassMaterial({
     ...glassMaterialSettings,
     color: 0xffffff,
-    opacity: 0.76,
-    transmission: 0.3,
-    roughness: 0.8,
+    opacity: 0.4,
+    transmission: 0.72,
+    roughness: 0.42,
   }, 0.44);
 
   for (let index = 0; index < 2; index += 1) {
@@ -198,11 +201,11 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     const materialSettings = { ...glassMaterialSettings };
     const accentMaterialSettings = {
       ...glassMaterialSettings,
-      color: 0xf3ffff,
-      opacity: 0.76,
-      transmission: 0.3,
-      roughness: 0.82,
-      emissiveIntensity: 0.095,
+      color: 0xebffff,
+      opacity: 0.5,
+      transmission: 0.64,
+      roughness: 0.5,
+      emissiveIntensity: 0.04,
     };
 
     const loader = new GLTFLoader();
