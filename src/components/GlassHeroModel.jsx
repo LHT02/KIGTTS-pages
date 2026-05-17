@@ -379,6 +379,10 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     resizeObserver.observe(mountNode);
     resizeRenderer();
 
+    const resetMouseTilt = () => {
+      targetTiltRef.current = { x: 0, y: 0 };
+    };
+
     const handlePointerMove = (event) => {
       const rect = mountNode.getBoundingClientRect();
       const normalizedX = ((event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5) * 2;
@@ -396,8 +400,11 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       cursorState.hover = 1;
     };
 
-    const handlePointerLeave = () => {
+    const handlePointerLeave = (event) => {
       cursorState.hover = 0;
+      if (event.pointerType === 'mouse') {
+        resetMouseTilt();
+      }
     };
 
     const handleDeviceOrientation = (event) => {
