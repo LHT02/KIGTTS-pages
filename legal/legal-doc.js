@@ -1,8 +1,8 @@
 (() => {
-  const markdownNode = document.getElementById('document-markdown');
+  const sourceNode = document.getElementById('document-source');
   const targetNode = document.getElementById('document-content');
 
-  if (!markdownNode || !targetNode) {
+  if (!sourceNode || !targetNode) {
     return;
   }
 
@@ -74,8 +74,8 @@
     .split('|')
     .map((cell) => cell.trim());
 
-  const renderMarkdown = (markdown) => {
-    const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
+  const renderLegalContent = (sourceText) => {
+    const lines = sourceText.replace(/\r\n?/g, '\n').split('\n');
     const output = [];
     let index = 0;
 
@@ -170,6 +170,6 @@
     return output.join('\n');
   };
 
-  const markdown = decodeEntities(markdownNode.textContent.trim());
-  targetNode.innerHTML = renderMarkdown(markdown);
+  const sourceText = decodeEntities(sourceNode.textContent.trim());
+  targetNode.innerHTML = renderLegalContent(sourceText);
 })();
