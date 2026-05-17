@@ -57,11 +57,13 @@ const androidApkUrl = 'https://github.com/LHT02/KIGTTS/releases/download/APP0.1.
 const trainerModelScopeUrl = 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files';
 const trainerHuggingFaceUrl = 'https://huggingface.co/LHT02/kigtts-trainer/tree/main';
 const projectUrl = 'https://github.com/LHT02/KIGTTS';
-const authorUrl = 'https://github.com/LHT02';
 const androidLicenseUrl = './legal/android-license.html';
 const androidPrivacyUrl = './legal/android-privacy.html';
 const trainerLicenseUrl = './legal/trainer-license.html';
 const trainerPrivacyUrl = './legal/trainer-privacy.html';
+const lhtBilibiliUrl = 'https://space.bilibili.com/87244951';
+const huajiangBilibiliUrl = 'https://space.bilibili.com/573842321';
+const yuiBilibiliUrl = 'https://space.bilibili.com/23208863';
 
 const downloadNotes = [
   `手机扫描二维码访问 ${qrValue}`,
@@ -71,20 +73,33 @@ const downloadNotes = [
 
 const producerCredits = [
   {
-    name: 'LHT02',
-    role: '软件作者，负责 KIGTTS Android 主线、训练器流程与网页维护',
-    href: authorUrl,
+    name: 'LHT',
+    role: 'KIGTTS 发起人与主要作者，负责产品方向、客户端与训练器整合。',
+    href: lhtBilibiliUrl,
+    avatar: './avatars/LHT.jpg',
   },
   {
-    name: 'LHT Studio',
-    role: '项目视觉、发布与文档维护标识',
-    href: authorUrl,
+    name: '花酱',
+    role: '参与 KIGTTS 设计讨论、内容整理与使用体验反馈。',
+    href: huajiangBilibiliUrl,
+    avatar: './avatars/huajiang.jpg',
   },
   {
-    name: 'KIGTTS Contributors',
-    role: '功能测试、问题反馈、文档补充与现场场景验证',
-    href: projectUrl,
+    name: 'Yui Lu',
+    role: '参与 KIGTTS 内容整理、场景反馈与使用体验建议。',
+    href: yuiBilibiliUrl,
+    avatar: './avatars/YuiLu.jpg',
   },
+];
+
+const friendLinks = [
+  { name: 'KIGTTS GitHub', caption: '项目源码与发行页', icon: 'code', href: projectUrl },
+  { name: 'Android Release', caption: 'APP0.1.0 下载入口', icon: 'android', href: androidReleaseUrl },
+  { name: 'ModelScope Trainer', caption: '训练器下载入口', icon: 'deployed_code', href: trainerModelScopeUrl },
+  { name: 'Hugging Face Trainer', caption: '训练器备用下载', icon: 'hub', href: trainerHuggingFaceUrl },
+  { name: 'LHT Bilibili', caption: '制作成员主页', icon: 'play_circle', href: lhtBilibiliUrl },
+  { name: '花酱 Bilibili', caption: '制作成员主页', icon: 'play_circle', href: huajiangBilibiliUrl },
+  { name: 'Yui Lu Bilibili', caption: '制作成员主页', icon: 'play_circle', href: yuiBilibiliUrl },
 ];
 
 const acknowledgementLibraries = [
@@ -121,7 +136,7 @@ const downloadTabs = [
     icon: 'android',
     eyebrow: 'ANDROID / APP 0.1.0',
     title: 'KIGTTS Android App',
-    summary: '现场字幕、TTS 朗读、快捷名片、画板、音效板和悬浮窗入口都在安卓端主应用里，适合手机直接部署使用。',
+    summary: '现场字幕、TTS 朗读、快捷名片、画板、音效板和悬浮窗入口都在安卓端主应用里，适合手机直接安装使用。',
     meta: [
       ['格式', 'APK'],
       ['版本', 'APP0.1.0'],
@@ -2208,7 +2223,7 @@ export function CreditsSection() {
             textAlign: { xs: 'center', lg: 'left' },
           }}
         >
-          CREDITS / REFERENCES
+          KIGTTS CREDITS
         </Typography>
         <Typography
           sx={{
@@ -2224,11 +2239,24 @@ export function CreditsSection() {
           }}
         >
           <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-            鸣谢制作人与 KIGTTS 引用的开源项目。
+            制作团队与开源生态
           </Box>
           <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
-            鸣谢与引用
+            鸣谢
           </Box>
+        </Typography>
+        <Typography
+          sx={{
+            mt: { xs: 0.55, sm: 0.85 },
+            maxWidth: 760,
+            mx: { xs: 'auto', lg: 0 },
+            color: alpha('#ffffff', 0.64),
+            fontSize: { xs: '0.74rem', sm: '0.9rem' },
+            lineHeight: 1.5,
+            textAlign: { xs: 'center', lg: 'left' },
+          }}
+        >
+          KIGTTS 的 Android 客户端、训练器和网页由制作团队共同推进，并基于多个优秀的开源项目构建。
         </Typography>
       </Box>
 
@@ -2239,7 +2267,7 @@ export function CreditsSection() {
           maxWidth: { xs: '100%', lg: 1420, xl: 1580 },
           minHeight: 0,
           mt: { xs: 0.75, sm: 1.8, lg: 2.4 },
-          overflowY: { xs: 'auto', lg: 'hidden' },
+          overflowY: 'auto',
           overflowX: 'hidden',
           pb: { xs: 1.2, lg: 0 },
           scrollbarWidth: 'thin',
@@ -2262,7 +2290,7 @@ export function CreditsSection() {
                 }}
               >
                 <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: '0.72rem', letterSpacing: '0.16em', fontWeight: 700 }}>
-                  PRODUCER
+                  制作团队
                 </Typography>
                 <Stack spacing={{ xs: 0.7, sm: 1.05 }} sx={{ mt: { xs: 0.75, sm: 1.5 } }}>
                   {producerCredits.map((producer, index) => (
@@ -2274,10 +2302,10 @@ export function CreditsSection() {
                       rel={producer.href ? 'noopener noreferrer' : undefined}
                       sx={{
                         display: 'grid',
-                        gridTemplateColumns: 'auto minmax(0, 1fr)',
-                        gap: 1,
+                        gridTemplateColumns: 'auto minmax(0, 1fr) auto',
+                        gap: { xs: 0.8, sm: 1 },
                         alignItems: 'center',
-                        p: { xs: 0.7, sm: 1.05 },
+                        p: { xs: 0.65, sm: 0.95 },
                         color: 'inherit',
                         textDecoration: 'none',
                         backgroundColor: alpha('#0a1415', 0.48),
@@ -2291,19 +2319,18 @@ export function CreditsSection() {
                       }}
                     >
                       <Box
+                        component="img"
+                        src={producer.avatar}
+                        alt={producer.name}
                         sx={{
-                          width: { xs: 30, sm: 40 },
-                          height: { xs: 30, sm: 40 },
-                          display: 'grid',
-                          placeItems: 'center',
-                          color: '#ffffff',
-                          backgroundColor: index === 0 ? '#038387' : alpha('#ffffff', 0.1),
-                          borderRadius: 0.45,
-                          fontWeight: 700,
+                          width: { xs: 38, sm: 48 },
+                          height: { xs: 38, sm: 48 },
+                          objectFit: 'cover',
+                          borderRadius: '50%',
+                          border: `2px solid ${index === 0 ? '#8ff5f7' : alpha('#ffffff', 0.36)}`,
+                          boxShadow: index === 0 ? `0 0 18px ${alpha('#038387', 0.68)}` : '0 4px 10px rgba(0,0,0,0.32)',
                         }}
-                      >
-                        {String(index + 1).padStart(2, '0')}
-                      </Box>
+                      />
                       <Box sx={{ minWidth: 0 }}>
                         <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.86rem', sm: '1.05rem' }, fontWeight: 700 }}>
                           {producer.name}
@@ -2312,17 +2339,30 @@ export function CreditsSection() {
                           {producer.role}
                         </Typography>
                       </Box>
+                      <Box
+                        sx={{
+                          width: { xs: 28, sm: 34 },
+                          height: { xs: 28, sm: 34 },
+                          display: 'grid',
+                          placeItems: 'center',
+                          color: '#ffffff',
+                          backgroundColor: index === 0 ? '#038387' : alpha('#ffffff', 0.1),
+                          borderRadius: 0.45,
+                        }}
+                      >
+                        <SymbolIcon name="open_in_new" size={18} />
+                      </Box>
                     </Box>
                   ))}
                 </Stack>
               </Box>
 
-              <Box sx={{ p: { xs: 0.95, sm: 1.8 }, ...md2Surface, borderRadius: 0.8 }}>
+              <Box sx={{ p: { xs: 0.95, sm: 1.8 }, ...md2Surface, borderRadius: 0.8, order: { xs: 2, lg: 3 } }}>
                 <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: '0.72rem', letterSpacing: '0.16em', fontWeight: 700 }}>
-                  LEGAL
+                  法律信息
                 </Typography>
                 <Typography sx={{ mt: 0.65, color: alpha('#ffffff', 0.76), lineHeight: 1.44, fontSize: { xs: '0.68rem', sm: '0.9rem' } }}>
-                  开源许可和隐私政策均使用软件内嵌文档原文。Android 与 Trainer 分别提供独立页面，方便从网页直接跳转核对。
+                  查看 KIGTTS Android 端和训练器的开源许可、隐私政策与使用条款。下载或使用前，请阅读对应页面。
                 </Typography>
                 <Grid container spacing={0.8} sx={{ mt: 1.25 }}>
                   {[
@@ -2331,7 +2371,7 @@ export function CreditsSection() {
                     ['训练端开源许可', 'laptop_mac', trainerLicenseUrl],
                     ['训练端隐私政策', 'privacy_tip', trainerPrivacyUrl],
                   ].map(([label, icon, href]) => (
-                    <Grid key={label} size={{ xs: 12, sm: 6, lg: 12 }}>
+                    <Grid key={label} size={{ xs: 12, sm: 6, lg: 6 }}>
                       <Button
                         fullWidth
                         component="a"
@@ -2353,6 +2393,7 @@ export function CreditsSection() {
                   ))}
                 </Grid>
               </Box>
+
             </Stack>
           </Grid>
 
@@ -2365,26 +2406,60 @@ export function CreditsSection() {
                 ...md2Surface,
                 borderRadius: 0.8,
                 overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
               }}
             >
               <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: { xs: 1, sm: 1.25 } }}>
                 <Box sx={{ width: 4, height: 28, backgroundColor: '#038387', boxShadow: `0 0 18px ${alpha('#038387', 0.72)}` }} />
                 <Box>
                   <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '1.02rem', sm: '1.2rem' }, fontWeight: 700 }}>
-                    Reference Stack
+                    开源生态
                   </Typography>
                   <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: { xs: '0.68rem', sm: '0.76rem' } }}>
-                    真实项目、框架、模型链路与下载镜像入口
+                    支撑语音识别、TTS、客户端界面和训练流程的核心项目
                   </Typography>
                 </Box>
               </Stack>
               <Box
+                sx={{
+                  minHeight: 0,
+                  overflowX: 'auto',
+                  overflowY: 'hidden',
+                  pb: 0.8,
+                  scrollbarWidth: 'thin',
+                  '&::-webkit-scrollbar': { height: 7 },
+                  '&::-webkit-scrollbar-thumb': {
+                    backgroundColor: alpha('#77d7d9', 0.28),
+                    borderRadius: 999,
+                  },
+                }}
+              >
+                <Stack direction="row" spacing={{ xs: 0.85, sm: 1.1, xl: 1.35 }} sx={{ width: 'max-content', minWidth: '100%' }}>
+                  {acknowledgementLibraries.map((item) => (
+                    <Box
+                      key={item.name}
+                      sx={{
+                        flex: '0 0 auto',
+                        width: item.featured
+                          ? { xs: 188, sm: 218, lg: 224, xl: 244 }
+                          : { xs: 142, sm: 160, lg: 168, xl: 178 },
+                      }}
+                    >
+                      <CreditLogo item={item} />
+                    </Box>
+                  ))}
+                </Stack>
+              </Box>
+
+              <Divider sx={{ my: { xs: 1.1, sm: 1.35 }, borderColor: alpha('#ffffff', 0.08) }} />
+
+              <Box
                 data-inner-scroll="true"
                 sx={{
-                  height: 'calc(100% - 54px)',
-                  minHeight: { xs: 280, sm: 320, lg: 0 },
+                  minHeight: 0,
                   overflowY: 'auto',
-                  pr: { xs: 0.3, sm: 0.6 },
+                  pr: { xs: 0.2, sm: 0.5 },
                   scrollbarWidth: 'thin',
                   '&::-webkit-scrollbar': { width: 7 },
                   '&::-webkit-scrollbar-thumb': {
@@ -2393,10 +2468,69 @@ export function CreditsSection() {
                   },
                 }}
               >
-                <Grid container spacing={{ xs: 0.85, sm: 1.1, xl: 1.35 }}>
-                  {acknowledgementLibraries.map((item) => (
-                    <Grid key={item.name} size={{ xs: 6, sm: 4, md: 3, lg: item.featured ? 3.2 : 2.4, xl: item.featured ? 3 : 2 }}>
-                      <CreditLogo item={item} />
+                <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: { xs: 0.85, sm: 1 } }}>
+                  <Box sx={{ width: 4, height: 24, backgroundColor: '#038387', boxShadow: `0 0 16px ${alpha('#038387', 0.56)}` }} />
+                  <Box>
+                    <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.96rem', sm: '1.08rem' }, fontWeight: 700 }}>
+                      相关链接
+                    </Typography>
+                    <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: { xs: '0.66rem', sm: '0.74rem' } }}>
+                      下载入口、项目主页和制作成员主页
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Grid container spacing={{ xs: 0.75, sm: 0.9 }}>
+                  {friendLinks.map((link) => (
+                    <Grid key={link.name} size={{ xs: 12, sm: 6, xl: 4 }}>
+                      <Box
+                        component="a"
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          display: 'grid',
+                          gridTemplateColumns: 'auto minmax(0, 1fr) auto',
+                          gap: 0.85,
+                          alignItems: 'center',
+                          minHeight: { xs: 40, sm: 46 },
+                          px: { xs: 0.9, sm: 1.05 },
+                          py: { xs: 0.65, sm: 0.75 },
+                          color: 'inherit',
+                          textDecoration: 'none',
+                          backgroundColor: alpha('#0a1415', 0.42),
+                          border: `1px solid ${alpha('#ffffff', 0.07)}`,
+                          borderRadius: 0.55,
+                          transition: 'background-color 180ms ease, border-color 180ms ease, transform 180ms ease',
+                          '&:hover': {
+                            backgroundColor: alpha('#0a1415', 0.62),
+                            borderColor: alpha('#8ff5f7', 0.3),
+                            transform: 'translateY(-1px)',
+                          },
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            width: 30,
+                            height: 30,
+                            display: 'grid',
+                            placeItems: 'center',
+                            color: '#ffffff',
+                            backgroundColor: alpha('#038387', 0.72),
+                            borderRadius: 0.45,
+                          }}
+                        >
+                          <SymbolIcon name={link.icon} size={18} />
+                        </Box>
+                        <Box sx={{ minWidth: 0 }}>
+                          <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.76rem', sm: '0.84rem' }, fontWeight: 700, lineHeight: 1.16 }}>
+                            {link.name}
+                          </Typography>
+                          <Typography sx={{ mt: 0.1, color: alpha('#ffffff', 0.52), fontSize: { xs: '0.62rem', sm: '0.68rem' }, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            {link.caption}
+                          </Typography>
+                        </Box>
+                        <SymbolIcon name="open_in_new" size={16} sx={{ color: alpha('#ffffff', 0.56) }} />
+                      </Box>
                     </Grid>
                   ))}
                 </Grid>

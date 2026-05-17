@@ -43,6 +43,8 @@ const WHEEL_INTENT_RESET_MS = 180;
 const mobileHeaderHeight = { xs: 64, sm: 70, lg: 70 };
 const appViewportHeight = 'var(--app-viewport-height, 100svh)';
 const desktopDpiBaselineHeight = 720;
+const mobileDpiBaselineWidth = 390;
+const mobileDpiBaselineHeight = 760;
 
 const loadingPulse = keyframes`
   0% {
@@ -360,7 +362,7 @@ export default function App() {
   const scrollTimeoutRef = useRef(null);
   const [viewportMetrics, setViewportMetrics] = useState(() => {
     if (typeof window === 'undefined') {
-      return { width: 0, height: 0, desktopDensityScale: 1 };
+      return { width: 0, height: 0, desktopDensityScale: 1, mobileDensityScale: 1 };
     }
 
     const viewport = window.visualViewport;
@@ -369,14 +371,22 @@ export default function App() {
     const aspectRatio = width / Math.max(height, 1);
 
     const minDesktopScale = aspectRatio >= 4 / 3 && width < 920 ? 0.68 : 0.5;
+    const mobileChromeHeight = width < 600 ? mobileHeaderHeight.xs : mobileHeaderHeight.sm;
+    const mobileDensityScale = clamp(
+      Math.min(width / mobileDpiBaselineWidth, (height - mobileChromeHeight) / mobileDpiBaselineHeight),
+      0.74,
+      1,
+    );
 
     return {
       width,
       height,
       desktopDensityScale: aspectRatio >= 4 / 3 ? clamp(height / desktopDpiBaselineHeight, minDesktopScale, 1) : 1,
+      mobileDensityScale,
     };
   });
   const desktopDensityScale = compactNavigation ? 1 : viewportMetrics.desktopDensityScale;
+  const mobileStageScale = compactNavigation ? viewportMetrics.mobileDensityScale : 1;
 
   useEffect(() => {
     let currentProgress = 1;
@@ -426,14 +436,22 @@ export default function App() {
       const aspectRatio = viewportWidth / Math.max(viewportHeight, 1);
       const minDesktopScale = aspectRatio >= 4 / 3 && viewportWidth < 920 ? 0.68 : 0.5;
       const densityScale = aspectRatio >= 4 / 3 ? clamp(viewportHeight / desktopDpiBaselineHeight, minDesktopScale, 1) : 1;
+      const mobileChromeHeight = viewportWidth < 600 ? mobileHeaderHeight.xs : mobileHeaderHeight.sm;
+      const mobileDensityScale = clamp(
+        Math.min(viewportWidth / mobileDpiBaselineWidth, (viewportHeight - mobileChromeHeight) / mobileDpiBaselineHeight),
+        0.74,
+        1,
+      );
 
       root.style.setProperty('--app-viewport-height', `${viewportHeight}px`);
       root.style.setProperty('--desktop-density-scale', densityScale.toFixed(3));
+      root.style.setProperty('--mobile-density-scale', mobileDensityScale.toFixed(3));
       setViewportMetrics((current) => {
         if (
           current.width === viewportWidth &&
           current.height === viewportHeight &&
-          current.desktopDensityScale === densityScale
+          current.desktopDensityScale === densityScale &&
+          current.mobileDensityScale === mobileDensityScale
         ) {
           return current;
         }
@@ -442,6 +460,7 @@ export default function App() {
           width: viewportWidth,
           height: viewportHeight,
           desktopDensityScale: densityScale,
+          mobileDensityScale,
         };
       });
     };
@@ -708,13 +727,14 @@ export default function App() {
   useEffect(() => {
     const initialId = getInitialSection();
     const timerId = window.setTimeout(() => {
+      const scrollRoot = scrollContainerRef.current;
       const targetNode = sectionRefs.current[initialId];
-      if (targetNode) {
-        targetNode.scrollIntoView({ behavior: 'auto', block: 'start' });
+      if (scrollRoot && targetNode) {
+        scrollRoot.scrollTop = targetNode.offsetTop;
         setActiveId(initialId);
         activeIdRef.current = initialId;
       }
-    }, 30);
+    }, 120);
 
     return () => window.clearTimeout(timerId);
   }, []);
@@ -747,12 +767,12 @@ export default function App() {
           display: 'flex',
           alignItems: 'stretch',
           gap: 0,
-          width: compactNavigation ? '100%' : `calc(100% / ${desktopStageScale})`,
+          width: compactNavigation ? `calc(100% / ${mobileStageScale})` : `calc(100% / ${desktopStageScale})`,
           height: compactNavigation
             ? {
-                xs: `calc(${appViewportHeight} - ${mobileHeaderHeight.xs}px - env(safe-area-inset-top))`,
-                sm: `calc(${appViewportHeight} - ${mobileHeaderHeight.sm}px - env(safe-area-inset-top))`,
-                lg: `calc(${appViewportHeight} - ${mobileHeaderHeight.lg}px - env(safe-area-inset-top))`,
+                xs: `calc((${appViewportHeight} - ${mobileHeaderHeight.xs}px - env(safe-area-inset-top)) / ${mobileStageScale})`,
+                sm: `calc((${appViewportHeight} - ${mobileHeaderHeight.sm}px - env(safe-area-inset-top)) / ${mobileStageScale})`,
+                lg: `calc((${appViewportHeight} - ${mobileHeaderHeight.lg}px - env(safe-area-inset-top)) / ${mobileStageScale})`,
               }
             : `calc(${appViewportHeight} / ${desktopStageScale})`,
           mt: compactNavigation
@@ -762,7 +782,7 @@ export default function App() {
                 lg: 'calc(70px + env(safe-area-inset-top))',
               }
             : 0,
-          transform: compactNavigation ? 'none' : `scale(${desktopStageScale})`,
+          transform: compactNavigation ? `scale(${mobileStageScale})` : `scale(${desktopStageScale})`,
           transformOrigin: 'top left',
           overflow: 'clip',
           backgroundColor: compactNavigation ? { lg: alpha('#0a1415', 0.26) } : alpha('#0a1415', 0.26),
