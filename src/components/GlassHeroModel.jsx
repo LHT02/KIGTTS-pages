@@ -15,7 +15,7 @@ const glassMaterialSettings = {
   transmission: 1,
   thickness: 2.18,
   ior: 1.51,
-  dispersion: 0.48,
+  dispersion: 0.72,
   transparent: false,
   opacity: 1,
   clearcoat: 1,
@@ -34,37 +34,6 @@ const glassMaterialSettings = {
   attenuationColor: 0x7ff7f2,
   attenuationDistance: 2.75,
 };
-
-function createLiquidNormalTexture(size = 160) {
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const context = canvas.getContext('2d');
-  const image = context.createImageData(size, size);
-
-  for (let y = 0; y < size; y += 1) {
-    for (let x = 0; x < size; x += 1) {
-      const offset = (y * size + x) * 4;
-      const waveA = Math.sin(x * 0.12 + y * 0.045);
-      const waveB = Math.cos(y * 0.1 - x * 0.055);
-      const ripple = Math.sin((x + y) * 0.037) * Math.cos((x - y) * 0.031);
-      image.data[offset] = 128 + waveA * 14 + ripple * 8;
-      image.data[offset + 1] = 128 + waveB * 14 - ripple * 7;
-      image.data[offset + 2] = 232 + Math.sin(x * 0.021) * 8;
-      image.data[offset + 3] = 255;
-    }
-  }
-
-  context.putImageData(image, 0, 0);
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(2.1, 2.1);
-  texture.anisotropy = 4;
-  texture.colorSpace = THREE.NoColorSpace;
-  texture.needsUpdate = true;
-  return texture;
-}
 
 function createRefractionBackdropTexture(size = 640) {
   const canvas = document.createElement('canvas');
@@ -113,54 +82,6 @@ function createRefractionBackdropTexture(size = 640) {
   return texture;
 }
 
-function createCausticsTexture(size = 640) {
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const context = canvas.getContext('2d');
-  context.clearRect(0, 0, size, size);
-  context.globalCompositeOperation = 'lighter';
-
-  for (let line = 0; line < 58; line += 1) {
-    const startX = size * (-0.08 + Math.random() * 1.16);
-    const startY = size * (0.12 + Math.random() * 0.72);
-    const length = size * (0.12 + Math.random() * 0.22);
-    const alphaValue = 0.035 + Math.random() * 0.08;
-    context.strokeStyle = `rgba(190,255,248,${alphaValue})`;
-    context.lineWidth = 0.9 + Math.random() * 2.8;
-    context.beginPath();
-    for (let step = 0; step < 34; step += 1) {
-      const t = step / 33;
-      const x = startX + length * t;
-      const y = startY
-        + Math.sin(t * Math.PI * 2.0 + line * 0.7) * size * 0.018
-        + Math.sin(t * Math.PI * 5.0 + line) * size * 0.006;
-      if (step === 0) {
-        context.moveTo(x, y);
-      } else {
-        context.lineTo(x, y);
-      }
-    }
-    context.stroke();
-  }
-
-  context.filter = 'blur(3px)';
-  const radialMask = context.createRadialGradient(size * 0.48, size * 0.52, size * 0.03, size * 0.48, size * 0.52, size * 0.48);
-  radialMask.addColorStop(0, 'rgba(120,255,245,0.18)');
-  radialMask.addColorStop(0.42, 'rgba(120,255,245,0.08)');
-  radialMask.addColorStop(1, 'rgba(120,255,245,0)');
-  context.fillStyle = radialMask;
-  context.fillRect(0, 0, size, size);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.colorSpace = THREE.SRGBColorSpace;
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(1.65, 1.18);
-  texture.needsUpdate = true;
-  return texture;
-}
-
 function createFresnelGlassMaterial(settings = glassMaterialSettings, rimStrength = 0.34) {
   const material = new THREE.MeshPhysicalMaterial(settings);
   material.side = THREE.FrontSide;
@@ -191,9 +112,9 @@ function createFresnelGlassMaterial(settings = glassMaterialSettings, rimStrengt
       float kigttsLiquidWave = sin(gl_FragCoord.x * 0.026 - gl_FragCoord.y * 0.018) * 0.5 + 0.5;
       float kigttsSpecularStreak = smoothstep(0.92, 1.0, kigttsLiquidWave) * (0.035 + vKigttsFresnel * 0.16);
       gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.86, 1.0, 0.985), 0.025 + kigttsFrostGrain * 0.012);
-      gl_FragColor.r += kigttsChroma * 0.09;
-      gl_FragColor.g += kigttsChroma * 0.018;
-      gl_FragColor.b += kigttsChroma * 0.15;
+      gl_FragColor.r += kigttsChroma * 0.12;
+      gl_FragColor.g += kigttsChroma * 0.012;
+      gl_FragColor.b += kigttsChroma * 0.2;
       gl_FragColor.rgb += vec3(0.0, 0.66, 0.60) * vKigttsFresnel * 0.075;
       gl_FragColor.rgb += vec3(1.0, 1.0, 1.0) * pow(vKigttsFresnel, 1.5) * 0.24;
       gl_FragColor.rgb += vec3(0.86, 1.0, 0.98) * kigttsSpecularStreak * 1.35;
@@ -302,34 +223,25 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     scene.environment = environment;
 
     const backdropTexture = createRefractionBackdropTexture();
-    const causticsTexture = createCausticsTexture();
     const refractionBackdrop = new THREE.Mesh(
       new THREE.PlaneGeometry(5.9, 4.55),
       new THREE.MeshBasicMaterial({
         map: backdropTexture,
         color: 0xffffff,
+        colorWrite: false,
         depthWrite: false,
         depthTest: false,
       }),
     );
     refractionBackdrop.position.set(-0.1, -0.08, -1.35);
     refractionBackdrop.renderOrder = -30;
+    refractionBackdrop.onBeforeRender = (activeRenderer) => {
+      refractionBackdrop.material.colorWrite = activeRenderer.getRenderTarget() !== null;
+    };
+    refractionBackdrop.onAfterRender = () => {
+      refractionBackdrop.material.colorWrite = false;
+    };
     scene.add(refractionBackdrop);
-
-    const causticsPlane = new THREE.Mesh(
-      new THREE.PlaneGeometry(5.6, 3.35),
-      new THREE.MeshBasicMaterial({
-        map: causticsTexture,
-        transparent: true,
-        opacity: 0.58,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        depthTest: false,
-      }),
-    );
-    causticsPlane.position.set(-0.06, -0.18, -1.02);
-    causticsPlane.renderOrder = -10;
-    scene.add(causticsPlane);
 
     const root = new THREE.Group();
     root.rotation.set(-0.06, 0.24, 0.02);
@@ -386,14 +298,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     fallbackModel.visible = false;
     root.add(fallbackModel);
 
-    const liquidNormalMap = createLiquidNormalTexture();
-    const materialSettings = {
-      ...glassMaterialSettings,
-      normalMap: liquidNormalMap,
-      normalScale: new THREE.Vector2(0.48, 0.48),
-      clearcoatNormalMap: liquidNormalMap,
-      clearcoatNormalScale: new THREE.Vector2(0.18, 0.18),
-    };
+    const materialSettings = { ...glassMaterialSettings };
     const accentMaterialSettings = {
       ...materialSettings,
       color: 0xffffff,
@@ -524,10 +429,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       cursorState.y += (cursorState.targetY - cursorState.y) * 0.16;
       cursorLight.position.set(cursorState.x, cursorState.y, 2.55);
       cursorLight.intensity += ((cursorState.hover ? 5.2 : 0.22) - cursorLight.intensity) * 0.12;
-      liquidNormalMap.offset.set(Math.sin(elapsed * 0.08) * 0.025, Math.cos(elapsed * 0.07) * 0.025);
       backdropTexture.offset.set(Math.sin(elapsed * 0.035) * 0.018, Math.cos(elapsed * 0.04) * 0.014);
-      causticsTexture.offset.set(elapsed * 0.018, Math.sin(elapsed * 0.22) * 0.03);
-      causticsPlane.material.opacity = 0.46 + Math.sin(elapsed * 0.9) * 0.1 + cursorState.hover * 0.08;
 
       renderer.render(scene, camera);
       frameId = window.requestAnimationFrame(renderFrame);
@@ -546,11 +448,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       disposeObject3d(root);
       refractionBackdrop.geometry.dispose();
       refractionBackdrop.material.dispose();
-      causticsPlane.geometry.dispose();
-      causticsPlane.material.dispose();
-      liquidNormalMap.dispose();
       backdropTexture.dispose();
-      causticsTexture.dispose();
       environment.dispose();
       pmremGenerator.dispose();
       renderer.dispose();
