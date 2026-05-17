@@ -567,9 +567,10 @@ function Md3Cookie4({ size, color, sx }) {
 
 function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 1 }) {
   const isBanner = compact && banner;
-  const denseDesktop = !compact && densityScale < 0.75;
+  const denseDesktop = !compact && densityScale < 0.9;
   const scale = compact ? 1 : densityScale;
   const dp = (value, min = 0) => scaledPx(value, scale, min);
+  const shortDesktopQuery = '@media (min-width: 900px) and (max-height: 820px)';
 
   return (
     <Box
@@ -577,7 +578,7 @@ function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 
         position: compact ? 'relative' : 'absolute',
         right: compact ? 'auto' : denseDesktop ? dp(24, 12) : { xs: dp(42, 12), lg: dp(42, 12), xl: dp(56, 16) },
         top: compact ? 'auto' : denseDesktop ? dp(12, 6) : { xs: dp(34, 8), lg: dp(34, 8), xl: dp(46, 12) },
-        width: compact ? '100%' : denseDesktop ? dp(300, 180) : { xs: dp(320, 172), lg: dp(320, 172), xl: dp(354, 188) },
+        width: compact ? '100%' : denseDesktop ? dp(440, 340) : { xs: dp(320, 172), lg: dp(320, 172), xl: dp(354, 188) },
         maxWidth: isBanner ? '100%' : compact ? { xs: 274, sm: '100%' } : 'none',
         minHeight: isBanner ? { xs: 58, sm: 64 } : compact ? 'auto' : denseDesktop ? dp(104, 56) : dp(190, 76),
         px: isBanner ? { xs: 1.8, sm: 2.4 } : compact ? { xs: 1.6, sm: 3, md: 3.2 } : denseDesktop ? Math.max(0.9, 2.1 * scale) : Math.max(1.1, 3.2 * scale),
@@ -604,6 +605,16 @@ function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 
         '&:hover::before': {
           opacity: 0.08, // MD3 standard hover state layer on surface
         },
+        ...(compact
+          ? {}
+          : {
+              [shortDesktopQuery]: {
+                width: 'clamp(390px, 36vw, 500px)',
+                minHeight: 104,
+                px: 2.4,
+                py: 1.2,
+              },
+            }),
       }}
     >
       {/* Top right MD3 8-leaf clover */}
@@ -637,11 +648,21 @@ function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 
           justifyContent: isBanner || denseDesktop ? 'space-between' : 'center',
           textAlign: isBanner || denseDesktop ? 'left' : 'center',
           minHeight: isBanner ? '100%' : 'auto',
+          ...(compact
+            ? {}
+            : {
+                [shortDesktopQuery]: {
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  textAlign: 'left',
+                  gap: 1.4,
+                },
+              }),
         }}
       >
         <Typography
           sx={{
-            flex: isBanner ? '1 1 auto' : 'initial',
+            flex: isBanner || denseDesktop ? '1 1 auto' : 'initial',
             minWidth: 0,
             fontSize: isBanner
               ? { xs: '0.82rem', sm: '0.98rem', md: '1.06rem' }
@@ -655,11 +676,21 @@ function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 
             whiteSpace: isBanner || denseDesktop ? 'nowrap' : 'normal',
             overflow: isBanner || denseDesktop ? 'hidden' : 'visible',
             textOverflow: isBanner || denseDesktop ? 'ellipsis' : 'clip',
+            ...(compact
+              ? {}
+              : {
+                  [shortDesktopQuery]: {
+                    flex: '1 1 auto',
+                    whiteSpace: 'normal',
+                    overflow: 'visible',
+                    textOverflow: 'clip',
+                    fontSize: '1.04rem',
+                    lineHeight: 1.25,
+                  },
+                }),
           }}
         >
-          {denseDesktop
-            ? 'Flutter Beta'
-            : isBanner
+          {isBanner
             ? betaLines.join('')
             : betaLines.map((line) => (
                 <Box key={line} component="span" sx={{ display: 'block' }}>
@@ -700,9 +731,19 @@ function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 
             '&:active::after': {
               opacity: 0.12, // MD3 primary button press state
             },
+            ...(compact
+              ? {}
+              : {
+                  [shortDesktopQuery]: {
+                    minWidth: 134,
+                    minHeight: 44,
+                    px: 2.3,
+                    fontSize: '0.95rem',
+                  },
+                }),
           }}
         >
-          {isBanner || denseDesktop ? '前往Beta' : '前往Beta页面'}
+          敬请期待
         </Button>
       </Stack>
     </Box>
@@ -917,7 +958,7 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
         }}
       />
       <Box sx={{ display: desktopLayout ? 'block' : { xs: 'none', lg: 'block' } }}>
-        <BetaBubble onSelect={() => onSelectDownloadTab?.('beta')} densityScale={densityScale} />
+        <BetaBubble onSelect={() => onSelectDownloadTab?.('beta')} densityScale={desktopLayout ? dpiScale : densityScale} />
       </Box>
       <Box
         sx={{
