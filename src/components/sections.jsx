@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import { alpha, keyframes } from '@mui/material/styles';
 import { QRCodeSVG } from 'qrcode.react';
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useRef, useState } from 'react';
 import subtitleScreen from '../../ART/ScreenShoot/便捷字幕.jpg';
 import boardScreen from '../../ART/ScreenShoot/画板.jpg';
 import cardScreen from '../../ART/ScreenShoot/快捷名片.jpg';
@@ -476,46 +476,26 @@ function RealQr({ compact = false, densityScale = 1, value = qrValue }) {
   );
 }
 
-function QqIcon({ size = 22 }) {
-  return (
-    <Box
-      component="span"
-      sx={{
-        width: size,
-        height: size,
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: 'inherit',
-      }}
-    >
-      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
-        <path d="M12 2.4c-3.02 0-5.47 2.86-5.47 6.38 0 1.32.35 2.54.94 3.56-.52.95-1.18 2.3-1.55 3.55-.22.75.23 1.25.91 1.02l1.43-.48c.62.66 1.42 1.16 2.33 1.4v1.25H8.45a1.1 1.1 0 0 0 0 2.2h7.1a1.1 1.1 0 1 0 0-2.2h-2.14v-1.25c.9-.24 1.7-.74 2.32-1.4l1.43.48c.68.23 1.13-.27.91-1.02-.37-1.25-1.03-2.6-1.55-3.55.59-1.02.94-2.24.94-3.56 0-3.52-2.45-6.38-5.46-6.38Zm-2.1 6.52c-.5 0-.9-.5-.9-1.1s.4-1.1.9-1.1.9.5.9 1.1-.4 1.1-.9 1.1Zm4.2 0c-.5 0-.9-.5-.9-1.1s.4-1.1.9-1.1.9.5.9 1.1-.4 1.1-.9 1.1ZM9.28 12.7c.77.48 1.7.75 2.72.75s1.95-.27 2.72-.75c-.44 1.12-1.47 1.88-2.72 1.88s-2.28-.76-2.72-1.88Z" />
-      </svg>
-    </Box>
-  );
-}
-
 function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
-  const compactHeight = scaledPx(54, densityScale, 38);
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  const handleClick = (e) => {
+    if (!popoverOpen) {
+      e.preventDefault();
+      setPopoverOpen(true);
+    }
+  };
 
   return (
     <Box
+      ref={containerRef}
+      onMouseEnter={() => setPopoverOpen(true)}
+      onMouseLeave={() => setPopoverOpen(false)}
       sx={{
         position: 'relative',
         flex: '0 1 46%',
         minWidth: 0,
-        '& .feedback-qr-popover': {
-          opacity: 0,
-          transform: 'translate(-50%, 8px)',
-          pointerEvents: 'none',
-          transition: 'opacity 160ms ease, transform 180ms cubic-bezier(0.2, 0, 0, 1)',
-        },
-        '&:hover .feedback-qr-popover, &:focus-within .feedback-qr-popover': {
-          opacity: 1,
-          transform: 'translate(-50%, 0)',
-          pointerEvents: 'auto',
-        },
       }}
     >
       <Button
@@ -524,44 +504,45 @@ function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
         href={feedbackGroupUrl}
         target="_blank"
         rel="noopener noreferrer"
-        startIcon={<QqIcon size={compact ? 20 : 24} />}
+        onClick={handleClick}
+        startIcon={<SymbolIcon name="forum" size={compact ? 20 : 24} />}
         sx={{
           ...md2Button,
           minWidth: 0,
-          minHeight: compact ? compactHeight : { xs: 46, sm: 58, lg: 64 },
+          minHeight: compact ? scaledPx(54, densityScale, 38) : { xs: 46, sm: 58, lg: 64 },
           px: compact ? { xs: 1.05, sm: 1.25 } : 1.8,
           fontSize: compact ? { xs: '0.7rem', sm: '0.84rem', md: '0.96rem' } : { xs: '0.78rem', sm: '0.94rem', md: '1rem' },
           whiteSpace: 'nowrap',
           justifyContent: 'center',
-          backgroundColor: '#126d70',
           '& .MuiButton-startIcon': {
             mr: compact ? 0.45 : 0.7,
-          },
-          '&:hover': {
-            backgroundColor: '#16888b',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.24)',
           },
         }}
       >
         加入反馈群
       </Button>
       <Box
-        className="feedback-qr-popover"
-        sx={{
-          display: { xs: 'none', lg: 'block' },
-          position: 'absolute',
-          left: '50%',
-          bottom: 'calc(100% + 12px)',
-          zIndex: 20,
-          width: 156,
-          p: 1.2,
-          color: '#eef8f8',
-          textAlign: 'center',
-          backgroundColor: alpha('#252a2b', 0.98),
-          border: `1px solid ${alpha('#ffffff', 0.08)}`,
-          boxShadow: '0 14px 30px rgba(0,0,0,0.38)',
-          borderRadius: 0.75,
-        }}
+        sx={[
+          {
+            display: { xs: 'none', lg: 'block' },
+            position: 'absolute',
+            left: '50%',
+            bottom: 'calc(100% + 12px)',
+            zIndex: 20,
+            width: 156,
+            p: 1.2,
+            color: '#eef8f8',
+            textAlign: 'center',
+            backgroundColor: alpha('#252a2b', 0.98),
+            border: `1px solid ${alpha('#ffffff', 0.08)}`,
+            boxShadow: '0 14px 30px rgba(0,0,0,0.38)',
+            borderRadius: 0.75,
+            pointerEvents: popoverOpen ? 'auto' : 'none',
+            opacity: popoverOpen ? 1 : 0,
+            transform: popoverOpen ? 'translate(-50%, 0)' : 'translate(-50%, 8px)',
+            transition: 'opacity 160ms ease, transform 180ms cubic-bezier(0.2, 0, 0, 1)',
+          },
+        ]}
       >
         <RealQr compact densityScale={0.86} value={feedbackGroupUrl} />
         <Typography sx={{ mt: 0.75, fontSize: '0.75rem', color: alpha('#f5fbfb', 0.72), lineHeight: 1.35 }}>
@@ -2489,9 +2470,9 @@ export function CreditsSection() {
                 </Typography>
                 <Grid container spacing={0.8} sx={{ mt: 1.25 }}>
                   {[
-                    ['Android 授权说明', 'android', androidLicenseUrl],
+                    ['Android 开源许可证', 'android', androidLicenseUrl],
                     ['Android 隐私说明', 'policy', androidPrivacyUrl],
-                    ['训练器授权说明', 'laptop_mac', trainerLicenseUrl],
+                    ['训练器开源许可证', 'laptop_mac', trainerLicenseUrl],
                     ['训练器隐私说明', 'privacy_tip', trainerPrivacyUrl],
                   ].map(([label, icon, href]) => (
                     <Grid key={label} size={{ xs: 12, sm: 6, lg: 6 }}>
