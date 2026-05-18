@@ -494,7 +494,9 @@ function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
       onMouseLeave={() => setPopoverOpen(false)}
       sx={{
         position: 'relative',
+        flex: '0 1 50%',
         minWidth: 0,
+        display: 'flex',
       }}
     >
       <Button
@@ -507,9 +509,8 @@ function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
         startIcon={<SymbolIcon name="forum" size={compact ? 20 : 24} />}
         sx={{
           ...md2Button,
-          flex: '0 1 50%',
           minWidth: 0,
-          minHeight: compact ? scaledPx(54, densityScale, 38) : { xs: 46, sm: 58, lg: 64 },
+          minHeight: compact ? { xs: 42, sm: 58, md: 66 } : { xs: 48, sm: 60, lg: 66 },
           px: compact ? { xs: 1.05, sm: 1.55 } : 2.1,
           fontSize: compact ? { xs: '0.78rem', sm: '0.98rem', md: '1.12rem' } : { xs: '0.92rem', sm: '1.08rem', md: '1.18rem' },
           whiteSpace: 'nowrap',
