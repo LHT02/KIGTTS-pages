@@ -192,6 +192,7 @@ const featureSlides = [
     icon: 'subtitles',
     eyebrow: '01 / 便捷字幕',
     title: '语音识别、快捷文本和 TTS 一键上屏',
+    brief: '把语音识别、文字输入和朗读放在一起，减少现场沟通时来回切换。',
     summary:
       'KIGTTS 面向 Kigurumi、头套、面具、舞台妆造和不方便直接说话的现场场景。便捷字幕把语音识别、手动输入、快捷文本、TTS 朗读、大字幕预览和预设分组放在同一个界面里。',
     bullets: ['减少频繁切 App', '降低现场打字压力', '一键上屏、朗读或发送常用语'],
@@ -204,6 +205,7 @@ const featureSlides = [
     icon: 'badge',
     eyebrow: '02 / 快捷名片',
     title: '个人信息、角色信息、链接和二维码展示',
+    brief: '用一张可分享名片展示主页、二维码、社交账号和角色信息。',
     summary:
       '快捷名片用于展示主页、社交账号、群二维码、约拍信息或临时说明，支持横竖屏展示、背景图、主题色背景、装饰文字、链接按钮、分享和多张名片切换。',
     bullets: ['互关和主页展示', '社交二维码与群信息', '角色设定和现场说明'],
@@ -216,6 +218,7 @@ const featureSlides = [
     icon: 'draw',
     eyebrow: '03 / 画板',
     title: '现场手写、涂鸦和快速示意',
+    brief: '嘈杂或不方便打字时，用手写、涂鸦和标注快速补充说明。',
     summary:
       '画板用于在嘈杂环境或不方便打字时快速补充说明，支持现场手写、涂鸦、标注和简单示意，让交流不完全依赖语音或键盘输入。',
     bullets: ['手写补充说明', '涂鸦和快速标注', '适合嘈杂现场兜底沟通'],
@@ -228,6 +231,7 @@ const featureSlides = [
     icon: 'library_music',
     eyebrow: '04 / 音效板',
     title: '接梗、反应音和关键词触发',
+    brief: '把常用反应音、接梗音效和关键词触发放在一个面板里。',
     summary:
       '音效板支持按分组管理音效、列表或宫格布局、点击播放/停止、关键词触发、音频导入转码和预设分享，适合角色互动、接梗和现场反馈。',
     bullets: ['识别结果触发音效', '角色音效包导入导出', '列表或宫格布局切换'],
@@ -240,6 +244,7 @@ const featureSlides = [
     icon: 'open_in_new',
     eyebrow: '05 / 悬浮窗与联动',
     title: '在其他 App 上方快速调出辅助功能',
+    brief: '在其他应用上方快速打开字幕、名片、画板、音效板和常用工具。',
     summary:
       '悬浮窗可以在微信、QQ、相机等 App 上方常驻，快速打开便捷字幕、快捷名片、画板、音效板、迷你控件和常用第三方应用。',
     bullets: ['折叠、贴边、展开', '音量键序列热键', '微信/QQ/支付宝扫码联动'],
@@ -252,6 +257,7 @@ const featureSlides = [
     icon: 'record_voice_over',
     eyebrow: '06 / 语音增强与变声链路',
     title: '本地 ASR、TTS、VAD 和说话人验证适配复杂现场',
+    brief: '本地处理识别、朗读、增强和说话人验证，适配嘈杂现场。',
     summary:
       'Android 端优先本地处理，包含 ASR、系统 TTS 或本地语音包朗读、AI 语音增强、VAD、说话人验证和音频测试。',
     bullets: ['语音识别 -> 文本 -> TTS 朗读', 'GTCRN / DPDFNet 增强模式', '减少旁人说话误触发'],
@@ -264,6 +270,7 @@ const featureSlides = [
     icon: 'tune',
     eyebrow: '07 / 设置与训练端',
     title: '训练器、语音包制作和高级配置',
+    brief: '在电脑端制作语音包，并导出给 Android 端导入使用。',
     summary:
       '桌面训练器用于整理语料、蒸馏、Piper 训练和语音包打包；设置区承载识别、朗读、热键、语音包和现场使用偏好的高级配置。',
     bullets: ['Piper 标准训练', 'GPT-SoVITS / VoxCPM2 蒸馏', '训练器导出 Android 可导入语音包'],
@@ -1052,12 +1059,6 @@ export function AboutSection() {
   const currentFeature = featureSlides[activeSlide];
   const slideNumber = String(activeSlide + 1).padStart(2, '0');
   const totalSlides = String(featureSlides.length).padStart(2, '0');
-  const detailRows = [
-    ['功能', currentFeature.label],
-    ['场景', currentFeature.bullets[0]],
-    ['输入', currentFeature.bullets[1]],
-    ['输出', currentFeature.bullets[2]],
-  ];
   const selectFeature = (index) => {
     setDetailsOpen(false);
     setActiveSlide(index);
@@ -1460,66 +1461,43 @@ export function AboutSection() {
             <Box
               sx={{
                 display: 'grid',
-                gridTemplateColumns: { xs: '1fr 1fr', sm: 'repeat(4, 1fr)', md: '1fr 1fr' },
-                gap: { xs: 0.55, sm: 0.7 },
+                gridTemplateColumns: 'auto minmax(0, 1fr)',
+                alignItems: 'center',
+                gap: { xs: 0.8, sm: 1 },
+                p: { xs: 0.95, sm: 1.1, md: 1.2 },
+                backgroundColor: alpha('#ffffff', 0.08),
+                border: `1px solid ${alpha('#ffffff', 0.06)}`,
+                borderLeft: `4px solid ${alpha('#8ff5f7', 0.82)}`,
+                borderRadius: 0.6,
+                boxShadow: md2SurfaceShadow,
+                backdropFilter: { xs: 'blur(12px)', md: 'none' },
                 animation: `${featurePanelEnter} 420ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
                 '@media (orientation: landscape)': {
-                  gridTemplateColumns: '1fr 1fr',
-                  gap: 'clamp(4px, 0.7vh, 7px)',
+                  p: 'clamp(7px, 1vh, 11px)',
+                  gap: 0.75,
                 },
               }}
             >
-              {detailRows.map(([label, value]) => (
-                <Box
-                  key={label}
-                  sx={{
-                    minWidth: 0,
-                    display: 'grid',
-                    gridTemplateColumns: 'auto minmax(0, 1fr)',
-                    alignItems: 'center',
-                    backgroundColor: alpha('#ffffff', 0.08),
-                    border: `1px solid ${alpha('#ffffff', 0.06)}`,
-                    borderRadius: 0.5,
-                    overflow: 'hidden',
-                    backdropFilter: { xs: 'blur(12px)', md: 'none' },
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      px: 0.85,
-                      py: 0.55,
-                      color: '#ffffff',
-                      backgroundColor: '#038387',
-                      fontSize: { xs: '0.68rem', sm: '0.72rem' },
-                    fontWeight: 700,
-                    lineHeight: 1.2,
-                      '@media (orientation: landscape)': {
-                        px: 0.7,
-                        py: 0.38,
-                        fontSize: '0.66rem',
-                      },
-                  }}
-                  >
-                    {label}
-                  </Typography>
-                  <Typography
-                    sx={{
-                      px: 0.85,
-                      color: alpha('#ffffff', 0.78),
-                      fontSize: { xs: '0.68rem', sm: '0.76rem', md: '0.8rem' },
-                      lineHeight: 1.25,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      whiteSpace: 'nowrap',
-                      '@media (orientation: landscape)': {
-                        fontSize: '0.68rem',
-                      },
-                    }}
-                  >
-                    {value}
-                  </Typography>
-                </Box>
-              ))}
+              <SymbolIcon name="info" size={22} sx={{ color: '#8ff5f7', flexShrink: 0 }} />
+              <Typography
+                sx={{
+                  minWidth: 0,
+                  color: alpha('#ffffff', 0.82),
+                  fontSize: { xs: '0.74rem', sm: '0.86rem', md: '0.92rem' },
+                  lineHeight: 1.42,
+                  display: '-webkit-box',
+                  WebkitBoxOrient: 'vertical',
+                  WebkitLineClamp: 2,
+                  overflow: 'hidden',
+                  '@media (orientation: landscape)': {
+                    fontSize: 'clamp(0.72rem, 1.5vh, 0.84rem)',
+                    lineHeight: 1.35,
+                    WebkitLineClamp: 2,
+                  },
+                }}
+              >
+                {currentFeature.brief}
+              </Typography>
             </Box>
 
             <Button
