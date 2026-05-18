@@ -494,7 +494,6 @@ function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
       onMouseLeave={() => setPopoverOpen(false)}
       sx={{
         position: 'relative',
-        flex: '0 1 46%',
         minWidth: 0,
       }}
     >
@@ -508,10 +507,11 @@ function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
         startIcon={<SymbolIcon name="forum" size={compact ? 20 : 24} />}
         sx={{
           ...md2Button,
+          flex: '0 1 50%',
           minWidth: 0,
           minHeight: compact ? scaledPx(54, densityScale, 38) : { xs: 46, sm: 58, lg: 64 },
-          px: compact ? { xs: 1.05, sm: 1.25 } : 1.8,
-          fontSize: compact ? { xs: '0.7rem', sm: '0.84rem', md: '0.96rem' } : { xs: '0.78rem', sm: '0.94rem', md: '1rem' },
+          px: compact ? { xs: 1.05, sm: 1.55 } : 2.1,
+          fontSize: compact ? { xs: '0.78rem', sm: '0.98rem', md: '1.12rem' } : { xs: '0.92rem', sm: '1.08rem', md: '1.18rem' },
           whiteSpace: 'nowrap',
           justifyContent: 'center',
           '& .MuiButton-startIcon': {
@@ -524,13 +524,15 @@ function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
       <Box
         sx={[
           {
-            display: { xs: 'none', lg: 'block' },
+            display: { xs: 'none', lg: 'flex' },
+            flexDirection: 'column',
+            alignItems: 'center',
             position: 'absolute',
             left: '50%',
             bottom: 'calc(100% + 12px)',
             zIndex: 20,
-            width: 156,
-            p: 1.2,
+            width: 186,
+            p: 1.6,
             color: '#eef8f8',
             textAlign: 'center',
             backgroundColor: alpha('#252a2b', 0.98),
@@ -544,8 +546,27 @@ function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
           },
         ]}
       >
-        <RealQr compact densityScale={0.86} value={feedbackGroupUrl} />
-        <Typography sx={{ mt: 0.75, fontSize: '0.75rem', color: alpha('#f5fbfb', 0.72), lineHeight: 1.35 }}>
+        <Box
+          sx={{
+            width: 138,
+            height: 138,
+            p: 1,
+            backgroundColor: '#fbfbfb',
+            borderRadius: 0.5,
+            boxShadow: '0 1px 2px rgba(0,0,0,0.16)',
+          }}
+        >
+          <QRCodeSVG
+            value={feedbackGroupUrl}
+            size={122}
+            level="M"
+            bgColor="#ffffff"
+            fgColor="#111111"
+            marginSize={1}
+            style={{ display: 'block', width: '100%', height: '100%' }}
+          />
+        </Box>
+        <Typography sx={{ mt: 0.85, fontSize: '0.82rem', color: alpha('#f5fbfb', 0.74), lineHeight: 1.35 }}>
           QQ 扫码加入反馈群
         </Typography>
       </Box>
@@ -866,43 +887,43 @@ function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 
       }}
     >
       <Stack spacing={compact ? 1.05 : 1.35}>
+        <Button
+          fullWidth
+          {...getDownloadButtonProps('android', androidApkUrl)}
+          startIcon={<SymbolIcon name="android" size={compact ? 22 : 28} />}
+          sx={{
+            ...md2Button,
+            minWidth: 0,
+            minHeight: scaledCompact ? primaryHeight : compact ? { xs: 44, sm: 58, md: 66 } : { xs: 48, sm: 60, lg: 66 },
+            px: scaledCompact ? 1 : compact ? { xs: 1.35, sm: 2.8 } : 2.8,
+            fontSize: compact ? { xs: '1rem', sm: '1.08rem', md: '1.28rem' } : { xs: '1rem', sm: '1.18rem', md: '1.28rem' },
+            justifyContent: compact ? 'center' : 'flex-start',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          下载APK
+        </Button>
         <Stack direction="row" spacing={compact ? 0.85 : 1.05} sx={{ width: '100%', minWidth: 0 }}>
           <Button
             fullWidth
-            {...getDownloadButtonProps('android', androidApkUrl)}
-            startIcon={<SymbolIcon name="android" size={compact ? 20 : 26} />}
+            {...getDownloadButtonProps('trainer', trainerModelScopeUrl)}
+            startIcon={<SymbolIcon name="laptop_mac" size={compact ? 20 : 24} />}
             sx={{
               ...md2Button,
-              flex: '1 1 54%',
+              flex: '0 1 50%',
+              display: { xs: mobileApkOnly ? 'none' : 'inline-flex', sm: 'inline-flex' },
               minWidth: 0,
-              minHeight: scaledCompact ? primaryHeight : compact ? { xs: 44, sm: 58, md: 66 } : { xs: 48, sm: 60, lg: 66 },
-              px: scaledCompact ? 1 : compact ? { xs: 1.05, sm: 1.55 } : 2.1,
+              minHeight: scaledCompact ? secondaryHeight : compact ? { xs: 42, sm: 58, md: 66 } : { xs: 48, sm: 60, lg: 66 },
+              px: scaledCompact ? 1.05 : compact ? { xs: 1.05, sm: 1.55 } : 2.1,
               fontSize: compact ? { xs: '0.78rem', sm: '0.98rem', md: '1.12rem' } : { xs: '0.92rem', sm: '1.08rem', md: '1.18rem' },
               justifyContent: 'center',
               whiteSpace: 'nowrap',
             }}
           >
-            下载APK
+            下载训练器
           </Button>
           <FeedbackGroupButton compact={compact} densityScale={densityScale} />
         </Stack>
-        <Button
-          fullWidth
-          {...getDownloadButtonProps('trainer', trainerModelScopeUrl)}
-          startIcon={<SymbolIcon name="laptop_mac" size={compact ? 22 : 28} />}
-          sx={{
-            ...md2Button,
-            display: { xs: mobileApkOnly ? 'none' : 'inline-flex', sm: 'inline-flex' },
-            minWidth: 0,
-            minHeight: scaledCompact ? secondaryHeight : compact ? { xs: 42, sm: 64, md: 72 } : { xs: 50, sm: 64, lg: 72 },
-            px: scaledCompact ? 1.05 : compact ? { xs: 1.35, sm: 2.8 } : 2.8,
-            fontSize: compact ? { xs: '0.78rem', sm: '1.08rem', md: '1.28rem' } : { xs: '1rem', sm: '1.18rem', md: '1.28rem' },
-            justifyContent: compact ? 'center' : 'flex-start',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          下载训练器
-        </Button>
       </Stack>
     </Box>
   );
@@ -916,12 +937,12 @@ function QrPanel({ compact = false, hideOnMobile = false, densityScale = 1 }) {
     <Box
       sx={{
         display: { xs: hideOnMobile ? 'none' : 'block', sm: 'block' },
-        width: scaledCompact ? panelWidth : compact ? { xs: 112, sm: 214, md: 230 } : { xs: '100%', sm: 214, md: 230 },
-        minWidth: scaledCompact ? panelWidth : compact ? { xs: 112, sm: 214, md: 230 } : { sm: 214, md: 230 },
+        width: scaledCompact ? panelWidth : compact ? { xs: 112, sm: 170, md: 180 } : { xs: '100%', sm: 204, md: 212 },
+        minWidth: scaledCompact ? panelWidth : compact ? { xs: 112, sm: 170, md: 180 } : { sm: 204, md: 212 },
         minHeight: 'auto',
         alignSelf: 'flex-start',
-        px: compact ? { xs: 0.95, sm: 2.2, md: 2.5 } : { xs: 1.4, sm: 2.2, md: 2.5 },
-        py: compact ? { xs: 0.95, sm: 2.2, md: 2.5 } : { xs: 1.4, sm: 2.2, md: 2.5 },
+        px: compact ? { xs: 0.95, sm: 1.4, md: 1.4 } : { xs: 1.4, sm: 1.6, md: 1.6 },
+        py: compact ? { xs: 0.95, sm: 1.4, md: 1.4 } : { xs: 1.4, sm: 1.6, md: 1.6 },
         ...md2Surface,
       }}
     >
