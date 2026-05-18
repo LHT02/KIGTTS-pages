@@ -74,19 +74,16 @@ const downloadNotes = [
 const producerCredits = [
   {
     name: 'LHT',
-    role: '发起人 / 主要作者',
     href: lhtBilibiliUrl,
     avatar: './avatars/LHT.jpg',
   },
   {
     name: '花酱',
-    role: '内容与体验协作',
     href: huajiangBilibiliUrl,
     avatar: './avatars/huajiang.jpg',
   },
   {
     name: 'Yui Lu',
-    role: '内容与体验协作',
     href: yuiBilibiliUrl,
     avatar: './avatars/YuiLu.jpg',
   },
@@ -2355,24 +2352,9 @@ export function CreditsSection() {
                         }}
                       />
                       <Box sx={{ minWidth: 0 }}>
-                        <Stack direction="row" spacing={0.75} alignItems="center" sx={{ minWidth: 0 }}>
-                          <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.86rem', sm: '1.05rem' }, fontWeight: 700, whiteSpace: 'nowrap' }}>
-                            {producer.name}
-                          </Typography>
-                          <Typography
-                            sx={{
-                              minWidth: 0,
-                              color: alpha('#8ff5f7', 0.82),
-                              fontSize: { xs: '0.62rem', sm: '0.72rem' },
-                              lineHeight: 1,
-                              whiteSpace: 'nowrap',
-                              overflow: 'hidden',
-                              textOverflow: 'ellipsis',
-                            }}
-                          >
-                            {producer.role}
-                          </Typography>
-                        </Stack>
+                        <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.9rem', sm: '1.08rem' }, fontWeight: 700, whiteSpace: 'nowrap' }}>
+                          {producer.name}
+                        </Typography>
                       </Box>
                       <Box
                         sx={{
