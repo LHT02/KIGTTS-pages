@@ -74,29 +74,29 @@ const downloadNotes = [
 const producerCredits = [
   {
     name: 'LHT',
-    role: 'KIGTTS 发起人与主要作者，负责产品方向、客户端与训练器整合。',
+    role: '发起人 / 主要作者',
     href: lhtBilibiliUrl,
     avatar: './avatars/LHT.jpg',
   },
   {
     name: '花酱',
-    role: '参与 KIGTTS 设计讨论、内容整理与使用体验反馈。',
+    role: '内容与体验协作',
     href: huajiangBilibiliUrl,
     avatar: './avatars/huajiang.jpg',
   },
   {
     name: 'Yui Lu',
-    role: '参与 KIGTTS 内容整理、场景反馈与使用体验建议。',
+    role: '内容与体验协作',
     href: yuiBilibiliUrl,
     avatar: './avatars/YuiLu.jpg',
   },
 ];
 
 const friendLinks = [
-  { name: 'KIGTTS GitHub', caption: '源码、版本记录和问题反馈', icon: 'code', href: projectUrl },
+  { name: 'KIGTTS GitHub', caption: '项目主页与更新记录', icon: 'code', href: projectUrl },
   { name: 'Android Release', caption: '下载 Android 安装包', icon: 'android', href: androidReleaseUrl },
-  { name: 'ModelScope Trainer', caption: '国内网络优先选择', icon: 'deployed_code', href: trainerModelScopeUrl },
-  { name: 'Hugging Face Trainer', caption: '海外网络备用选择', icon: 'hub', href: trainerHuggingFaceUrl },
+  { name: 'ModelScope Trainer', caption: '训练器国内下载', icon: 'deployed_code', href: trainerModelScopeUrl },
+  { name: 'Hugging Face Trainer', caption: '训练器海外下载', icon: 'hub', href: trainerHuggingFaceUrl },
   { name: 'LHT Bilibili', caption: '制作成员主页', icon: 'play_circle', href: lhtBilibiliUrl },
   { name: '花酱 Bilibili', caption: '制作成员主页', icon: 'play_circle', href: huajiangBilibiliUrl },
   { name: 'Yui Lu Bilibili', caption: '制作成员主页', icon: 'play_circle', href: yuiBilibiliUrl },
@@ -110,23 +110,23 @@ const acknowledgementLibraries = [
     href: projectUrl,
     featured: true,
   },
-  { name: 'Android', role: 'Android 客户端平台', logo: './logos/android.svg', href: 'https://developer.android.com/' },
-  { name: 'Kotlin', role: 'Android 主线语言', logo: './logos/kotlin.svg', href: 'https://kotlinlang.org/' },
-  { name: 'Jetpack Compose', role: 'Android UI 框架', logo: './logos/jetpackcompose.svg', href: 'https://developer.android.com/compose' },
-  { name: 'Flutter', role: '跨平台测试版本', logo: './logos/flutter.svg', href: 'https://flutter.dev/' },
-  { name: 'Material Symbols', role: '图标体系', logo: './logos/materialdesign.svg', href: 'https://fonts.google.com/icons' },
+  { name: 'Android', role: '手机端运行环境', logo: './logos/android.svg', href: 'https://developer.android.com/' },
+  { name: 'Kotlin', role: '手机端应用语言', logo: './logos/kotlin.svg', href: 'https://kotlinlang.org/' },
+  { name: 'Jetpack Compose', role: '手机端界面支持', logo: './logos/jetpackcompose.svg', href: 'https://developer.android.com/compose' },
+  { name: 'Flutter', role: '未来 Beta 版本', logo: './logos/flutter.svg', href: 'https://flutter.dev/' },
+  { name: 'Material Symbols', role: '界面图标支持', logo: './logos/materialdesign.svg', href: 'https://fonts.google.com/icons' },
   { name: 'sherpa-onnx', role: '离线 ASR / 说话人验证', logo: './logos/k2-fsa.png', href: 'https://github.com/k2-fsa/sherpa-onnx', monochrome: true },
   { name: 'ONNX Runtime', role: '模型推理运行时', logo: './logos/onnx.svg', href: 'https://onnxruntime.ai/' },
-  { name: 'Piper', role: '离线 TTS / 训练链路', logo: './logos/piper.svg', href: 'https://github.com/OHF-Voice/piper1-gpl', monochrome: true, wide: true },
+  { name: 'Piper', role: '本地语音朗读与训练', logo: './logos/piper.svg', href: 'https://github.com/OHF-Voice/piper1-gpl', monochrome: true, wide: true },
   { name: 'piper-phonemize', role: '音素转换', logo: './logos/rhasspy.png', href: 'https://github.com/rhasspy/piper-phonemize', monochrome: true },
   { name: 'eSpeak NG', role: 'Piper 发音数据', logo: './logos/espeak-ng.png', href: 'https://github.com/espeak-ng/espeak-ng', monochrome: true },
-  { name: 'Electron', role: '桌面训练器壳层', logo: './logos/electron.svg', href: 'https://www.electronjs.org/' },
-  { name: 'React', role: '训练器与网页 UI', logo: './logos/react.svg', href: 'https://react.dev/' },
-  { name: 'Python', role: '训练器后端流程', logo: './logos/python.svg', href: 'https://www.python.org/' },
-  { name: 'PyTorch', role: '训练与蒸馏依赖', logo: './logos/pytorch.svg', href: 'https://pytorch.org/' },
+  { name: 'Electron', role: '桌面训练器窗口', logo: './logos/electron.svg', href: 'https://www.electronjs.org/' },
+  { name: 'React', role: '训练器与官网界面', logo: './logos/react.svg', href: 'https://react.dev/' },
+  { name: 'Python', role: '训练器核心流程', logo: './logos/python.svg', href: 'https://www.python.org/' },
+  { name: 'PyTorch', role: '语音训练支持', logo: './logos/pytorch.svg', href: 'https://pytorch.org/' },
   { name: 'Hugging Face', role: '训练器海外下载', logo: './logos/huggingface.svg', href: 'https://huggingface.co/LHT02/kigtts-trainer/tree/main' },
   { name: 'ModelScope', role: '训练器国内下载', logo: './logos/modelscope.ico', href: 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files' },
-  { name: 'GitHub', role: '源码与版本记录', logo: './logos/github.svg', href: projectUrl },
+  { name: 'GitHub', role: '项目主页与发布', logo: './logos/github.svg', href: projectUrl },
 ];
 
 const downloadTabs = [
@@ -138,11 +138,11 @@ const downloadTabs = [
     title: 'KIGTTS Android',
     summary: '手机端适合直接带到现场使用：便捷字幕、TTS 朗读、快捷名片、画板、音效板和悬浮窗都在同一个应用里。',
     meta: [
-      ['格式', 'APK'],
+      ['文件', 'APK 安装包'],
       ['版本', '0.1.0'],
-      ['来源', 'GitHub Release'],
+      ['下载', 'GitHub Release'],
     ],
-    bullets: ['点击“下载 APK”获取安装包', '如果浏览器提示风险，请确认来源为本官网和 GitHub Release', '安装后按需要开启麦克风、悬浮窗等权限'],
+    bullets: ['在手机浏览器中下载 APK', '请确认页面来自 KIGTTS 官网或 GitHub', '安装后按需要开启麦克风、悬浮窗等权限'],
     actions: [
       { label: '下载 APK', icon: 'download', href: androidApkUrl, primary: true },
       { label: '查看发行页', icon: 'open_in_new', href: androidReleaseUrl },
@@ -154,13 +154,13 @@ const downloadTabs = [
     icon: 'laptop_mac',
     eyebrow: 'DESKTOP / 电脑端',
     title: 'KIGTTS Trainer',
-    summary: '训练器适合想制作或整理自己语音包的用户。你可以在电脑上准备素材、训练语音，并把导出的语音包导入 Android 端使用。',
+    summary: '训练器适合想制作自己语音包的用户。你可以在电脑上准备素材、训练语音，并把导出的语音包导入 Android 端使用。',
     meta: [
-      ['平台', 'Windows / Desktop'],
-      ['下载站', '魔搭 / Hugging Face'],
-      ['用途', '语音包制作'],
+      ['设备', 'Windows 电脑'],
+      ['下载', '魔搭 / Hugging Face'],
+      ['用途', '制作语音包'],
     ],
-    bullets: ['国内网络优先使用魔搭', '访问较慢时可切换 Hugging Face', '下载后按说明解压并启动训练器'],
+    bullets: ['国内用户建议先选魔搭', '下载较慢时再试 Hugging Face', '解压后按界面引导启动训练器'],
     actions: [
       { label: '魔搭下载', icon: 'deployed_code', href: trainerModelScopeUrl, primary: true },
       { label: 'Hugging Face', icon: 'hub', href: trainerHuggingFaceUrl },
@@ -174,11 +174,11 @@ const downloadTabs = [
     title: '暂未上线，敬请期待',
     summary: 'Flutter Beta 还在准备中，目前不提供安装包。想先使用 KIGTTS，请下载 Android 端。',
     meta: [
-      ['状态', '未上线'],
+      ['进度', '准备中'],
       ['下载', '暂未开放'],
-      ['计划', '后续开放测试'],
+      ['提醒', '官网公布'],
     ],
-    bullets: ['当前没有公开安装包', '开放测试后会在官网更新', '现在请优先使用 Android 端'],
+    bullets: ['目前还没有公开安装包', '开放后会在官网发布', '现在建议先使用 Android 端'],
     actions: [
       { label: '暂未上线', icon: 'hourglass_empty', disabled: true, primary: true },
       { label: '敬请期待', icon: 'notifications_active', disabled: true },
@@ -255,11 +255,11 @@ const featureSlides = [
   {
     label: '语音包',
     icon: 'record_voice_over',
-    eyebrow: '06 / 语音增强与变声链路',
+    eyebrow: '06 / 语音增强与变声',
     title: '本地 ASR、TTS、VAD 和说话人验证适配复杂现场',
     brief: '本地处理识别、朗读、增强和说话人验证，适配嘈杂现场。',
     summary:
-      'Android 端优先本地处理，包含 ASR、系统 TTS 或本地语音包朗读、AI 语音增强、VAD、说话人验证和音频测试。',
+      'Android 端优先在本地完成识别、朗读、降噪、语音增强、说话人验证和音频测试。',
     bullets: ['语音识别 -> 文本 -> TTS 朗读', 'GTCRN / DPDFNet 增强模式', '减少旁人说话误触发'],
     note: '适合能接受短暂延迟，但希望用 TTS 替代本人发声或增强外放的场景。',
     image: voicePackScreen,
@@ -269,12 +269,12 @@ const featureSlides = [
     label: '设置',
     icon: 'tune',
     eyebrow: '07 / 设置与训练端',
-    title: '训练器、语音包制作和高级配置',
+    title: '训练器、语音包制作和偏好设置',
     brief: '在电脑端制作语音包，并导出给 Android 端导入使用。',
     summary:
-      '桌面训练器用于整理语料、蒸馏、Piper 训练和语音包打包；设置区承载识别、朗读、热键、语音包和现场使用偏好的高级配置。',
+      '桌面训练器用于准备语音素材、训练语音包和导出成品；设置页用于调整识别、朗读、热键、语音包和现场使用偏好。',
     bullets: ['Piper 标准训练', 'GPT-SoVITS / VoxCPM2 蒸馏', '训练器导出 Android 可导入语音包'],
-    note: '训练器用于完成语料整理、训练配置和语音包导出，配合 Android 端完成完整制作流程。',
+    note: '训练器负责制作语音包，Android 端负责现场使用，两者可以配合完成完整流程。',
     image: trainerScreen,
     imageAlt: 'KIGTTS 训练器截图',
   },
@@ -1551,7 +1551,7 @@ export function AboutSection() {
                   fontWeight: 700,
                 }}
               >
-                功能说明
+                能做什么
               </Typography>
               <Typography
                 sx={{
@@ -1659,7 +1659,7 @@ export function AboutSection() {
                       fontWeight: 700,
                     }}
                   >
-                    功能说明
+                    能做什么
                   </Typography>
                   <Typography
                     sx={{
@@ -2111,7 +2111,7 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                         ? '点击“下载 APK”获取当前版本安装包，下载完成后在 Android 设备上安装。'
                         : currentDownload.id === 'trainer'
                           ? '国内用户优先选择魔搭；如果访问慢，再尝试 Hugging Face。'
-                          : 'Flutter Beta 暂未开放下载。开放测试后会在这里更新。'}
+                          : 'Flutter Beta 暂未开放下载。上线后会在官网公布。'}
                     </Typography>
                   </Stack>
                 </Box>
@@ -2278,7 +2278,7 @@ export function CreditsSection() {
             textAlign: { xs: 'center', lg: 'left' },
           }}
         >
-          KIGTTS 离不开制作成员、开源项目和社区工具。这里集中列出主要贡献者、相关项目和常用链接。
+          感谢一起完成 KIGTTS 的朋友，也感谢支撑识别、朗读和训练能力的开源项目。
         </Typography>
       </Box>
 
@@ -2355,12 +2355,24 @@ export function CreditsSection() {
                         }}
                       />
                       <Box sx={{ minWidth: 0 }}>
-                        <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.86rem', sm: '1.05rem' }, fontWeight: 700 }}>
-                          {producer.name}
-                        </Typography>
-                        <Typography sx={{ mt: 0.2, color: alpha('#ffffff', 0.62), fontSize: { xs: '0.66rem', sm: '0.8rem' }, lineHeight: 1.32 }}>
-                          {producer.role}
-                        </Typography>
+                        <Stack direction="row" spacing={0.75} alignItems="center" sx={{ minWidth: 0 }}>
+                          <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.86rem', sm: '1.05rem' }, fontWeight: 700, whiteSpace: 'nowrap' }}>
+                            {producer.name}
+                          </Typography>
+                          <Typography
+                            sx={{
+                              minWidth: 0,
+                              color: alpha('#8ff5f7', 0.82),
+                              fontSize: { xs: '0.62rem', sm: '0.72rem' },
+                              lineHeight: 1,
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                            }}
+                          >
+                            {producer.role}
+                          </Typography>
+                        </Stack>
                       </Box>
                       <Box
                         sx={{
@@ -2382,17 +2394,17 @@ export function CreditsSection() {
 
               <Box sx={{ p: { xs: 0.95, sm: 1.8 }, ...md2Surface, borderRadius: 0.8, order: { xs: 2, lg: 3 } }}>
                 <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: '0.72rem', letterSpacing: '0.16em', fontWeight: 700 }}>
-                  法律信息
+                  使用前须知
                 </Typography>
                 <Typography sx={{ mt: 0.65, color: alpha('#ffffff', 0.76), lineHeight: 1.44, fontSize: { xs: '0.68rem', sm: '0.9rem' } }}>
-                  这里提供 Android 端和训练器的许可与隐私说明。下载或使用前，可以先了解权限、文件和数据处理方式。
+                  下载前可查看授权、隐私和权限使用情况，确认适合自己的使用方式。
                 </Typography>
                 <Grid container spacing={0.8} sx={{ mt: 1.25 }}>
                   {[
-                    ['Android 开源许可', 'android', androidLicenseUrl],
-                    ['Android 隐私政策', 'policy', androidPrivacyUrl],
-                    ['训练端开源许可', 'laptop_mac', trainerLicenseUrl],
-                    ['训练端隐私政策', 'privacy_tip', trainerPrivacyUrl],
+                    ['Android 授权说明', 'android', androidLicenseUrl],
+                    ['Android 隐私说明', 'policy', androidPrivacyUrl],
+                    ['训练器授权说明', 'laptop_mac', trainerLicenseUrl],
+                    ['训练器隐私说明', 'privacy_tip', trainerPrivacyUrl],
                   ].map(([label, icon, href]) => (
                     <Grid key={label} size={{ xs: 12, sm: 6, lg: 6 }}>
                       <Button
@@ -2437,10 +2449,10 @@ export function CreditsSection() {
                 <Box sx={{ width: 4, height: 28, backgroundColor: '#038387', boxShadow: `0 0 18px ${alpha('#038387', 0.72)}` }} />
                 <Box>
                   <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '1.02rem', sm: '1.2rem' }, fontWeight: 700 }}>
-                    使用到的技术与工具
+                    项目鸣谢
                   </Typography>
                   <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: { xs: '0.68rem', sm: '0.76rem' } }}>
-                    KIGTTS 使用这些项目完成语音识别、朗读、客户端界面和语音包训练。
+                    感谢这些项目为识别、朗读、界面和语音包制作提供支持。
                   </Typography>
                 </Box>
               </Stack>
@@ -2498,7 +2510,7 @@ export function CreditsSection() {
                       相关链接
                     </Typography>
                     <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: { xs: '0.66rem', sm: '0.74rem' } }}>
-                      下载、反馈和制作成员主页
+                      下载页面与制作成员主页
                     </Typography>
                   </Box>
                 </Stack>
