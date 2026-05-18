@@ -27,30 +27,30 @@ export const navItems = [
   {
     id: 'home',
     label: '首页',
-    caption: 'Home',
+    caption: '了解 KIGTTS',
     icon: 'home',
   },
   {
     id: 'about',
     label: '介绍',
-    caption: 'About',
+    caption: '功能怎么用',
     icon: 'graphic_eq',
   },
   {
     id: 'download',
     label: '下载',
-    caption: 'Download',
+    caption: '选择适合的版本',
     icon: 'download',
   },
   {
     id: 'credits',
     label: '鸣谢',
-    caption: 'Credits',
+    caption: '团队与开源项目',
     icon: 'volunteer_activism',
   },
 ];
 
-const betaLines = ['尝试由Flutter构建', '的Beta版本'];
+const betaLines = ['尝试 Flutter Beta', '版本'];
 const qrValue = 'www.kigtts.lhtstudio.com';
 const androidReleaseUrl = 'https://github.com/LHT02/KIGTTS/releases/tag/APP0.1.0';
 const androidApkUrl = 'https://github.com/LHT02/KIGTTS/releases/download/APP0.1.0/app-release.apk';
@@ -67,8 +67,8 @@ const yuiBilibiliUrl = 'https://space.bilibili.com/23208863';
 
 const downloadNotes = [
   `手机扫描二维码访问 ${qrValue}`,
-  'APK 指向 GitHub Release APP0.1.0',
-  '训练器提供 ModelScope 与 Hugging Face 镜像',
+  'Android 安装包来自 GitHub Release',
+  '训练器可从魔搭或 Hugging Face 下载',
 ];
 
 const producerCredits = [
@@ -93,10 +93,10 @@ const producerCredits = [
 ];
 
 const friendLinks = [
-  { name: 'KIGTTS GitHub', caption: '项目主页与版本发布', icon: 'code', href: projectUrl },
-  { name: 'Android Release', caption: 'APP0.1.0 下载入口', icon: 'android', href: androidReleaseUrl },
-  { name: 'ModelScope Trainer', caption: '训练器下载入口', icon: 'deployed_code', href: trainerModelScopeUrl },
-  { name: 'Hugging Face Trainer', caption: '训练器备用下载', icon: 'hub', href: trainerHuggingFaceUrl },
+  { name: 'KIGTTS GitHub', caption: '源码、版本记录和问题反馈', icon: 'code', href: projectUrl },
+  { name: 'Android Release', caption: '下载 Android 安装包', icon: 'android', href: androidReleaseUrl },
+  { name: 'ModelScope Trainer', caption: '国内网络优先选择', icon: 'deployed_code', href: trainerModelScopeUrl },
+  { name: 'Hugging Face Trainer', caption: '海外网络备用选择', icon: 'hub', href: trainerHuggingFaceUrl },
   { name: 'LHT Bilibili', caption: '制作成员主页', icon: 'play_circle', href: lhtBilibiliUrl },
   { name: '花酱 Bilibili', caption: '制作成员主页', icon: 'play_circle', href: huajiangBilibiliUrl },
   { name: 'Yui Lu Bilibili', caption: '制作成员主页', icon: 'play_circle', href: yuiBilibiliUrl },
@@ -105,7 +105,7 @@ const friendLinks = [
 const acknowledgementLibraries = [
   {
     name: 'KIGTTS',
-    role: '项目主页',
+    role: 'KIGTTS 官方仓库',
     logo: logoWhite,
     href: projectUrl,
     featured: true,
@@ -113,7 +113,7 @@ const acknowledgementLibraries = [
   { name: 'Android', role: 'Android 客户端平台', logo: './logos/android.svg', href: 'https://developer.android.com/' },
   { name: 'Kotlin', role: 'Android 主线语言', logo: './logos/kotlin.svg', href: 'https://kotlinlang.org/' },
   { name: 'Jetpack Compose', role: 'Android UI 框架', logo: './logos/jetpackcompose.svg', href: 'https://developer.android.com/compose' },
-  { name: 'Flutter', role: 'Beta 版本技术栈', logo: './logos/flutter.svg', href: 'https://flutter.dev/' },
+  { name: 'Flutter', role: '跨平台测试版本', logo: './logos/flutter.svg', href: 'https://flutter.dev/' },
   { name: 'Material Symbols', role: '图标体系', logo: './logos/materialdesign.svg', href: 'https://fonts.google.com/icons' },
   { name: 'sherpa-onnx', role: '离线 ASR / 说话人验证', logo: './logos/k2-fsa.png', href: 'https://github.com/k2-fsa/sherpa-onnx', monochrome: true },
   { name: 'ONNX Runtime', role: '模型推理运行时', logo: './logos/onnx.svg', href: 'https://onnxruntime.ai/' },
@@ -124,9 +124,9 @@ const acknowledgementLibraries = [
   { name: 'React', role: '训练器与网页 UI', logo: './logos/react.svg', href: 'https://react.dev/' },
   { name: 'Python', role: '训练器后端流程', logo: './logos/python.svg', href: 'https://www.python.org/' },
   { name: 'PyTorch', role: '训练与蒸馏依赖', logo: './logos/pytorch.svg', href: 'https://pytorch.org/' },
-  { name: 'Hugging Face', role: '训练器镜像', logo: './logos/huggingface.svg', href: 'https://huggingface.co/LHT02/kigtts-trainer/tree/main' },
-  { name: 'ModelScope', role: '训练器国内镜像', logo: './logos/modelscope.ico', href: 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files' },
-  { name: 'GitHub', role: '版本发布与问题反馈', logo: './logos/github.svg', href: projectUrl },
+  { name: 'Hugging Face', role: '训练器海外下载', logo: './logos/huggingface.svg', href: 'https://huggingface.co/LHT02/kigtts-trainer/tree/main' },
+  { name: 'ModelScope', role: '训练器国内下载', logo: './logos/modelscope.ico', href: 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files' },
+  { name: 'GitHub', role: '源码与版本记录', logo: './logos/github.svg', href: projectUrl },
 ];
 
 const downloadTabs = [
@@ -134,15 +134,15 @@ const downloadTabs = [
     id: 'android',
     label: '安卓端',
     icon: 'android',
-    eyebrow: 'ANDROID / APP 0.1.0',
-    title: 'KIGTTS Android App',
-    summary: '现场字幕、TTS 朗读、快捷名片、画板、音效板和悬浮窗入口都在安卓端主应用里，适合手机直接安装使用。',
+    eyebrow: 'ANDROID / 手机端',
+    title: 'KIGTTS Android',
+    summary: '手机端适合直接带到现场使用：便捷字幕、TTS 朗读、快捷名片、画板、音效板和悬浮窗都在同一个应用里。',
     meta: [
       ['格式', 'APK'],
-      ['版本', 'APP0.1.0'],
+      ['版本', '0.1.0'],
       ['来源', 'GitHub Release'],
     ],
-    bullets: ['主下载按钮直达 app-release.apk', '发行页保留版本说明和后续资产', '建议在 Android 设备浏览器中打开下载'],
+    bullets: ['点击“下载 APK”获取安装包', '如果浏览器提示风险，请确认来源为本官网和 GitHub Release', '安装后按需要开启麦克风、悬浮窗等权限'],
     actions: [
       { label: '下载 APK', icon: 'download', href: androidApkUrl, primary: true },
       { label: '查看发行页', icon: 'open_in_new', href: androidReleaseUrl },
@@ -152,15 +152,15 @@ const downloadTabs = [
     id: 'trainer',
     label: '训练器',
     icon: 'laptop_mac',
-    eyebrow: 'DESKTOP / TRAINER',
+    eyebrow: 'DESKTOP / 电脑端',
     title: 'KIGTTS Trainer',
-    summary: '训练器用于整理语料、训练或蒸馏语音包，并把结果导出给 Android 端导入使用。当前提供魔搭和 Hugging Face 两个镜像入口。',
+    summary: '训练器适合想制作或整理自己语音包的用户。你可以在电脑上准备素材、训练语音，并把导出的语音包导入 Android 端使用。',
     meta: [
       ['平台', 'Windows / Desktop'],
-      ['镜像', 'ModelScope + Hugging Face'],
+      ['下载站', '魔搭 / Hugging Face'],
       ['用途', '语音包制作'],
     ],
-    bullets: ['魔搭适合国内网络直接访问', 'Hugging Face 保留国际下载入口', '下载后按训练器页面提示解压并启动'],
+    bullets: ['国内网络优先使用魔搭', '访问较慢时可切换 Hugging Face', '下载后按说明解压并启动训练器'],
     actions: [
       { label: '魔搭下载', icon: 'deployed_code', href: trainerModelScopeUrl, primary: true },
       { label: 'Hugging Face', icon: 'hub', href: trainerHuggingFaceUrl },
@@ -172,13 +172,13 @@ const downloadTabs = [
     icon: 'flutter',
     eyebrow: 'FLUTTER / BETA',
     title: '暂未上线，敬请期待',
-    summary: 'Flutter Beta 是后续版本入口，当前尚未发布公开测试构建。可下载版本上线后会在这一页签提供，安卓主线仍以 Kotlin + Jetpack Compose 版本为准。',
+    summary: 'Flutter Beta 还在准备中，目前不提供安装包。想先使用 KIGTTS，请下载 Android 端。',
     meta: [
       ['状态', '未上线'],
-      ['入口', '预留'],
+      ['下载', '暂未开放'],
       ['计划', '后续开放测试'],
     ],
-    bullets: ['当前不提供安装包', '上线后会在此提供下载', '安卓主线问题仍以 Android 软件为准'],
+    bullets: ['当前没有公开安装包', '开放测试后会在官网更新', '现在请优先使用 Android 端'],
     actions: [
       { label: '暂未上线', icon: 'hourglass_empty', disabled: true, primary: true },
       { label: '敬请期待', icon: 'notifications_active', disabled: true },
@@ -193,9 +193,9 @@ const featureSlides = [
     eyebrow: '01 / 便捷字幕',
     title: '语音识别、快捷文本和 TTS 一键上屏',
     summary:
-      'KIGTTS 面向 Kigurumi、头套、面具、舞台妆造和不方便直接说话的现场场景。便捷字幕把语音识别、手动输入、快捷文本、TTS 朗读、大字幕预览和预设分组整合在一个主入口里。',
+      'KIGTTS 面向 Kigurumi、头套、面具、舞台妆造和不方便直接说话的现场场景。便捷字幕把语音识别、手动输入、快捷文本、TTS 朗读、大字幕预览和预设分组放在同一个界面里。',
     bullets: ['减少频繁切 App', '降低现场打字压力', '一键上屏、朗读或发送常用语'],
-    note: '原项目定位与便捷字幕合并为一项：它是整套现场交流路径的主入口。',
+    note: '打开便捷字幕后，可以直接开始识别语音、输入文字或朗读常用短句。',
     image: subtitleScreen,
     imageAlt: '便捷字幕功能截图',
   },
@@ -205,8 +205,8 @@ const featureSlides = [
     eyebrow: '02 / 快捷名片',
     title: '个人信息、角色信息、链接和二维码展示',
     summary:
-      '快捷名片用于展示主页、群入口、约拍信息或临时说明，支持横竖屏展示、背景图、主题色背景、装饰文字、链接按钮、分享和多张名片切换。',
-    bullets: ['互关和主页展示', '社交二维码与群入口', '角色设定和现场说明'],
+      '快捷名片用于展示主页、社交账号、群二维码、约拍信息或临时说明，支持横竖屏展示、背景图、主题色背景、装饰文字、链接按钮、分享和多张名片切换。',
+    bullets: ['互关和主页展示', '社交二维码与群信息', '角色设定和现场说明'],
     note: '名片功能适合在不方便开口解释时快速完成信息交换。',
     image: cardScreen,
     imageAlt: '快捷名片功能截图',
@@ -1053,7 +1053,7 @@ export function AboutSection() {
   const slideNumber = String(activeSlide + 1).padStart(2, '0');
   const totalSlides = String(featureSlides.length).padStart(2, '0');
   const detailRows = [
-    ['模块', currentFeature.eyebrow.split('/')[1]?.trim() ?? '功能'],
+    ['功能', currentFeature.label],
     ['场景', currentFeature.bullets[0]],
     ['输入', currentFeature.bullets[1]],
     ['输出', currentFeature.bullets[2]],
@@ -1428,7 +1428,7 @@ export function AboutSection() {
                 </Box>
                 <Box sx={{ minWidth: 0 }}>
                   <Typography sx={{ color: alpha('#ffffff', 0.56), fontSize: { xs: '0.68rem', sm: '0.75rem' }, letterSpacing: '0.14em' }}>
-                    KIGTTS FEATURE / {slideNumber}
+                    功能介绍 / {slideNumber}
                   </Typography>
                   <Typography
                     sx={{
@@ -1573,7 +1573,7 @@ export function AboutSection() {
                   fontWeight: 700,
                 }}
               >
-                CONTENT
+                功能说明
               </Typography>
               <Typography
                 sx={{
@@ -1681,7 +1681,7 @@ export function AboutSection() {
                       fontWeight: 700,
                     }}
                   >
-                    CONTENT
+                    功能说明
                   </Typography>
                   <Typography
                     sx={{
@@ -1886,7 +1886,7 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
             textAlign: 'center',
           }}
         >
-          DOWNLOAD
+          下载
         </Typography>
         <Typography
           sx={{
@@ -1899,7 +1899,7 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
             textAlign: 'center',
           }}
         >
-          按设备类型选择下载入口，真实链接集中在同一张翻页卡片里。
+          选择适合你的版本，按提示下载和安装。
         </Typography>
       </Box>
 
@@ -2062,7 +2062,7 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                   }}
                 >
                   <Typography sx={{ color: alpha('#ffffff', 0.52), fontSize: '0.72rem', letterSpacing: '0.16em', fontWeight: 700 }}>
-                    CONTENT
+                    适合谁使用
                   </Typography>
                   <Typography
                     sx={{
@@ -2126,14 +2126,14 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                       sx={{ color: currentDownload.id === 'beta' ? alpha('#ffffff', 0.52) : '#8ff5f7' }}
                     />
                     <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '1.2rem', sm: '1.42rem' }, fontWeight: 700 }}>
-                      {currentDownload.id === 'android' ? 'APK 直链' : currentDownload.id === 'trainer' ? '双镜像下载' : '入口预留'}
+                      {currentDownload.id === 'android' ? '手机安装包' : currentDownload.id === 'trainer' ? '电脑端训练器' : '还在准备中'}
                     </Typography>
                     <Typography sx={{ maxWidth: 280, color: alpha('#ffffff', 0.62), fontSize: { xs: '0.78rem', sm: '0.9rem' }, lineHeight: 1.5 }}>
                       {currentDownload.id === 'android'
-                        ? '点击主按钮会直接下载 GitHub Release 中的 app-release.apk。'
+                        ? '点击“下载 APK”获取当前版本安装包，下载完成后在 Android 设备上安装。'
                         : currentDownload.id === 'trainer'
-                          ? '优先使用魔搭；需要国际镜像时使用 Hugging Face。'
-                          : 'Flutter Beta 尚未开放公开构建。'}
+                          ? '国内用户优先选择魔搭；如果访问慢，再尝试 Hugging Face。'
+                          : 'Flutter Beta 暂未开放下载。开放测试后会在这里更新。'}
                     </Typography>
                   </Stack>
                 </Box>
@@ -2267,7 +2267,7 @@ export function CreditsSection() {
             textAlign: { xs: 'center', lg: 'left' },
           }}
         >
-          KIGTTS CREDITS
+          鸣谢
         </Typography>
         <Typography
           sx={{
@@ -2283,7 +2283,7 @@ export function CreditsSection() {
           }}
         >
           <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-            制作团队与开源生态
+            制作团队与项目鸣谢
           </Box>
           <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
             鸣谢
@@ -2300,7 +2300,7 @@ export function CreditsSection() {
             textAlign: { xs: 'center', lg: 'left' },
           }}
         >
-          KIGTTS 的 Android 客户端、训练器和网页由制作团队共同推进，并基于多个优秀的开源项目构建。
+          KIGTTS 离不开制作成员、开源项目和社区工具。这里集中列出主要贡献者、相关项目和常用链接。
         </Typography>
       </Box>
 
@@ -2407,7 +2407,7 @@ export function CreditsSection() {
                   法律信息
                 </Typography>
                 <Typography sx={{ mt: 0.65, color: alpha('#ffffff', 0.76), lineHeight: 1.44, fontSize: { xs: '0.68rem', sm: '0.9rem' } }}>
-                  查看 KIGTTS Android 端和训练器的开源许可、隐私政策与使用条款。下载或使用前，请阅读对应页面。
+                  这里提供 Android 端和训练器的许可与隐私说明。下载或使用前，可以先了解权限、文件和数据处理方式。
                 </Typography>
                 <Grid container spacing={0.8} sx={{ mt: 1.25 }}>
                   {[
@@ -2459,10 +2459,10 @@ export function CreditsSection() {
                 <Box sx={{ width: 4, height: 28, backgroundColor: '#038387', boxShadow: `0 0 18px ${alpha('#038387', 0.72)}` }} />
                 <Box>
                   <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '1.02rem', sm: '1.2rem' }, fontWeight: 700 }}>
-                    开源生态
+                    使用到的技术与工具
                   </Typography>
                   <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: { xs: '0.68rem', sm: '0.76rem' } }}>
-                    支撑语音识别、TTS、客户端界面和训练流程的核心项目
+                    KIGTTS 使用这些项目完成语音识别、朗读、客户端界面和语音包训练。
                   </Typography>
                 </Box>
               </Stack>
@@ -2520,7 +2520,7 @@ export function CreditsSection() {
                       相关链接
                     </Typography>
                     <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: { xs: '0.66rem', sm: '0.74rem' } }}>
-                      下载入口、项目主页和制作成员主页
+                      下载、反馈和制作成员主页
                     </Typography>
                   </Box>
                 </Stack>

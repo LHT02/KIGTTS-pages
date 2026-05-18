@@ -206,7 +206,7 @@ function MobileNavigation({ activeId, onSelect }) {
         <Stack spacing={1.2} sx={{ p: 2.2, pb: 0 }}>
           <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: 156 }} />
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            切换页面内容，布局会根据屏宽自动调整。
+            选择想看的内容：功能介绍、下载方式和制作鸣谢。
           </Typography>
         </Stack>
         <List sx={{ px: 1.2, py: 2 }}>
