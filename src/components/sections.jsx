@@ -50,7 +50,7 @@ export const navItems = [
   },
 ];
 
-const betaLines = ['尝试 Flutter Beta', '版本'];
+const betaLines = ['Flutter 新版', '即将上线'];
 const qrValue = 'www.kigtts.lhtstudio.com';
 const androidReleaseUrl = 'https://github.com/LHT02/KIGTTS/releases/tag/APP0.1.0';
 const androidApkUrl = 'https://github.com/LHT02/KIGTTS/releases/download/APP0.1.0/app-release.apk';
@@ -94,9 +94,9 @@ const friendLinks = [
   { name: 'Android Release', caption: '下载 Android 安装包', icon: 'android', href: androidReleaseUrl },
   { name: 'ModelScope Trainer', caption: '训练器国内下载', icon: 'deployed_code', href: trainerModelScopeUrl },
   { name: 'Hugging Face Trainer', caption: '训练器海外下载', icon: 'hub', href: trainerHuggingFaceUrl },
-  { name: 'LHT Bilibili', caption: '制作成员主页', icon: 'play_circle', href: lhtBilibiliUrl },
-  { name: '花酱 Bilibili', caption: '制作成员主页', icon: 'play_circle', href: huajiangBilibiliUrl },
-  { name: 'Yui Lu Bilibili', caption: '制作成员主页', icon: 'play_circle', href: yuiBilibiliUrl },
+  { name: 'LHT Bilibili', caption: 'LHT 的个人主页', icon: 'play_circle', href: lhtBilibiliUrl },
+  { name: '花酱 Bilibili', caption: '花酱的个人主页', icon: 'play_circle', href: huajiangBilibiliUrl },
+  { name: 'Yui Lu Bilibili', caption: 'Yui Lu 的个人主页', icon: 'play_circle', href: yuiBilibiliUrl },
 ];
 
 const acknowledgementLibraries = [
@@ -139,7 +139,7 @@ const downloadTabs = [
       ['版本', '0.1.0'],
       ['下载', 'GitHub Release'],
     ],
-    bullets: ['在手机浏览器中下载 APK', '请确认页面来自 KIGTTS 官网或 GitHub', '安装后按需要开启麦克风、悬浮窗等权限'],
+    bullets: ['在手机浏览器中下载 APK', '确保从官网或 GitHub 下载，避免第三方修改包', '安装后按需要开启麦克风、悬浮窗等权限'],
     actions: [
       { label: '下载 APK', icon: 'download', href: androidApkUrl, primary: true },
       { label: '查看发行页', icon: 'open_in_new', href: androidReleaseUrl },
@@ -219,7 +219,7 @@ const featureSlides = [
     summary:
       '画板用于在嘈杂环境或不方便打字时快速补充说明，支持现场手写、涂鸦、标注和简单示意，让交流不完全依赖语音或键盘输入。',
     bullets: ['手写补充说明', '涂鸦和快速标注', '适合嘈杂现场兜底沟通'],
-    note: '画板从音效板中拆出为独立介绍，方便和现场手写场景对应。',
+    note: '画板可代替纸笔，适合嘈杂环境下的快速涂鸦和标注交流。',
     image: boardScreen,
     imageAlt: '画板功能截图',
   },
@@ -258,7 +258,7 @@ const featureSlides = [
     summary:
       'Android 端优先在本地完成识别、朗读、降噪、语音增强、说话人验证和音频测试。',
     bullets: ['语音识别 -> 文本 -> TTS 朗读', 'GTCRN / DPDFNet 增强模式', '减少旁人说话误触发'],
-    note: '适合能接受短暂延迟，但希望用 TTS 替代本人发声或增强外放的场景。',
+    note: '适合希望用合成语音代替或增强本人发声的场景，可能会有短暂延迟。',
     image: voicePackScreen,
     imageAlt: '语音包功能截图',
   },
@@ -271,7 +271,7 @@ const featureSlides = [
     summary:
       '桌面训练器用于准备语音素材、训练语音包和导出成品；设置页用于调整识别、朗读、热键、语音包和现场使用偏好。',
     bullets: ['Piper 标准训练', 'GPT-SoVITS / VoxCPM2 蒸馏', '训练器导出 Android 可导入语音包'],
-    note: '训练器负责制作语音包，Android 端负责现场使用，两者可以配合完成完整流程。',
+    note: '电脑端制作语音包 → 导入手机端 → 现场使用，两端配合完成完整流程。',
     image: trainerScreen,
     imageAlt: 'KIGTTS 训练器截图',
   },
@@ -901,7 +901,7 @@ function HomeRightBlock({ onSelect, onSelectDownloadTab, compact = false, deskto
           fontWeight: 300,
         }}
       >
-        变娃交流无阻碍
+         让沉默的你被听见
       </Typography>
       <Stack
         direction={desktopLayout ? 'row' : compact ? { xs: 'column', sm: 'row' } : { xs: 'column', sm: 'row' }}
@@ -1548,7 +1548,7 @@ export function AboutSection() {
                   fontWeight: 700,
                 }}
               >
-                能做什么
+                功能详情
               </Typography>
               <Typography
                 sx={{
@@ -1656,7 +1656,7 @@ export function AboutSection() {
                       fontWeight: 700,
                     }}
                   >
-                    能做什么
+                    功能详情
                   </Typography>
                   <Typography
                     sx={{
@@ -2037,7 +2037,7 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                   }}
                 >
                   <Typography sx={{ color: alpha('#ffffff', 0.52), fontSize: '0.72rem', letterSpacing: '0.16em', fontWeight: 700 }}>
-                    适合谁使用
+                    适用说明
                   </Typography>
                   <Typography
                     sx={{
@@ -2379,7 +2379,7 @@ export function CreditsSection() {
                   使用前须知
                 </Typography>
                 <Typography sx={{ mt: 0.65, color: alpha('#ffffff', 0.76), lineHeight: 1.44, fontSize: { xs: '0.68rem', sm: '0.9rem' } }}>
-                  下载前可查看授权、隐私和权限使用情况，确认适合自己的使用方式。
+                  使用前请查阅授权协议与隐私政策。
                 </Typography>
                 <Grid container spacing={0.8} sx={{ mt: 1.25 }}>
                   {[

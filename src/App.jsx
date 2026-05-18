@@ -206,7 +206,7 @@ function MobileNavigation({ activeId, onSelect }) {
         <Stack spacing={1.2} sx={{ p: 2.2, pb: 0 }}>
           <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: 156 }} />
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            选择想看的内容：功能介绍、下载方式和制作鸣谢。
+            功能介绍 · 下载方式 · 制作鸣谢
           </Typography>
         </Stack>
         <List sx={{ px: 1.2, py: 2 }}>
@@ -317,7 +317,7 @@ function LoadingScreen({ progress, visible }) {
             />
           ))}
         </Stack>
-        <Typography sx={{ mt: 0.45, color: alpha('#ffffff', 0.38), fontSize: '0.76rem' }}>Loading assets...</Typography>
+        <Typography sx={{ mt: 0.45, color: alpha('#ffffff', 0.38), fontSize: '0.76rem' }}>资源加载中…</Typography>
       </Box>
 
       <Stack
@@ -335,7 +335,7 @@ function LoadingScreen({ progress, visible }) {
         <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: '100%', maxWidth: 330, filter: 'drop-shadow(0 18px 26px rgba(0,0,0,0.22))' }} />
         <Box sx={{ width: '100%', height: 1, backgroundColor: alpha('#ffffff', 0.12) }} />
         <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.78rem', sm: '0.92rem' }, letterSpacing: '0.05em', fontWeight: 700 }}>
-          OVER THE VOICE / INTO THE FRONT
+          让沉默的你被听见
         </Typography>
       </Stack>
     </Box>
