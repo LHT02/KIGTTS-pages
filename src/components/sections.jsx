@@ -57,6 +57,7 @@ const androidApkUrl = 'https://github.com/LHT02/KIGTTS/releases/download/APP0.1.
 const trainerModelScopeUrl = 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files';
 const trainerHuggingFaceUrl = 'https://huggingface.co/LHT02/kigtts-trainer/tree/main';
 const projectUrl = 'https://github.com/LHT02/KIGTTS';
+const feedbackGroupUrl = 'https://qm.qq.com/q/JRnqshDOEM';
 const androidLicenseUrl = './legal/android-license.html';
 const androidPrivacyUrl = './legal/android-privacy.html';
 const trainerLicenseUrl = './legal/trainer-license.html';
@@ -447,7 +448,7 @@ function CreditLogo({ item }) {
   );
 }
 
-function RealQr({ compact = false, densityScale = 1 }) {
+function RealQr({ compact = false, densityScale = 1, value = qrValue }) {
   const compactSize = scaledPx(108, densityScale, 78);
   const qrSize = scaledPx(96, densityScale, 68);
 
@@ -463,7 +464,7 @@ function RealQr({ compact = false, densityScale = 1 }) {
       }}
     >
       <QRCodeSVG
-        value={qrValue}
+        value={value}
         size={compact ? qrSize : 144}
         level="M"
         bgColor="#ffffff"
@@ -471,6 +472,102 @@ function RealQr({ compact = false, densityScale = 1 }) {
         marginSize={1}
         style={{ display: 'block', width: '100%', height: '100%' }}
       />
+    </Box>
+  );
+}
+
+function QqIcon({ size = 22 }) {
+  return (
+    <Box
+      component="span"
+      sx={{
+        width: size,
+        height: size,
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: 'inherit',
+      }}
+    >
+      <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24" width="100%" height="100%" fill="currentColor">
+        <path d="M12 2.4c-3.02 0-5.47 2.86-5.47 6.38 0 1.32.35 2.54.94 3.56-.52.95-1.18 2.3-1.55 3.55-.22.75.23 1.25.91 1.02l1.43-.48c.62.66 1.42 1.16 2.33 1.4v1.25H8.45a1.1 1.1 0 0 0 0 2.2h7.1a1.1 1.1 0 1 0 0-2.2h-2.14v-1.25c.9-.24 1.7-.74 2.32-1.4l1.43.48c.68.23 1.13-.27.91-1.02-.37-1.25-1.03-2.6-1.55-3.55.59-1.02.94-2.24.94-3.56 0-3.52-2.45-6.38-5.46-6.38Zm-2.1 6.52c-.5 0-.9-.5-.9-1.1s.4-1.1.9-1.1.9.5.9 1.1-.4 1.1-.9 1.1Zm4.2 0c-.5 0-.9-.5-.9-1.1s.4-1.1.9-1.1.9.5.9 1.1-.4 1.1-.9 1.1ZM9.28 12.7c.77.48 1.7.75 2.72.75s1.95-.27 2.72-.75c-.44 1.12-1.47 1.88-2.72 1.88s-2.28-.76-2.72-1.88Z" />
+      </svg>
+    </Box>
+  );
+}
+
+function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
+  const compactHeight = scaledPx(54, densityScale, 38);
+
+  return (
+    <Box
+      sx={{
+        position: 'relative',
+        flex: '0 1 46%',
+        minWidth: 0,
+        '& .feedback-qr-popover': {
+          opacity: 0,
+          transform: 'translate(-50%, 8px)',
+          pointerEvents: 'none',
+          transition: 'opacity 160ms ease, transform 180ms cubic-bezier(0.2, 0, 0, 1)',
+        },
+        '&:hover .feedback-qr-popover, &:focus-within .feedback-qr-popover': {
+          opacity: 1,
+          transform: 'translate(-50%, 0)',
+          pointerEvents: 'auto',
+        },
+      }}
+    >
+      <Button
+        fullWidth
+        component="a"
+        href={feedbackGroupUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        startIcon={<QqIcon size={compact ? 20 : 24} />}
+        sx={{
+          ...md2Button,
+          minWidth: 0,
+          minHeight: compact ? compactHeight : { xs: 46, sm: 58, lg: 64 },
+          px: compact ? { xs: 1.05, sm: 1.25 } : 1.8,
+          fontSize: compact ? { xs: '0.7rem', sm: '0.84rem', md: '0.96rem' } : { xs: '0.78rem', sm: '0.94rem', md: '1rem' },
+          whiteSpace: 'nowrap',
+          justifyContent: 'center',
+          backgroundColor: '#126d70',
+          '& .MuiButton-startIcon': {
+            mr: compact ? 0.45 : 0.7,
+          },
+          '&:hover': {
+            backgroundColor: '#16888b',
+            boxShadow: '0 4px 8px rgba(0,0,0,0.24)',
+          },
+        }}
+      >
+        加入反馈群
+      </Button>
+      <Box
+        className="feedback-qr-popover"
+        sx={{
+          display: { xs: 'none', lg: 'block' },
+          position: 'absolute',
+          left: '50%',
+          bottom: 'calc(100% + 12px)',
+          zIndex: 20,
+          width: 156,
+          p: 1.2,
+          color: '#eef8f8',
+          textAlign: 'center',
+          backgroundColor: alpha('#252a2b', 0.98),
+          border: `1px solid ${alpha('#ffffff', 0.08)}`,
+          boxShadow: '0 14px 30px rgba(0,0,0,0.38)',
+          borderRadius: 0.75,
+        }}
+      >
+        <RealQr compact densityScale={0.86} value={feedbackGroupUrl} />
+        <Typography sx={{ mt: 0.75, fontSize: '0.75rem', color: alpha('#f5fbfb', 0.72), lineHeight: 1.35 }}>
+          QQ 扫码加入反馈群
+        </Typography>
+      </Box>
     </Box>
   );
 }
@@ -592,6 +689,8 @@ function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 
         backgroundColor: '#82cbcc', // Base teal background
         boxShadow: '0 8px 24px rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1)',
         overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
         transition: 'box-shadow 0.2s ease',
         '&::before': {
           content: '""',
@@ -651,14 +750,16 @@ function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 
           alignItems: 'center',
           justifyContent: isBanner || denseDesktop ? 'space-between' : 'center',
           textAlign: isBanner || denseDesktop ? 'left' : 'center',
-          minHeight: isBanner ? '100%' : 'auto',
+          minHeight: isBanner || denseDesktop ? '100%' : 'auto',
           ...(compact
             ? {}
             : {
                 [shortDesktopQuery]: {
                   flexDirection: 'row',
+                  alignItems: 'center',
                   justifyContent: 'space-between',
                   textAlign: 'left',
+                  minHeight: '100%',
                   gap: 1.4,
                 },
               }),
@@ -756,8 +857,7 @@ function BetaBubble({ onSelect, compact = false, banner = false, densityScale = 
 
 function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 1, onSelectDownloadTab }) {
   const scaledCompact = compact && densityScale < 0.98;
-  const panelMinHeight = scaledPx(244, densityScale, densityScale < 0.75 ? 108 : 132);
-  const primaryHeight = scaledPx(72, densityScale, 42);
+  const primaryHeight = scaledPx(68, densityScale, 40);
   const secondaryHeight = scaledPx(72, densityScale, 38);
   const getDownloadButtonProps = (tabId, href) => {
     if (onSelectDownloadTab) {
@@ -777,29 +877,34 @@ function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 
       sx={{
         flex: 1,
         minWidth: 0,
-        minHeight: scaledCompact ? panelMinHeight : compact ? { xs: 'auto', sm: 204, md: 244 } : { xs: 'auto', sm: 220, lg: 244 },
+        minHeight: 'auto',
+        alignSelf: 'flex-start',
         px: compact ? { xs: 1.05, sm: 2.2, md: 2.5 } : { xs: 1.5, sm: 2.2, md: 2.5 },
         py: compact ? { xs: 1.05, sm: 2.2, md: 2.5 } : { xs: 1.5, sm: 2.2, md: 2.5 },
         ...md2Surface,
       }}
     >
-      <Stack spacing={compact ? 1.1 : 1.8} sx={{ height: '100%' }}>
-        <Button
-          fullWidth
-          {...getDownloadButtonProps('android', androidApkUrl)}
-          startIcon={<SymbolIcon name="android" size={compact ? 22 : 28} />}
-          sx={{
-            ...md2Button,
-            minWidth: 0,
-            minHeight: scaledCompact ? primaryHeight : compact ? { xs: 48, sm: 64, md: 72 } : { xs: 50, sm: 64, lg: 72 },
-            px: scaledCompact ? 1.05 : compact ? { xs: 1.35, sm: 2.8 } : 2.8,
-            fontSize: compact ? { xs: '1rem', sm: '1.08rem', md: '1.28rem' } : { xs: '1rem', sm: '1.18rem', md: '1.28rem' },
-            justifyContent: compact ? 'center' : 'flex-start',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          下载APK
-        </Button>
+      <Stack spacing={compact ? 1.05 : 1.35}>
+        <Stack direction="row" spacing={compact ? 0.85 : 1.05} sx={{ width: '100%', minWidth: 0 }}>
+          <Button
+            fullWidth
+            {...getDownloadButtonProps('android', androidApkUrl)}
+            startIcon={<SymbolIcon name="android" size={compact ? 20 : 26} />}
+            sx={{
+              ...md2Button,
+              flex: '1 1 54%',
+              minWidth: 0,
+              minHeight: scaledCompact ? primaryHeight : compact ? { xs: 44, sm: 58, md: 66 } : { xs: 48, sm: 60, lg: 66 },
+              px: scaledCompact ? 1 : compact ? { xs: 1.05, sm: 1.55 } : 2.1,
+              fontSize: compact ? { xs: '0.78rem', sm: '0.98rem', md: '1.12rem' } : { xs: '0.92rem', sm: '1.08rem', md: '1.18rem' },
+              justifyContent: 'center',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            下载APK
+          </Button>
+          <FeedbackGroupButton compact={compact} densityScale={densityScale} />
+        </Stack>
         <Button
           fullWidth
           {...getDownloadButtonProps('trainer', trainerModelScopeUrl)}
@@ -825,7 +930,6 @@ function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 
 function QrPanel({ compact = false, hideOnMobile = false, densityScale = 1 }) {
   const scaledCompact = compact && densityScale < 0.98;
   const panelWidth = scaledPx(230, densityScale, densityScale < 0.75 ? 106 : 118);
-  const panelMinHeight = scaledPx(244, densityScale, densityScale < 0.75 ? 108 : 132);
 
   return (
     <Box
@@ -833,7 +937,8 @@ function QrPanel({ compact = false, hideOnMobile = false, densityScale = 1 }) {
         display: { xs: hideOnMobile ? 'none' : 'block', sm: 'block' },
         width: scaledCompact ? panelWidth : compact ? { xs: 112, sm: 214, md: 230 } : { xs: '100%', sm: 214, md: 230 },
         minWidth: scaledCompact ? panelWidth : compact ? { xs: 112, sm: 214, md: 230 } : { sm: 214, md: 230 },
-        minHeight: scaledCompact ? panelMinHeight : compact ? { xs: 'auto', sm: 204, md: 244 } : { xs: 'auto', sm: 220, lg: 244 },
+        minHeight: 'auto',
+        alignSelf: 'flex-start',
         px: compact ? { xs: 0.95, sm: 2.2, md: 2.5 } : { xs: 1.4, sm: 2.2, md: 2.5 },
         py: compact ? { xs: 0.95, sm: 2.2, md: 2.5 } : { xs: 1.4, sm: 2.2, md: 2.5 },
         ...md2Surface,
@@ -901,7 +1006,7 @@ function HomeRightBlock({ onSelect, onSelectDownloadTab, compact = false, deskto
           fontWeight: 300,
         }}
       >
-         让沉默的你被听见
+        让沉默的你被听见
       </Typography>
       <Stack
         direction={desktopLayout ? 'row' : compact ? { xs: 'column', sm: 'row' } : { xs: 'column', sm: 'row' }}
@@ -911,7 +1016,7 @@ function HomeRightBlock({ onSelect, onSelectDownloadTab, compact = false, deskto
           maxWidth: desktopLayout ? '100%' : { xs: 338, sm: '100%' },
           mx: desktopLayout ? 0 : { xs: 'auto', lg: 0 },
           mt: desktopLayout ? Math.max(0.75, (densityScale < 0.75 ? 3 : 4.2) * densityScale) : compact ? { xs: 1.05, sm: 3.2, md: 4.2 } : { xs: 4, md: 5.2 },
-          alignItems: 'stretch',
+          alignItems: desktopLayout ? 'flex-start' : 'stretch',
           justifyContent: 'center',
         }}
       >
@@ -930,12 +1035,12 @@ function HomeRightBlock({ onSelect, onSelectDownloadTab, compact = false, deskto
 export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = false, densityScale = 1, dpiScale = 1 }) {
   const shortDpiDesktop = desktopLayout && dpiScale < 0.75;
   const shortLandscapeFactor = densityScale < 0.75 ? 0.84 : 1;
-  const desktopContentMaxWidth = scaledPx(1500, densityScale, 780);
-  const desktopRightColumn = scaledPx(420, densityScale * shortLandscapeFactor, 312);
+  const desktopContentMaxWidth = scaledPx(1160, densityScale, 760);
+  const desktopRightColumn = scaledPx(536, densityScale * shortLandscapeFactor, 312);
   const desktopLogoWidth = scaledPx(200, densityScale, 108);
   const desktopHeroWidth = densityScale < 0.75
-    ? `clamp(440px, 56vw, ${scaledPx(920, densityScale, 620)}px)`
-    : `min(46vw, calc(var(--app-viewport-height, 100svh) * 0.72), ${scaledPx(840, densityScale, 250)}px)`;
+    ? `clamp(250px, 28vw, ${scaledPx(430, densityScale, 300)}px)`
+    : `clamp(310px, 29vw, ${scaledPx(500, densityScale, 340)}px)`;
 
   return (
     <Box
@@ -968,17 +1073,18 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
         sx={{
           ...centeredContentSx,
           maxWidth: desktopLayout ? desktopContentMaxWidth : { xs: '100%', lg: 1500, xl: 1640 },
+          width: desktopLayout ? 'fit-content' : '100%',
           flex: 1,
           mt: desktopLayout ? Math.max(0.6, 2.6 * densityScale) : { xs: 0, lg: 3.2 },
           display: desktopLayout ? 'grid' : { xs: 'flex', lg: 'grid' },
           flexDirection: { xs: 'column', lg: 'row' },
-          gridTemplateColumns: desktopLayout ? `minmax(0, 1fr) minmax(${desktopRightColumn}px, 0.72fr)` : {
+          gridTemplateColumns: desktopLayout ? `${desktopHeroWidth} ${desktopRightColumn}px` : {
             lg: 'minmax(520px, 0.95fr) minmax(420px, 0.72fr)',
             xl: 'minmax(600px, 0.98fr) minmax(440px, 0.72fr)',
           },
           alignItems: 'center',
-          justifyContent: desktopLayout ? 'initial' : { xs: 'flex-start', lg: 'initial' },
-          gap: desktopLayout ? Math.max(1.1, 2.4 * densityScale) : { xs: 0.2, sm: 0.4, lg: 2.4, xl: 3.2 },
+          justifyContent: 'center',
+          gap: desktopLayout ? Math.max(1.1, 2.0 * densityScale) : { xs: 0.2, sm: 0.4, lg: 2.4, xl: 3.2 },
           minHeight: desktopLayout ? 0 : { lg: 'calc(100svh - 158px)' },
         }}
       >
@@ -994,7 +1100,7 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
             pointerEvents: 'auto',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: desktopLayout ? 'flex-end' : { xs: 'center', lg: 'flex-end' },
+            justifyContent: 'center',
           }}
         >
           <Box
@@ -1034,7 +1140,7 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
             px: desktopLayout ? 0 : { xs: 1.8, sm: 3.4, lg: 0 },
             mt: shortDpiDesktop ? 2 : 0,
             display: 'flex',
-            justifyContent: desktopLayout ? 'flex-start' : { xs: 'center', lg: 'flex-start' },
+            justifyContent: 'center',
           }}
         >
           <HomeRightBlock
