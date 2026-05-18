@@ -13,10 +13,19 @@ function createMatcapMaterial(matcapTexture, color = 0xffffff) {
     color,
   });
   material.side = THREE.FrontSide;
-  material.depthWrite = true;
+  material.depthWrite = false;
   material.depthTest = true;
-  material.transparent = false;
+  material.transparent = true;
+  material.alphaTest = 0.015;
   material.fog = false;
+  material.onBeforeCompile = (shader) => {
+    shader.fragmentShader = shader.fragmentShader.replace(
+      'vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;',
+      `diffuseColor.a *= matcapColor.a;
+      vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;`,
+    );
+  };
+  material.customProgramCacheKey = () => 'kigtts-matcap-alpha';
   return material;
 }
 
