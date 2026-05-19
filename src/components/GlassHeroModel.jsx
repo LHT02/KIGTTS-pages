@@ -12,6 +12,7 @@ import matcap5TextureUrl from '../../ART/Mat/matcap5.png?url';
 import bxzmModelUrl from '../assets/bxzm.glb?url';
 
 function createMatcapMaterial(matcapTexture, color = 0xffffff, { opaque = false } = {}) {
+  const alphaCutoff = opaque ? 0.06 : 0.015;
   const material = new THREE.MeshMatcapMaterial({
     matcap: matcapTexture,
     color,
@@ -21,18 +22,18 @@ function createMatcapMaterial(matcapTexture, color = 0xffffff, { opaque = false 
   material.depthTest = true;
   material.depthFunc = THREE.LessEqualDepth;
   material.transparent = !opaque;
-  material.alphaTest = opaque ? 0 : 0.015;
+  material.alphaTest = 0;
   material.fog = false;
-  if (!opaque) {
-    material.onBeforeCompile = (shader) => {
-      shader.fragmentShader = shader.fragmentShader.replace(
-        'vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;',
-        `diffuseColor.a *= matcapColor.a;
+  material.forceSinglePass = true;
+  material.onBeforeCompile = (shader) => {
+    shader.fragmentShader = shader.fragmentShader.replace(
+      'vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;',
+      `if (matcapColor.a < ${alphaCutoff.toFixed(3)}) discard;
+        ${opaque ? '' : 'diffuseColor.a *= matcapColor.a;'}
         vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;`,
-      );
-    };
-  }
-  material.customProgramCacheKey = () => (opaque ? 'kigtts-matcap-opaque-depth' : 'kigtts-matcap-alpha-depth');
+    );
+  };
+  material.customProgramCacheKey = () => `kigtts-matcap-${opaque ? 'opaque' : 'alpha'}-${alphaCutoff}`;
   return material;
 }
 
@@ -219,11 +220,20 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
 
             child.castShadow = false;
             child.receiveShadow = false;
+            child.renderOrder = 0;
             if (Array.isArray(child.material)) {
               child.material = child.material.map((material) => getMatcapMaterial(material));
             } else {
               child.material = getMatcapMaterial(child.material);
             }
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
+            materials.forEach((material) => {
+              material.side = THREE.FrontSide;
+              material.depthWrite = true;
+              material.depthTest = true;
+              material.forceSinglePass = true;
+              material.needsUpdate = true;
+            });
           }
         });
 
