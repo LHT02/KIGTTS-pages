@@ -11,3 +11,4 @@ debug.log
 .playwright-cli/
 output/playwright/
 ART/Snipaste_*.png
+ART/Mat/original/

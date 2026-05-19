@@ -10,6 +10,7 @@ import matcap3TextureUrl from '../../ART/Mat/matcap3.png?url';
 import matcap4TextureUrl from '../../ART/Mat/matcap4.png?url';
 import matcap5TextureUrl from '../../ART/Mat/matcap5.png?url';
 import bxzmModelUrl from '../assets/bxzm.glb?url';
+import fallbackImageUrl from '../../ART/KIGTTS1.png';
 
 function createMatcapMaterial(matcapTexture, color = 0xffffff, { opaque = false } = {}) {
   const alphaCutoff = opaque ? 0.06 : 0.015;
@@ -86,49 +87,13 @@ function disposeObject3d(object3d) {
   });
 }
 
-function createFallbackModel(matcapTexture) {
-  const group = new THREE.Group();
-  const glass = createMatcapMaterial(matcapTexture, 0xf4ffff);
-  const darkGlass = createMatcapMaterial(matcapTexture, 0xd8ffff);
-
-  const panel = new THREE.Mesh(new THREE.BoxGeometry(1.9, 2.72, 0.08, 4, 4, 1), darkGlass.clone());
-  panel.position.set(0.22, 0.02, 0);
-  group.add(panel);
-
-  for (let index = 0; index < 5; index += 1) {
-    const bar = new THREE.Mesh(new THREE.BoxGeometry(1.22 - index * 0.12, 0.08, 0.03), glass.clone());
-    bar.position.set(0.16, 0.9 - index * 0.24, 0.08);
-    group.add(bar);
-  }
-
-  const card = new THREE.Mesh(new THREE.BoxGeometry(0.66, 1.72, 0.22, 3, 3, 2), glass.clone());
-  card.position.set(-1.15, 0.28, -0.18);
-  card.rotation.z = -0.62;
-  group.add(card);
-
-  const mask = new THREE.Mesh(new THREE.SphereGeometry(0.68, 48, 32), darkGlass.clone());
-  mask.position.set(-1.08, -1.1, 0.18);
-  mask.scale.set(1.12, 0.82, 0.72);
-  group.add(mask);
-
-  const penMaterial = createMatcapMaterial(matcapTexture, 0xffffff);
-
-  for (let index = 0; index < 2; index += 1) {
-    const pen = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1.9, 20), penMaterial.clone());
-    pen.position.set(1.28 + index * 0.26, -0.12 - index * 0.04, -0.1);
-    pen.rotation.z = -0.42 - index * 0.16;
-    group.add(pen);
-  }
-
-  return group;
-}
-
 export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
   const mountRef = useRef(null);
   const modelRef = useRef(null);
   const targetTiltRef = useRef({ x: 0, y: 0 });
   const [loadProgress, setLoadProgress] = useState(0);
   const [modelReady, setModelReady] = useState(false);
+  const [fallbackImage, setFallbackImage] = useState(false);
 
   useEffect(() => {
     const mountNode = mountRef.current;
@@ -162,11 +127,6 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     root.rotation.set(-0.06, 0.24, 0.02);
     scene.add(root);
 
-    const fallbackModel = createFallbackModel(primaryMatcapTexture);
-    fallbackModel.scale.setScalar(modelScale);
-    fallbackModel.visible = false;
-    root.add(fallbackModel);
-
     const matcapMaterialCache = new Map();
     const getMatcapMaterial = (sourceMaterial) => {
       const materialName = sourceMaterial?.name ?? '';
@@ -186,7 +146,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
 
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
-    dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
+    dracoLoader.setDecoderPath('./draco/');
     loader.setDRACOLoader(dracoLoader);
 
     let disposed = false;
@@ -213,7 +173,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
             const materialNames = (Array.isArray(child.material) ? child.material : [child.material])
               .map((material) => material?.name?.toLowerCase() ?? '')
               .join(' ');
-            if (/(grid|wire|helper|axis|line|background|backdrop)/.test(`${lowerName} ${materialNames}`)) {
+            if (/(grid|wire|helper|axis|line|background|backdrop|outline|edge|frame|cage|lattice|rig|skeleton|armature)/.test(`${lowerName} ${materialNames}`)) {
               child.visible = false;
               return;
             }
@@ -237,7 +197,6 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
           }
         });
 
-        fallbackModel.visible = false;
         root.add(model);
         modelRef.current = model;
         setLoadProgress(100);
@@ -250,8 +209,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
         setLoadProgress(Math.min(96, Math.round((event.loaded / event.total) * 100)));
       },
       () => {
-        fallbackModel.visible = true;
-        modelRef.current = fallbackModel;
+        setFallbackImage(true);
         setLoadProgress(100);
         setModelReady(true);
       },
@@ -392,6 +350,21 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
             模型加载 {loadProgress || 1}%
           </Typography>
         </Box>
+      ) : null}
+      {fallbackImage ? (
+        <Box
+          component="img"
+          src={fallbackImageUrl}
+          alt="KIGTTS"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            filter: 'drop-shadow(0 18px 34px rgba(0,0,0,0.28))',
+          }}
+        />
       ) : null}
     </Box>
   );
