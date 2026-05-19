@@ -11,12 +11,12 @@ const GlassHeroModel = lazy(() => import('../GlassHeroModel').then((module) => (
 export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = false, densityScale = 1, dpiScale = 1 }) {
   const shortDpiDesktop = desktopLayout && dpiScale < 0.75;
   const shortLandscapeFactor = densityScale < 0.75 ? 0.84 : 1;
-  const desktopContentMaxWidth = scaledPx(1160, densityScale, 760);
+  const desktopContentMaxWidth = scaledPx(1380, densityScale, 900);
   const desktopRightColumn = scaledPx(536, densityScale * shortLandscapeFactor, 312);
   const desktopLogoWidth = scaledPx(200, densityScale, 108);
   const desktopHeroWidth = densityScale < 0.75
-    ? `clamp(250px, 28vw, ${scaledPx(430, densityScale, 300)}px)`
-    : `clamp(310px, 29vw, ${scaledPx(500, densityScale, 340)}px)`;
+    ? `clamp(300px, 32vw, ${scaledPx(510, densityScale, 340)}px)`
+    : `clamp(420px, 36vw, ${scaledPx(700, densityScale, 520)}px)`;
 
   return (
     <Box
@@ -60,7 +60,7 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
           },
           alignItems: 'center',
           justifyContent: 'center',
-          gap: desktopLayout ? Math.max(1.1, 2.0 * densityScale) : { xs: 0.2, sm: 0.4, lg: 2.4, xl: 3.2 },
+          gap: desktopLayout ? Math.max(1.25, 2.6 * densityScale) : { xs: 0.2, sm: 0.4, lg: 2.4, xl: 3.2 },
           minHeight: desktopLayout ? 0 : { lg: 'calc(100svh - 158px)' },
         }}
       >
@@ -103,7 +103,7 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
             >
               <GlassHeroModel
                 densityScale={densityScale}
-                modelScale={desktopLayout && densityScale < 0.75 ? 2.25 : 1}
+                modelScale={desktopLayout && densityScale < 0.75 ? 2.25 : 1.06}
                 sx={{ width: '100%', height: '100%', minHeight: 0 }}
               />
             </Suspense>

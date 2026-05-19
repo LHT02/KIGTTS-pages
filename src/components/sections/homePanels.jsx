@@ -26,9 +26,10 @@ function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 
     <Box
       sx={{
         flex: 1,
+        width: '100%',
         minWidth: 0,
         minHeight: 'auto',
-        alignSelf: 'flex-start',
+        alignSelf: mobileApkOnly ? { xs: 'stretch', sm: 'flex-start' } : 'flex-start',
         px: compact ? { xs: 1.05, sm: 2.2, md: 2.5 } : { xs: 1.5, sm: 2.2, md: 2.5 },
         py: compact ? { xs: 1.05, sm: 2.2, md: 2.5 } : { xs: 1.5, sm: 2.2, md: 2.5 },
         ...md2Surface,
@@ -51,7 +52,11 @@ function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 
         >
           下载APK
         </Button>
-        <Stack direction="row" spacing={compact ? 0.85 : 1.05} sx={{ width: '100%', minWidth: 0 }}>
+        <Stack
+          direction={{ xs: mobileApkOnly ? 'column' : 'row', sm: 'row' }}
+          spacing={compact ? 0.85 : 1.05}
+          sx={{ width: '100%', minWidth: 0 }}
+        >
           <Button
             fullWidth
             {...getDownloadButtonProps('trainer', trainerModelScopeUrl)}
@@ -70,7 +75,7 @@ function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 
           >
             下载训练器
           </Button>
-          <FeedbackGroupButton compact={compact} densityScale={densityScale} />
+          <FeedbackGroupButton compact={compact} densityScale={densityScale} mobileFullWidth={mobileApkOnly} />
         </Stack>
       </Stack>
     </Box>

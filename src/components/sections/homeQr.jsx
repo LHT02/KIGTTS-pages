@@ -34,7 +34,7 @@ export function RealQr({ compact = false, densityScale = 1, value = qrValue }) {
   );
 }
 
-export function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
+export function FeedbackGroupButton({ compact = false, densityScale = 1, mobileFullWidth = false }) {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const containerRef = useRef(null);
 
@@ -52,7 +52,8 @@ export function FeedbackGroupButton({ compact = false, densityScale = 1 }) {
       onMouseLeave={() => setPopoverOpen(false)}
       sx={{
         position: 'relative',
-        flex: '0 1 50%',
+        flex: { xs: mobileFullWidth ? '1 1 100%' : '0 1 50%', sm: '0 1 50%' },
+        width: { xs: mobileFullWidth ? '100%' : 'auto', sm: 'auto' },
         minWidth: 0,
         display: 'flex',
       }}
