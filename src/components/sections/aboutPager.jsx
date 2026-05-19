@@ -1,7 +1,8 @@
 import { Box, Button, Stack } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { featureSlides } from './data';
-import { md2Button, SymbolIcon } from './shared';
+import { md2Button } from './styles';
+import { SymbolIcon } from './SymbolIcon';
 
 export function FeaturePager({ activeSlide, goToFeature, selectFeature }) {
   return (

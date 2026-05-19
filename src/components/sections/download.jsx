@@ -3,7 +3,8 @@ import { alpha } from '@mui/material/styles';
 import { useState } from 'react';
 import { downloadTabs } from './data';
 import { featurePanelEnter } from './motion';
-import { centeredContentSx, centeredSectionSx, md2Button, md2RaisedShadow, md2Surface, SymbolIcon } from './shared';
+import { SymbolIcon } from './SymbolIcon';
+import { centeredContentSx, centeredSectionSx, md2Button, md2RaisedShadow, md2Surface } from './styles';
 export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
   const [localActiveTabId, setLocalActiveTabId] = useState(downloadTabs[0].id);
   const activeTabId = activeTabIdProp ?? localActiveTabId;

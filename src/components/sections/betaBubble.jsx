@@ -1,7 +1,7 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { keyframes } from '@mui/material/styles';
 import { betaLines } from './data';
-import { scaledPx } from './shared';
+import { scaledPx } from './utils';
 const rotateFlower = keyframes`
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

@@ -2,7 +2,9 @@ import { Box, Button, Divider, Stack, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { featureSlides, logoWhite } from './data';
 import { featureVisualEnter } from './motion';
-import { md2RaisedShadow, md2SurfaceShadow, ProgressiveImage, SymbolIcon } from './shared';
+import { md2RaisedShadow, md2SurfaceShadow } from './styles';
+import { ProgressiveImage } from './ProgressiveImage';
+import { SymbolIcon } from './SymbolIcon';
 
 export function FeatureRail({ activeSlide, onSelectFeature }) {
   return (

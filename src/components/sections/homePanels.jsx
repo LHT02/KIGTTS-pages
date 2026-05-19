@@ -2,7 +2,9 @@ import { Box, Button, Stack, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { androidApkUrl, downloadNotes, logoWhite, trainerModelScopeUrl } from './data';
 import { FeedbackGroupButton, RealQr } from './homeQr';
-import { md2Button, md2Surface, scaledPx, SymbolIcon } from './shared';
+import { SymbolIcon } from './SymbolIcon';
+import { md2Button, md2Surface } from './styles';
+import { scaledPx } from './utils';
 function DownloadPanel({ compact = false, mobileApkOnly = false, densityScale = 1, onSelectDownloadTab }) {
   const scaledCompact = compact && densityScale < 0.98;
   const primaryHeight = scaledPx(68, densityScale, 40);

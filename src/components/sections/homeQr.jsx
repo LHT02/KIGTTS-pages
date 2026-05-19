@@ -3,7 +3,9 @@ import { alpha } from '@mui/material/styles';
 import { QRCodeSVG } from 'qrcode.react';
 import { useRef, useState } from 'react';
 import { feedbackGroupUrl, qrValue } from './data';
-import { md2Button, scaledPx, SymbolIcon } from './shared';
+import { SymbolIcon } from './SymbolIcon';
+import { md2Button } from './styles';
+import { scaledPx } from './utils';
 export function RealQr({ compact = false, densityScale = 1, value = qrValue }) {
   const compactSize = scaledPx(108, densityScale, 78);
   const qrSize = scaledPx(96, densityScale, 68);

@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { useState } from 'react';
 import { featureSlides } from './data';
-import { centeredSectionSx } from './shared';
+import { centeredSectionSx } from './styles';
 import { FeatureDetailsPanel } from './aboutDetails';
 import { FeatureRail, FeatureVisualPanel } from './aboutPresentation';
 export function AboutSection() {

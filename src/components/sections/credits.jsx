@@ -9,7 +9,9 @@ import {
   trainerLicenseUrl,
   trainerPrivacyUrl,
 } from './data';
-import { centeredContentSx, CreditLogo, md2Button, md2RaisedShadow, md2Surface, SymbolIcon } from './shared';
+import { CreditLogo } from './CreditLogo';
+import { SymbolIcon } from './SymbolIcon';
+import { centeredContentSx, md2Button, md2RaisedShadow, md2Surface } from './styles';
 export function CreditsSection() {
   return (
     <Box

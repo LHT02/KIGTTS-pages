@@ -4,7 +4,8 @@ import { lazy, Suspense } from 'react';
 import { lhtstudioLogo } from './data';
 import { BetaBubble } from './betaBubble';
 import { HomeRightBlock } from './homePanels';
-import { centeredContentSx, centeredSectionSx, scaledPx } from './shared';
+import { centeredContentSx, centeredSectionSx } from './styles';
+import { scaledPx } from './utils';
 
 const GlassHeroModel = lazy(() => import('../GlassHeroModel').then((module) => ({ default: module.GlassHeroModel })));
 export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = false, densityScale = 1, dpiScale = 1 }) {
