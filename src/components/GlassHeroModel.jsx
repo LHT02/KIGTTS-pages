@@ -11,25 +11,28 @@ import matcap4TextureUrl from '../../ART/Mat/matcap4.png?url';
 import matcap5TextureUrl from '../../ART/Mat/matcap5.png?url';
 import bxzmModelUrl from '../assets/bxzm.glb?url';
 
-function createMatcapMaterial(matcapTexture, color = 0xffffff) {
+function createMatcapMaterial(matcapTexture, color = 0xffffff, { opaque = false } = {}) {
   const material = new THREE.MeshMatcapMaterial({
     matcap: matcapTexture,
     color,
   });
   material.side = THREE.FrontSide;
-  material.depthWrite = false;
+  material.depthWrite = true;
   material.depthTest = true;
-  material.transparent = true;
-  material.alphaTest = 0.015;
+  material.depthFunc = THREE.LessEqualDepth;
+  material.transparent = !opaque;
+  material.alphaTest = opaque ? 0 : 0.015;
   material.fog = false;
-  material.onBeforeCompile = (shader) => {
-    shader.fragmentShader = shader.fragmentShader.replace(
-      'vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;',
-      `diffuseColor.a *= matcapColor.a;
-      vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;`,
-    );
-  };
-  material.customProgramCacheKey = () => 'kigtts-matcap-alpha';
+  if (!opaque) {
+    material.onBeforeCompile = (shader) => {
+      shader.fragmentShader = shader.fragmentShader.replace(
+        'vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;',
+        `diffuseColor.a *= matcapColor.a;
+        vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;`,
+      );
+    };
+  }
+  material.customProgramCacheKey = () => (opaque ? 'kigtts-matcap-opaque-depth' : 'kigtts-matcap-alpha-depth');
   return material;
 }
 
@@ -169,7 +172,12 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       const matcapKey = resolveMatcapKey(materialName);
       const cacheKey = `${matcapKey}:${materialName || 'default'}`;
       if (!matcapMaterialCache.has(cacheKey)) {
-        matcapMaterialCache.set(cacheKey, createMatcapMaterial(matcapTextures[matcapKey] ?? primaryMatcapTexture, 0xffffff));
+        matcapMaterialCache.set(
+          cacheKey,
+          createMatcapMaterial(matcapTextures[matcapKey] ?? primaryMatcapTexture, 0xffffff, {
+            opaque: matcapKey === 'matcap4',
+          }),
+        );
       }
 
       return matcapMaterialCache.get(cacheKey);
