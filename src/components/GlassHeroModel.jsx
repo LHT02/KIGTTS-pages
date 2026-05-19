@@ -4,9 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import matcap1TextureUrl from '../../ART/Mat/matcap1.png?url';
 import matcap2TextureUrl from '../../ART/Mat/matcap2.png?url';
 import matcap3TextureUrl from '../../ART/Mat/matcap3.png?url';
@@ -120,20 +117,6 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     renderer.toneMappingExposure = 1.05;
     mountNode.appendChild(renderer.domElement);
 
-    const initialRect = mountNode.getBoundingClientRect();
-    const initialWidth = Math.max(1, Math.round(initialRect.width));
-    const initialHeight = Math.max(1, Math.round(initialRect.height));
-
-    const renderPass = new RenderPass(scene, camera);
-    const bloomPass = new UnrealBloomPass(new THREE.Vector2(initialWidth, initialHeight), 0.42, 0.18, 0.72);
-    bloomPass.threshold = 0.72;
-    bloomPass.strength = 0.42;
-    bloomPass.radius = 0.18;
-
-    const composer = new EffectComposer(renderer);
-    composer.addPass(renderPass);
-    composer.addPass(bloomPass);
-
     const textureLoader = new THREE.TextureLoader();
     const matcapTextures = Object.fromEntries(
       matcapTextureEntries.map(([key, url]) => [key, configureMatcapTexture(textureLoader.load(url))]),
@@ -239,8 +222,6 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height, false);
-      composer.setSize(width, height);
-      bloomPass.resolution.set(width, height);
     };
 
     const resizeObserver = new ResizeObserver(resizeRenderer);
@@ -292,7 +273,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       root.rotation.z = Math.sin(elapsed * 0.45) * 0.018;
       root.position.y = Math.sin(elapsed * 0.75) * 0.045;
 
-      composer.render();
+      renderer.render(scene, camera);
       frameId = window.requestAnimationFrame(renderFrame);
     };
     renderFrame();
@@ -307,7 +288,6 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       dracoLoader.dispose();
       disposeObject3d(root);
       Object.values(matcapTextures).forEach((texture) => texture.dispose());
-      bloomPass.dispose();
       renderer.dispose();
       renderer.domElement.remove();
     };
