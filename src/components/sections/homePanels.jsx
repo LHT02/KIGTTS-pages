@@ -162,7 +162,9 @@ export function HomeRightBlock({ onSelect, onSelectDownloadTab, compact = false,
           fontWeight: 900,
         }}
       >
-        让沉默的你被听见
+        <Box component="span" sx={{ color: '#f1f4f4', fontWeight: 300 }}>让</Box>
+        <Box component="span">沉默的你</Box>
+        <Box component="span" sx={{ color: '#f1f4f4', fontWeight: 300 }}>被听见</Box>
       </Typography>
       <Stack
         direction={desktopLayout ? 'row' : compact ? { xs: 'column', sm: 'row' } : { xs: 'column', sm: 'row' }}
