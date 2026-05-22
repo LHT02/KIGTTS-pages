@@ -8,6 +8,7 @@ import '@fontsource/material-symbols-sharp/400.css';
 import '@fontsource/noto-sans-sc/chinese-simplified-400.css';
 import '@fontsource/noto-sans-sc/chinese-simplified-500.css';
 import '@fontsource/noto-sans-sc/chinese-simplified-700.css';
+import '@fontsource/noto-sans-sc/chinese-simplified-900.css';
 import App from './App';
 import { theme } from './theme';
 

@@ -158,7 +158,8 @@ export function HomeRightBlock({ onSelect, onSelectDownloadTab, compact = false,
           lineHeight: compact ? 1.12 : 1.18,
           letterSpacing: '0.03em',
           color: '#f1f4f4',
-          fontWeight: 300,
+          fontFamily: '"Noto Sans SC"',
+          fontWeight: 900,
         }}
       >
         让沉默的你被听见
