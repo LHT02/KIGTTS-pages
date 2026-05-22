@@ -166,6 +166,16 @@ export function HomeRightBlock({ onSelect, onSelectDownloadTab, compact = false,
         <Box component="span">沉默的你</Box>
         <Box component="span" sx={{ color: '#f1f4f4', fontWeight: 300 }}>被听见</Box>
       </Typography>
+      <Typography
+        sx={{
+          mt: compact ? { xs: 0.45, sm: 1 } : 1.2,
+          color: alpha('#ffffff', 0.52),
+          fontSize: compact ? { xs: '0.72rem', sm: '0.88rem' } : { xs: '0.82rem', sm: '0.95rem' },
+          letterSpacing: '0.04em',
+        }}
+      >
+        专为 Kigurumi 玩家打造
+      </Typography>
       <Stack
         direction={desktopLayout ? 'row' : compact ? { xs: 'column', sm: 'row' } : { xs: 'column', sm: 'row' }}
         spacing={desktopLayout ? desktopActionGap : compact ? 1.2 : 2}
