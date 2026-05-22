@@ -272,7 +272,7 @@ export function LoadingScreen({ progress, visible }) {
             />
           ))}
         </Stack>
-        <Typography sx={{ mt: 0.45, color: alpha('#ffffff', 0.38), fontSize: '0.76rem' }}>Loading...</Typography>
+        <Typography sx={{ mt: 0.45, color: alpha('#ffffff', 0.38), fontSize: '0.76rem' }}>LOADING</Typography>
       </Box>
 
       <Stack
@@ -290,9 +290,9 @@ export function LoadingScreen({ progress, visible }) {
         <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: '100%', maxWidth: 330, filter: 'drop-shadow(0 18px 26px rgba(0,0,0,0.22))' }} />
         <Box sx={{ width: '100%', height: 1, backgroundColor: alpha('#ffffff', 0.12) }} />
         <Typography sx={{ fontSize: { xs: '0.78rem', sm: '0.92rem' }, letterSpacing: '0.05em', fontFamily: '"Noto Sans SC"', fontWeight: 900 }}>
-          <Box component="span" sx={{ color: '#f5f7f7', fontWeight: 300 }}>让</Box>
-          <Box component="span" sx={{ color: '#82cacb' }}>沉默的你</Box>
-          <Box component="span" sx={{ color: '#f5f7f7', fontWeight: 300 }}>被听见</Box>
+          <Box component="span" sx={{ color: '#f5f7f7', fontWeight: 300 }}>LET YOUR </Box>
+          <Box component="span" sx={{ color: '#82cacb' }}>SILENCE</Box>
+          <Box component="span" sx={{ color: '#f5f7f7', fontWeight: 300 }}> BE HEARD</Box>
         </Typography>
       </Stack>
     </Box>
