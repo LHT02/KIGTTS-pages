@@ -53,7 +53,7 @@ export function CreditsSection() {
           }}
         >
           <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
-            制作团队与项目鸣谢
+            制作团队与开源引用
           </Box>
           <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
             鸣谢
@@ -227,10 +227,10 @@ export function CreditsSection() {
                 <Box sx={{ width: 4, height: 28, backgroundColor: '#038387', boxShadow: `0 0 18px ${alpha('#038387', 0.72)}` }} />
                 <Box>
                   <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '1.02rem', sm: '1.2rem' }, fontWeight: 700 }}>
-                    项目鸣谢
+                    开源引用
                   </Typography>
                   <Typography sx={{ color: alpha('#ffffff', 0.54), fontSize: { xs: '0.68rem', sm: '0.76rem' } }}>
-                    感谢这些项目为识别、朗读、界面和语音包制作提供支持。
+                    以下开源项目构成了 KIGTTS 的核心技术栈。
                   </Typography>
                 </Box>
               </Stack>
