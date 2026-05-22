@@ -2,6 +2,7 @@ import { Box, Button, Divider, Grid, Stack, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import {
   acknowledgementLibraries,
+  androidAgreementUrl,
   androidLicenseUrl,
   androidPrivacyUrl,
   friendLinks,
@@ -173,12 +174,13 @@ export function CreditsSection() {
                   使用前须知
                 </Typography>
                 <Typography sx={{ mt: 0.65, color: alpha('#ffffff', 0.76), lineHeight: 1.44, fontSize: { xs: '0.68rem', sm: '0.9rem' } }}>
-                  使用前请查阅授权协议与隐私政策。
+                  使用前请查看用户协议、开源许可与隐私政策。
                 </Typography>
                 <Grid container spacing={0.8} sx={{ mt: 1.25 }}>
                   {[
                     ['Android 开源许可证', 'android', androidLicenseUrl],
                     ['Android 隐私说明', 'policy', androidPrivacyUrl],
+                    ['Android 用户协议', 'description', androidAgreementUrl],
                     ['训练器开源许可证', 'laptop_mac', trainerLicenseUrl],
                     ['训练器隐私说明', 'privacy_tip', trainerPrivacyUrl],
                   ].map(([label, icon, href]) => (

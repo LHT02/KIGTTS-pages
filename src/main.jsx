@@ -5,9 +5,9 @@ import '@fontsource/google-sans/latin-400.css';
 import '@fontsource/google-sans/latin-500.css';
 import '@fontsource/google-sans/latin-700.css';
 import '@fontsource/material-symbols-sharp/400.css';
-import '@fontsource/noto-sans-sc/chinese-simplified-400.css';
-import '@fontsource/noto-sans-sc/chinese-simplified-500.css';
-import '@fontsource/noto-sans-sc/chinese-simplified-700.css';
+import '@fontsource/noto-sans-sc/400.css';
+import '@fontsource/noto-sans-sc/500.css';
+import '@fontsource/noto-sans-sc/700.css';
 import App from './App';
 import { theme } from './theme';
 

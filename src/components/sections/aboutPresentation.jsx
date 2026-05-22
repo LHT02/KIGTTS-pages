@@ -193,6 +193,9 @@ export function FeatureVisualPanel({ currentFeature, activeSlide, slideNumber, t
             <ProgressiveImage
               key={currentFeature.imageAlt}
               src={currentFeature.image}
+              placeholderSrc={currentFeature.imagePlaceholder}
+              srcSet={currentFeature.imageSrcSet}
+              sizes={currentFeature.imageSizes}
               alt={currentFeature.imageAlt}
               eager={activeSlide === 0}
               sx={{

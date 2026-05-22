@@ -1,13 +1,36 @@
 import { Box } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-export function ProgressiveImage({ src, alt, sx, eager = false }) {
+export function ProgressiveImage({ src, alt, sx, eager = false, placeholderSrc, srcSet, sizes }) {
   const [loaded, setLoaded] = useState(false);
+  const [displaySrc, setDisplaySrc] = useState(placeholderSrc ?? src);
+
+  useEffect(() => {
+    setLoaded(false);
+    setDisplaySrc(placeholderSrc ?? src);
+
+    if (!placeholderSrc || placeholderSrc === src) {
+      return undefined;
+    }
+
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = src;
+    image.onload = () => {
+      setDisplaySrc(src);
+    };
+
+    return () => {
+      image.onload = null;
+    };
+  }, [placeholderSrc, src]);
 
   return (
     <Box
       component="img"
-      src={src}
+      src={displaySrc}
+      srcSet={displaySrc === src ? srcSet : undefined}
+      sizes={displaySrc === src ? sizes : undefined}
       alt={alt}
       loading={eager ? 'eager' : 'lazy'}
       decoding="async"

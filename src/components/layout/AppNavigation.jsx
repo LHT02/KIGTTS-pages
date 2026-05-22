@@ -100,7 +100,6 @@ export function SideRail({ activeId, onSelect, densityScale = 1 }) {
 
 export function MobileNavigation({ activeId, onSelect }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const currentItem = navItems.find((item) => item.id === activeId) ?? navItems[0];
 
   return (
     <>
@@ -117,20 +116,13 @@ export function MobileNavigation({ activeId, onSelect }) {
       >
         <Toolbar
           sx={{
-            minHeight: { xs: 64, sm: 70 },
+            minHeight: { xs: mobileHeaderHeight.xs, sm: mobileHeaderHeight.sm },
             gap: { xs: 1, sm: 1.5 },
             pt: 'env(safe-area-inset-top)',
+            justifyContent: 'space-between',
           }}
         >
-          <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: { xs: 108, sm: 118 }, flexShrink: 0 }} />
-          <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
-              {currentItem.label}
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              {currentItem.caption}
-            </Typography>
-          </Box>
+          <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: { xs: 118, sm: 132 }, flexShrink: 0 }} />
           <IconButton color="inherit" onClick={() => setDrawerOpen(true)} aria-label="打开菜单">
             <SymbolIcon name="menu" size={24} />
           </IconButton>

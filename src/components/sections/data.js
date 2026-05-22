@@ -1,10 +1,3 @@
-import subtitleScreen from '../../../ART/ScreenShoot/便捷字幕.jpg';
-import boardScreen from '../../../ART/ScreenShoot/画板.jpg';
-import cardScreen from '../../../ART/ScreenShoot/快捷名片.jpg';
-import floatingScreen from '../../../ART/ScreenShoot/悬浮窗.png';
-import trainerScreen from '../../../ART/ScreenShoot/训练器.png';
-import soundScreen from '../../../ART/ScreenShoot/音效板.jpg';
-import voicePackScreen from '../../../ART/ScreenShoot/语音包.jpg';
 import logoWhite from '../../../ART/LOGOWhite.svg';
 import lhtstudioLogo from '../../../ART/lhtstudio.svg';
 
@@ -46,6 +39,7 @@ export const projectUrl = 'https://github.com/LHT02/KIGTTS';
 export const feedbackGroupUrl = 'https://qm.qq.com/q/JRnqshDOEM';
 export const androidLicenseUrl = './legal/android-license.html';
 export const androidPrivacyUrl = './legal/android-privacy.html';
+export const androidAgreementUrl = './legal/android-agreement.html';
 export const trainerLicenseUrl = './legal/trainer-license.html';
 export const trainerPrivacyUrl = './legal/trainer-privacy.html';
 export const lhtBilibiliUrl = 'https://space.bilibili.com/87244951';
@@ -130,6 +124,7 @@ export const downloadTabs = [
     actions: [
       { label: '下载 APK', icon: 'download', href: androidApkUrl, primary: true },
       { label: '查看发行页', icon: 'open_in_new', href: androidReleaseUrl },
+      { label: '用户协议', icon: 'description', href: androidAgreementUrl },
     ],
   },
   {
@@ -170,6 +165,13 @@ export const downloadTabs = [
   },
 ];
 
+const screenshotLod = (name) => ({
+  image: `./lod/screens/${name}-900.jpg`,
+  imagePlaceholder: `./lod/screens/${name}-32.jpg`,
+  imageSrcSet: `./lod/screens/${name}-480.jpg 480w, ./lod/screens/${name}-900.jpg 900w`,
+  imageSizes: '(orientation: landscape) 52vw, 100vw',
+});
+
 export const featureSlides = [
   {
     label: '便捷字幕',
@@ -181,7 +183,7 @@ export const featureSlides = [
       'KIGTTS 面向 Kigurumi、头套、面具、舞台妆造和不方便直接说话的现场场景。便捷字幕把语音识别、手动输入、快捷文本、TTS 朗读、大字幕预览和预设分组放在同一个界面里。',
     bullets: ['减少频繁切 App', '降低现场打字压力', '一键上屏、朗读或发送常用语'],
     note: '打开便捷字幕后，可以直接开始识别语音、输入文字或朗读常用短句。',
-    image: subtitleScreen,
+    ...screenshotLod('subtitle'),
     imageAlt: '便捷字幕功能截图',
   },
   {
@@ -194,7 +196,7 @@ export const featureSlides = [
       '快捷名片用于展示主页、社交账号、群二维码、约拍信息或临时说明，支持横竖屏展示、背景图、主题色背景、装饰文字、链接按钮、分享和多张名片切换。',
     bullets: ['互关和主页展示', '社交二维码与群信息', '角色设定和现场说明'],
     note: '名片功能适合在不方便开口解释时快速完成信息交换。',
-    image: cardScreen,
+    ...screenshotLod('card'),
     imageAlt: '快捷名片功能截图',
   },
   {
@@ -207,7 +209,7 @@ export const featureSlides = [
       '画板用于在嘈杂环境或不方便打字时快速补充说明，支持现场手写、涂鸦、标注和简单示意，让交流不完全依赖语音或键盘输入。',
     bullets: ['手写补充说明', '涂鸦和快速标注', '适合嘈杂现场兜底沟通'],
     note: '画板可代替纸笔，适合嘈杂环境下的快速涂鸦和标注交流。',
-    image: boardScreen,
+    ...screenshotLod('board'),
     imageAlt: '画板功能截图',
   },
   {
@@ -220,7 +222,7 @@ export const featureSlides = [
       '音效板支持按分组管理音效、列表或宫格布局、点击播放/停止、关键词触发、音频导入转码和预设分享，适合角色互动、接梗和现场反馈。',
     bullets: ['识别结果触发音效', '角色音效包导入导出', '列表或宫格布局切换'],
     note: '音效板和字幕、TTS 可以组合使用，让现场互动更轻量。',
-    image: soundScreen,
+    ...screenshotLod('sound'),
     imageAlt: '音效板功能截图',
   },
   {
@@ -233,7 +235,7 @@ export const featureSlides = [
       '悬浮窗可以在微信、QQ、相机等 App 上方常驻，快速打开便捷字幕、快捷名片、画板、音效板、迷你控件和常用第三方应用。',
     bullets: ['折叠、贴边、展开', '音量键序列热键', '微信/QQ/支付宝扫码联动'],
     note: '开启无障碍辅助后，部分热键和直达操作会更稳定。',
-    image: floatingScreen,
+    ...screenshotLod('floating'),
     imageAlt: '悬浮窗功能截图',
   },
   {
@@ -246,7 +248,7 @@ export const featureSlides = [
       'Android 端优先在本地完成识别、朗读、降噪、语音增强、说话人验证和音频测试。',
     bullets: ['语音识别 -> 文本 -> TTS 朗读', 'GTCRN / DPDFNet 增强模式', '减少旁人说话误触发'],
     note: '适合希望用合成语音代替或增强本人发声的场景，可能会有短暂延迟。',
-    image: voicePackScreen,
+    ...screenshotLod('voice-pack'),
     imageAlt: '语音包功能截图',
   },
   {
@@ -259,7 +261,7 @@ export const featureSlides = [
       '桌面训练器用于准备语音素材、训练语音包和导出成品；设置页用于调整识别、朗读、热键、语音包和现场使用偏好。',
     bullets: ['Piper 标准训练', 'GPT-SoVITS / VoxCPM2 蒸馏', '训练器导出 Android 可导入语音包'],
     note: '电脑端制作语音包 → 导入手机端 → 现场使用，两端配合完成完整流程。',
-    image: trainerScreen,
+    ...screenshotLod('trainer'),
     imageAlt: 'KIGTTS 训练器截图',
   },
 ];

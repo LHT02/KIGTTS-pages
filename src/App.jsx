@@ -67,9 +67,9 @@ export default function App() {
             : `calc(${appViewportHeight} / ${desktopStageScale})`,
           mt: compactNavigation
             ? {
-                xs: 'calc(64px + env(safe-area-inset-top))',
-                sm: 'calc(70px + env(safe-area-inset-top))',
-                lg: 'calc(70px + env(safe-area-inset-top))',
+                xs: `calc(${mobileHeaderHeight.xs}px + env(safe-area-inset-top))`,
+                sm: `calc(${mobileHeaderHeight.sm}px + env(safe-area-inset-top))`,
+                lg: `calc(${mobileHeaderHeight.lg}px + env(safe-area-inset-top))`,
               }
             : 0,
           transform: compactNavigation ? `scale(${mobileStageScale})` : `scale(${desktopStageScale})`,

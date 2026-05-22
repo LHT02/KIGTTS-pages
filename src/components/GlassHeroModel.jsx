@@ -10,15 +10,16 @@ import matcap3TextureUrl from '../../ART/Mat/matcap3.png?url';
 import matcap4TextureUrl from '../../ART/Mat/matcap4.png?url';
 import matcap5TextureUrl from '../../ART/Mat/matcap5.png?url';
 import bxzmModelUrl from '../assets/bxzm.glb?url';
-import fallbackImageUrl from '../../ART/KIGTTS1.png';
 
-function createMatcapMaterial(matcapTexture, color = 0xffffff, { opaque = false } = {}) {
+const fallbackImageUrl = './lod/hero-fallback-900.jpg';
+
+function createMatcapMaterial(matcapTexture, color = 0xffffff, { opaque = false, doubleSided = false } = {}) {
   const alphaCutoff = opaque ? 0.06 : 0.015;
   const material = new THREE.MeshMatcapMaterial({
     matcap: matcapTexture,
     color,
   });
-  material.side = THREE.FrontSide;
+  material.side = doubleSided ? THREE.DoubleSide : THREE.FrontSide;
   material.depthWrite = true;
   material.depthTest = true;
   material.depthFunc = THREE.LessEqualDepth;
@@ -30,20 +31,21 @@ function createMatcapMaterial(matcapTexture, color = 0xffffff, { opaque = false 
     shader.fragmentShader = shader.fragmentShader.replace(
       'vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;',
       `if (matcapColor.a < ${alphaCutoff.toFixed(3)}) discard;
+        ${doubleSided ? 'if (!gl_FrontFacing) { matcapColor.rgb *= 0.7; }' : ''}
         ${opaque ? '' : 'diffuseColor.a *= matcapColor.a;'}
         vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;`,
     );
   };
-  material.customProgramCacheKey = () => `kigtts-matcap-${opaque ? 'opaque' : 'alpha'}-${alphaCutoff}`;
+  material.customProgramCacheKey = () => `kigtts-matcap-${opaque ? 'opaque' : 'alpha'}-${doubleSided ? 'double' : 'front'}-${alphaCutoff}`;
   return material;
 }
 
 const matcapTextureEntries = [
-  ['matcap1', matcap1TextureUrl],
-  ['matcap2', matcap2TextureUrl],
-  ['matcap3', matcap3TextureUrl],
-  ['matcap4', matcap4TextureUrl],
-  ['matcap5', matcap5TextureUrl],
+  { key: 'matcap1', highUrl: matcap1TextureUrl, lowUrl: './lod/matcap/matcap1-96.png' },
+  { key: 'matcap2', highUrl: matcap2TextureUrl, lowUrl: './lod/matcap/matcap2-96.png', doubleSided: true },
+  { key: 'matcap3', highUrl: matcap3TextureUrl, lowUrl: './lod/matcap/matcap3-96.png' },
+  { key: 'matcap4', highUrl: matcap4TextureUrl, lowUrl: './lod/matcap/matcap4-96.png', opaque: true },
+  { key: 'matcap5', highUrl: matcap5TextureUrl, lowUrl: './lod/matcap/matcap5-96.png', doubleSided: true },
 ];
 
 function configureMatcapTexture(texture) {
@@ -63,7 +65,20 @@ function resolveMatcapKey(materialName = '') {
   }
 
   const key = `matcap${match[1]}`;
-  return matcapTextureEntries.some(([entryKey]) => entryKey === key) ? key : 'matcap1';
+  return matcapTextureEntries.some((entry) => entry.key === key) ? key : 'matcap1';
+}
+
+function canCreateWebGLContext() {
+  if (typeof document === 'undefined') {
+    return false;
+  }
+
+  try {
+    const canvas = document.createElement('canvas');
+    return Boolean(canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+  } catch {
+    return false;
+  }
 }
 
 function disposeObject3d(object3d) {
@@ -106,21 +121,39 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     camera.position.set(2.35, 0.46, 6.15);
     camera.lookAt(0.08, 0.04, 0);
 
-    const renderer = new THREE.WebGLRenderer({
-      alpha: true,
-      antialias: true,
-      powerPreference: 'high-performance',
-    });
+    if (!canCreateWebGLContext()) {
+      setFallbackImage(true);
+      setLoadProgress(100);
+      setModelReady(true);
+      return undefined;
+    }
+
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        alpha: true,
+        antialias: true,
+        powerPreference: 'high-performance',
+      });
+    } catch {
+      setFallbackImage(true);
+      setLoadProgress(100);
+      setModelReady(true);
+      return undefined;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.05;
     mountNode.appendChild(renderer.domElement);
 
+    let disposed = false;
     const textureLoader = new THREE.TextureLoader();
-    const matcapTextures = Object.fromEntries(
-      matcapTextureEntries.map(([key, url]) => [key, configureMatcapTexture(textureLoader.load(url))]),
+    const matcapEntryByKey = Object.fromEntries(matcapTextureEntries.map((entry) => [entry.key, entry]));
+    const lowMatcapTextures = Object.fromEntries(
+      matcapTextureEntries.map((entry) => [entry.key, configureMatcapTexture(textureLoader.load(entry.lowUrl))]),
     );
+    const matcapTextures = { ...lowMatcapTextures };
     const primaryMatcapTexture = matcapTextures.matcap1;
 
     const root = new THREE.Group();
@@ -133,23 +166,45 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       const matcapKey = resolveMatcapKey(materialName);
       const cacheKey = `${matcapKey}:${materialName || 'default'}`;
       if (!matcapMaterialCache.has(cacheKey)) {
+        const matcapEntry = matcapEntryByKey[matcapKey] ?? matcapEntryByKey.matcap1;
+        const material = createMatcapMaterial(matcapTextures[matcapKey] ?? primaryMatcapTexture, 0xffffff, {
+          opaque: Boolean(matcapEntry.opaque),
+          doubleSided: Boolean(matcapEntry.doubleSided),
+        });
+        material.userData.matcapKey = matcapKey;
         matcapMaterialCache.set(
           cacheKey,
-          createMatcapMaterial(matcapTextures[matcapKey] ?? primaryMatcapTexture, 0xffffff, {
-            opaque: matcapKey === 'matcap4',
-          }),
+          material,
         );
       }
 
       return matcapMaterialCache.get(cacheKey);
     };
 
+    matcapTextureEntries.forEach((entry) => {
+      textureLoader.load(entry.highUrl, (texture) => {
+        if (disposed) {
+          texture.dispose();
+          return;
+        }
+
+        configureMatcapTexture(texture);
+        matcapTextures[entry.key] = texture;
+        matcapMaterialCache.forEach((material) => {
+          if (material.userData.matcapKey === entry.key) {
+            material.matcap = texture;
+            material.needsUpdate = true;
+          }
+        });
+        lowMatcapTextures[entry.key]?.dispose();
+      });
+    });
+
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('./draco/');
     loader.setDRACOLoader(dracoLoader);
 
-    let disposed = false;
     loader.load(
       bxzmModelUrl,
       (gltf) => {
@@ -188,7 +243,6 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
             }
             const materials = Array.isArray(child.material) ? child.material : [child.material];
             materials.forEach((material) => {
-              material.side = THREE.FrontSide;
               material.depthWrite = true;
               material.depthTest = true;
               material.forceSinglePass = true;
@@ -287,7 +341,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
       resizeObserver.disconnect();
       dracoLoader.dispose();
       disposeObject3d(root);
-      Object.values(matcapTextures).forEach((texture) => texture.dispose());
+      new Set([...Object.values(lowMatcapTextures), ...Object.values(matcapTextures)]).forEach((texture) => texture.dispose());
       renderer.dispose();
       renderer.domElement.remove();
     };
