@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { alpha, keyframes } from '@mui/material/styles';
-import logoWhite from '../../../ART/LOGOWhite.svg';
+import logoWhiteLandscapeLandscape from '../../../ART/LOGOWhite-landscape.svg';
 const loadingPulse = keyframes`
   0% {
     opacity: 0.35;
@@ -108,7 +108,7 @@ function SideRail({ activeId, onSelect, densityScale = 1 }) {
           opacity: 0.88,
         }}
       >
-        <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: '100%' }} />
+        <Box component="img" src={logoWhiteLandscape} alt="KIGTTS" sx={{ width: '100%' }} />
       </Box>
     </Box>
   );
@@ -138,7 +138,7 @@ function MobileNavigation({ activeId, onSelect }) {
             pt: 'env(safe-area-inset-top)',
           }}
         >
-          <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: { xs: 108, sm: 118 }, flexShrink: 0 }} />
+          <Box component="img" src={logoWhiteLandscape} alt="KIGTTS" sx={{ width: { xs: 108, sm: 118 }, flexShrink: 0 }} />
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
               {currentItem.label}
@@ -159,7 +159,7 @@ function MobileNavigation({ activeId, onSelect }) {
         PaperProps={{ sx: { width: 296, px: 1.4 } }}
       >
         <Stack spacing={1.2} sx={{ p: 2.2, pb: 0 }}>
-          <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: 156 }} />
+          <Box component="img" src={logoWhiteLandscape} alt="KIGTTS" sx={{ width: 156 }} />
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             功能介绍 · 下载方式 · 制作鸣谢
           </Typography>
@@ -287,7 +287,7 @@ export function LoadingScreen({ progress, visible }) {
           alignItems: 'flex-start',
         }}
       >
-        <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: '100%', maxWidth: 330, filter: 'drop-shadow(0 18px 26px rgba(0,0,0,0.22))' }} />
+        <Box component="img" src={logoWhiteLandscape} alt="KIGTTS" sx={{ width: '100%', maxWidth: 330, filter: 'drop-shadow(0 18px 26px rgba(0,0,0,0.22))' }} />
         <Box sx={{ width: '100%', height: 1, backgroundColor: alpha('#ffffff', 0.12) }} />
         <Typography sx={{ fontSize: { xs: '0.78rem', sm: '0.92rem' }, letterSpacing: '0.05em', fontFamily: '"Noto Sans SC"', fontWeight: 900 }}>
           <Box component="span" sx={{ color: '#f5f7f7', fontWeight: 300 }}>LET YOUR </Box>
