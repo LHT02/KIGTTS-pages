@@ -145,24 +145,25 @@ export const downloadTabs = [
       { label: 'Hugging Face', icon: 'hub', href: trainerHuggingFaceUrl },
     ],
   },
-  {
-    id: 'beta',
-    label: 'Flutter Beta',
-    icon: 'flutter',
-    eyebrow: 'FLUTTER / BETA',
-    title: '暂未上线，敬请期待',
-    summary: 'Flutter Beta 还在准备中，目前不提供安装包。想先使用 KIGTTS，请下载 Android 端。',
-    meta: [
-      ['进度', '准备中'],
-      ['下载', '暂未开放'],
-      ['提醒', '官网公布'],
-    ],
-    bullets: ['目前还没有公开安装包', '开放后会在官网发布', '现在建议先使用 Android 端'],
-    actions: [
-      { label: '暂未上线', icon: 'hourglass_empty', disabled: true, primary: true },
-      { label: '敬请期待', icon: 'notifications_active', disabled: true },
-    ],
-  },
+  // TODO: Flutter Beta 页面暂时禁用，后续启用时取消注释 ↓
+  // {
+  //   id: 'beta',
+  //   label: 'Flutter Beta',
+  //   icon: 'flutter',
+  //   eyebrow: 'FLUTTER / BETA',
+  //   title: '暂未上线，敬请期待',
+  //   summary: 'Flutter Beta 还在准备中，目前不提供安装包。想先使用 KIGTTS，请下载 Android 端。',
+  //   meta: [
+  //     ['进度', '准备中'],
+  //     ['下载', '暂未开放'],
+  //     ['提醒', '官网公布'],
+  //   ],
+  //   bullets: ['目前还没有公开安装包', '开放后会在官网发布', '现在建议先使用 Android 端'],
+  //   actions: [
+  //     { label: '暂未上线', icon: 'hourglass_empty', disabled: true, primary: true },
+  //     { label: '敬请期待', icon: 'notifications_active', disabled: true },
+  //   ],
+  // },
 ];
 
 const screenshotLod = (name) => ({

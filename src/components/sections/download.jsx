@@ -98,7 +98,8 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
             aria-label="下载类型"
             sx={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
+              // TODO: Flutter Beta 恢复后改回 repeat(3, 1fr)
+              gridTemplateColumns: 'repeat(2, 1fr)',
               backgroundColor: alpha('#0a1415', 0.52),
               borderBottom: `1px solid ${alpha('#ffffff', 0.08)}`,
             }}

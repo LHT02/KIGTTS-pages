@@ -2,7 +2,8 @@ import { Box } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { lazy, Suspense } from 'react';
 import { lhtstudioLogo } from './data';
-import { BetaBubble } from './betaBubble';
+// TODO: Flutter Beta 暂时禁用，后续启用时取消注释 ↓
+// import { BetaBubble } from './betaBubble';
 import { HomeRightBlock } from './homePanels';
 import { centeredContentSx, centeredSectionSx } from './styles';
 import { scaledPx } from './utils';
@@ -43,9 +44,11 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
           alignSelf: desktopLayout ? 'flex-start' : { xs: 'center', lg: 'flex-start' },
         }}
       />
+      {/* TODO: Flutter Beta 浮窗暂时禁用，后续启用时取消注释 ↓
       <Box sx={{ display: desktopLayout ? 'block' : { xs: 'none', lg: 'block' } }}>
         <BetaBubble onSelect={() => onSelectDownloadTab?.('beta')} densityScale={desktopLayout ? dpiScale : densityScale} />
       </Box>
+      */}
       <Box
         sx={{
           ...centeredContentSx,
@@ -65,9 +68,11 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
           minHeight: desktopLayout ? 0 : { lg: 'calc(100svh - 158px)' },
         }}
       >
+        {/* TODO: Flutter Beta 横幅暂时禁用，后续启用时取消注释 ↓
         <Box sx={{ width: '100%', display: desktopLayout ? 'none' : { xs: 'flex', lg: 'none' }, justifyContent: 'center' }}>
           <BetaBubble onSelect={() => onSelectDownloadTab?.('beta')} compact banner />
         </Box>
+        */}
         <Box
           sx={{
             minWidth: 0,
