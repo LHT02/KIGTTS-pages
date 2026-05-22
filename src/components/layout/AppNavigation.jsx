@@ -136,9 +136,6 @@ export function MobileNavigation({ activeId, onSelect }) {
       >
         <Stack spacing={1.2} sx={{ p: 2.2, pb: 0 }}>
           <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: 156 }} />
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            功能介绍 · 下载方式 · 制作鸣谢
-          </Typography>
         </Stack>
         <List sx={{ px: 1.2, py: 2 }}>
           {navItems.map((item) => {
@@ -168,7 +165,6 @@ export function MobileNavigation({ activeId, onSelect }) {
                 </ListItemIcon>
                 <ListItemText
                   primary={item.label}
-                  secondary={item.caption}
                   primaryTypographyProps={{ fontWeight: 600 }}
                 />
               </ListItemButton>
