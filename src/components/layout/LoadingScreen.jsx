@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from '@mui/material';
 import { alpha, keyframes } from '@mui/material/styles';
-import logoWhiteLandscapeLandscape from '../../../ART/LOGOWhite-landscape.svg';
+import logoWhiteLandscape from '../../../ART/LOGOWhite-landscape.svg';
 const loadingPulse = keyframes`
   0% {
     opacity: 0.35;
