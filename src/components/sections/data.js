@@ -180,6 +180,7 @@ export const featureSlides = [
     icon: 'subtitles',
     eyebrow: '01 / 便捷字幕',
     title: '能说话的便捷字幕',
+    titleHighlight: '能说话的',
     brief: '不光能看好用，还能发声。',
     summary:
       '自带 TTS 功能与音量增益，甚至支持语音识别。把语音识别、快捷文本、TTS 朗读和大字幕预览放在同一个界面里，减少现场沟通的来回切换。',
@@ -193,6 +194,7 @@ export const featureSlides = [
     icon: 'badge',
     eyebrow: '02 / 快捷名片',
     title: '随时扩列名片夹',
+    titleHighlight: '随时扩列',
     brief: '拿出手机，面对面留个联系方式。',
     summary:
       '快捷名片支持自定义二维码和图片，还能多张存储。展示主页、社交账号、群二维码、约拍信息或临时说明，横竖屏切换无压力。',
@@ -206,6 +208,7 @@ export const featureSlides = [
     icon: 'draw',
     eyebrow: '03 / 画板',
     title: '写写画画小画板',
+    titleHighlight: '写写画画',
     brief: '不想打字的话可以写字啦~',
     summary:
       '就是个正常的小画板。嘈杂或不方便打字时，手写、涂鸦、标注快速补充说明，让交流不完全依赖语音或键盘。',
@@ -219,6 +222,7 @@ export const featureSlides = [
     icon: 'library_music',
     eyebrow: '04 / 音效板',
     title: '接梗放音效，点一下就响',
+    titleHighlight: '接梗放音效',
     brief: '把常用反应音、接梗音效和关键词触发放在一个面板里。',
     summary:
       '支持分组管理音效、列表或宫格布局、点击播放/停止、关键词触发、音频导入转码和预设分享，角色互动和现场反馈就靠它了。',
@@ -232,6 +236,7 @@ export const featureSlides = [
     icon: 'open_in_new',
     eyebrow: '05 / 悬浮窗与联动',
     title: '随时启动悬浮窗',
+    titleHighlight: '随时启动',
     brief: '不光工具齐备，还能快速启动。',
     summary:
       '悬浮窗带有启动器功能，可以在微信、QQ、相机等 App 上方常驻。快速打开便捷字幕、快捷名片、画板、音效板、迷你控件和常用第三方应用。',
@@ -245,6 +250,7 @@ export const featureSlides = [
     icon: 'record_voice_over',
     eyebrow: '06 / 语音增强与变声',
     title: '让你的声音更出彩',
+    titleHighlight: '让你的声音',
     brief: '本地处理识别、朗读、增强和说话人验证，嘈杂现场也不怕。',
     summary:
       'Android 端优先在本地完成识别、朗读、降噪、语音增强、说话人验证和音频测试，减少旁人说话误触发。',
@@ -258,6 +264,7 @@ export const featureSlides = [
     icon: 'tune',
     eyebrow: '07 / 设置与训练端',
     title: '电脑端做包，手机端用',
+    titleHighlight: '电脑端做包',
     brief: '在电脑上制作语音包，导出到 Android 端导入使用。',
     summary:
       '桌面训练器用于准备语音素材、训练语音包和导出成品；设置页用于调整识别、朗读、热键、语音包和现场使用偏好。两端配合一条龙。',

@@ -60,8 +60,21 @@ export function FeatureTitleCard({ currentFeature, slideNumber }) {
                 fontSize: 'clamp(0.92rem, 4vh, 1.35rem)',
               },
             }}
-          >
-            {currentFeature.title}
+            >
+            {currentFeature.titleHighlight
+              ? (() => {
+                  const idx = currentFeature.title.indexOf(currentFeature.titleHighlight);
+                  const before = currentFeature.title.slice(0, idx);
+                  const after = currentFeature.title.slice(idx + currentFeature.titleHighlight.length);
+                  return (
+                    <>
+                      {before}
+                      <Box component="span" sx={{ color: '#82cacb' }}>{currentFeature.titleHighlight}</Box>
+                      {after}
+                    </>
+                  );
+                })()
+              : currentFeature.title}
           </Typography>
         </Box>
       </Stack>
