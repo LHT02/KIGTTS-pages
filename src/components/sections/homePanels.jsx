@@ -157,7 +157,7 @@ export function HomeRightBlock({ onSelect, onSelectDownloadTab, compact = false,
           fontSize: desktopLayout ? desktopTitleSize : compact ? { xs: '1.22rem', sm: '2rem', md: '2.6rem', xl: '2.9rem' } : { xs: '2rem', md: '2.6rem', xl: '2.9rem' },
           lineHeight: compact ? 1.12 : 1.18,
           letterSpacing: '0.03em',
-          color: '#f1f4f4',
+          color: '#82cacb',
           fontFamily: '"Noto Sans SC"',
           fontWeight: 900,
         }}

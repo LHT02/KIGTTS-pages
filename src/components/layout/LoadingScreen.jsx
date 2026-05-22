@@ -289,7 +289,7 @@ export function LoadingScreen({ progress, visible }) {
       >
         <Box component="img" src={logoWhite} alt="KIGTTS" sx={{ width: '100%', maxWidth: 330, filter: 'drop-shadow(0 18px 26px rgba(0,0,0,0.22))' }} />
         <Box sx={{ width: '100%', height: 1, backgroundColor: alpha('#ffffff', 0.12) }} />
-        <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.78rem', sm: '0.92rem' }, letterSpacing: '0.05em', fontFamily: '"Noto Sans SC"', fontWeight: 900 }}>
+        <Typography sx={{ color: '#82cacb', fontSize: { xs: '0.78rem', sm: '0.92rem' }, letterSpacing: '0.05em', fontFamily: '"Noto Sans SC"', fontWeight: 900 }}>
           让沉默的你被听见
         </Typography>
       </Stack>
