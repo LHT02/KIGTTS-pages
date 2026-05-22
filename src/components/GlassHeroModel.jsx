@@ -9,7 +9,8 @@ import matcap2TextureUrl from '../../ART/Mat/matcap2.png?url';
 import matcap3TextureUrl from '../../ART/Mat/matcap3.png?url';
 import matcap4TextureUrl from '../../ART/Mat/matcap4.png?url';
 import matcap5TextureUrl from '../../ART/Mat/matcap5.png?url';
-import bxzmModelUrl from '../assets/bxzm.glb?url';
+
+const MODEL_URL = './bxzm.data';
 
 const fallbackImageUrl = './lod/hero-fallback-900.jpg';
 
@@ -206,69 +207,79 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     dracoLoader.setDecoderConfig({ type: 'js' });
     loader.setDRACOLoader(dracoLoader);
 
-    loader.load(
-      bxzmModelUrl,
-      (gltf) => {
-        if (disposed) {
-          disposeObject3d(gltf.scene);
-          return;
+    // Fetch as ArrayBuffer then parse — .data extension bypasses CDN AVIF rewriting
+    fetch(MODEL_URL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
         }
-
-        const model = gltf.scene;
-        const bounds = new THREE.Box3().setFromObject(model);
-        const center = bounds.getCenter(new THREE.Vector3());
-        const size = bounds.getSize(new THREE.Vector3());
-        const maxAxis = Math.max(size.x, size.y, size.z, 0.001);
-
-        model.position.sub(center);
-        model.scale.setScalar((3.75 * modelScale) / maxAxis);
-        model.rotation.set(0.06, 0.2, 0.02);
-        model.traverse((child) => {
-          if (child.isMesh) {
-            const lowerName = child.name.toLowerCase();
-            const materialNames = (Array.isArray(child.material) ? child.material : [child.material])
-              .map((material) => material?.name?.toLowerCase() ?? '')
-              .join(' ');
-            if (/(grid|wire|helper|axis|line|background|backdrop|outline|edge|frame|cage|lattice|rig|skeleton|armature)/.test(`${lowerName} ${materialNames}`)) {
-              child.visible = false;
+        return response.arrayBuffer();
+      })
+      .then((buffer) => {
+        loader.parse(
+          buffer,
+          '',
+          (gltf) => {
+            if (disposed) {
+              disposeObject3d(gltf.scene);
               return;
             }
 
-            child.castShadow = false;
-            child.receiveShadow = false;
-            child.renderOrder = 0;
-            if (Array.isArray(child.material)) {
-              child.material = child.material.map((material) => getMatcapMaterial(material));
-            } else {
-              child.material = getMatcapMaterial(child.material);
-            }
-            const materials = Array.isArray(child.material) ? child.material : [child.material];
-            materials.forEach((material) => {
-              material.depthWrite = true;
-              material.depthTest = true;
-              material.forceSinglePass = true;
-              material.needsUpdate = true;
-            });
-          }
-        });
+            const model = gltf.scene;
+            const bounds = new THREE.Box3().setFromObject(model);
+            const center = bounds.getCenter(new THREE.Vector3());
+            const size = bounds.getSize(new THREE.Vector3());
+            const maxAxis = Math.max(size.x, size.y, size.z, 0.001);
 
-        root.add(model);
-        modelRef.current = model;
-        setLoadProgress(100);
-        setModelReady(true);
-      },
-      (event) => {
-        if (!event.total) {
-          return;
-        }
-        setLoadProgress(Math.min(96, Math.round((event.loaded / event.total) * 100)));
-      },
-      () => {
+            model.position.sub(center);
+            model.scale.setScalar((3.75 * modelScale) / maxAxis);
+            model.rotation.set(0.06, 0.2, 0.02);
+            model.traverse((child) => {
+              if (child.isMesh) {
+                const lowerName = child.name.toLowerCase();
+                const materialNames = (Array.isArray(child.material) ? child.material : [child.material])
+                  .map((material) => material?.name?.toLowerCase() ?? '')
+                  .join(' ');
+                if (/(grid|wire|helper|axis|line|background|backdrop|outline|edge|frame|cage|lattice|rig|skeleton|armature)/.test(`${lowerName} ${materialNames}`)) {
+                  child.visible = false;
+                  return;
+                }
+
+                child.castShadow = false;
+                child.receiveShadow = false;
+                child.renderOrder = 0;
+                if (Array.isArray(child.material)) {
+                  child.material = child.material.map((material) => getMatcapMaterial(material));
+                } else {
+                  child.material = getMatcapMaterial(child.material);
+                }
+                const materials = Array.isArray(child.material) ? child.material : [child.material];
+                materials.forEach((material) => {
+                  material.depthWrite = true;
+                  material.depthTest = true;
+                  material.forceSinglePass = true;
+                  material.needsUpdate = true;
+                });
+              }
+            });
+
+            root.add(model);
+            modelRef.current = model;
+            setLoadProgress(100);
+            setModelReady(true);
+          },
+          () => {
+            setFallbackImage(true);
+            setLoadProgress(100);
+            setModelReady(true);
+          },
+        );
+      })
+      .catch(() => {
         setFallbackImage(true);
         setLoadProgress(100);
         setModelReady(true);
-      },
-    );
+      });
 
     const resizeRenderer = () => {
       const rect = mountNode.getBoundingClientRect();

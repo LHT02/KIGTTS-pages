@@ -1,6 +1,6 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { androidApkUrl, downloadNotes, logoWhite, trainerModelScopeUrl } from './data';
+import { androidApkUrl, downloadNotes, logoWhiteTrim, trainerModelScopeUrl } from './data';
 import { FeedbackGroupButton, RealQr } from './homeQr';
 import { SymbolIcon } from './SymbolIcon';
 import { md2Button, md2Surface } from './styles';
@@ -144,7 +144,7 @@ export function HomeRightBlock({ onSelect, onSelectDownloadTab, compact = false,
     >
       <Box
         component="img"
-        src={logoWhite}
+        src={logoWhiteTrim}
         alt="KIGTTS"
         sx={{
           width: desktopLayout ? desktopLogoWidth : compact ? { xs: '76%', sm: '100%' } : '100%',
