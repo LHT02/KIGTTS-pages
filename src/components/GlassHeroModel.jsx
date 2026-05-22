@@ -10,7 +10,8 @@ import matcap3TextureUrl from '../../ART/Mat/matcap3.png?url';
 import matcap4TextureUrl from '../../ART/Mat/matcap4.png?url';
 import matcap5TextureUrl from '../../ART/Mat/matcap5.png?url';
 
-const MODEL_URL = './bxzm.data';
+// Fetch from jsDelivr CDN — model too large for retiehe upload limit
+const MODEL_URL = 'https://cdn.jsdelivr.net/gh/KigScope/KIGTTS-pages@main/public/bxzm.data';
 
 const fallbackImageUrl = './lod/hero-fallback-900.jpg';
 
@@ -207,7 +208,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     dracoLoader.setDecoderConfig({ type: 'js' });
     loader.setDRACOLoader(dracoLoader);
 
-    // Fetch as ArrayBuffer then parse — .data extension bypasses CDN AVIF rewriting
+    // Fetch as ArrayBuffer then parse — .data extension + query bypasses CDN rewriting
     fetch(MODEL_URL)
       .then((response) => {
         if (!response.ok) {
