@@ -1,8 +1,7 @@
 (() => {
-  const sourceNode = document.getElementById('document-source');
   const targetNode = document.getElementById('document-content');
 
-  if (!sourceNode || !targetNode) {
+  if (!targetNode) {
     return;
   }
 
@@ -170,6 +169,28 @@
     return output.join('\n');
   };
 
-  const sourceText = decodeEntities(sourceNode.textContent.trim());
-  targetNode.innerHTML = renderLegalContent(sourceText);
+  const renderSourceText = (sourceText) => {
+    targetNode.innerHTML = renderLegalContent(sourceText);
+  };
+
+  const sourcePath = targetNode.getAttribute('data-source');
+  if (sourcePath) {
+    fetch(sourcePath, { cache: 'no-cache' })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to load ${sourcePath}`);
+        }
+        return response.text();
+      })
+      .then(renderSourceText)
+      .catch(() => {
+        targetNode.innerHTML = '<p>文档暂时无法加载，请稍后重试。</p>';
+      });
+    return;
+  }
+
+  const sourceNode = document.getElementById('document-source');
+  if (sourceNode) {
+    renderSourceText(decodeEntities(sourceNode.textContent.trim()));
+  }
 })();
