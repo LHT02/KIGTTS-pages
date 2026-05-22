@@ -272,7 +272,7 @@ export function LoadingScreen({ progress, visible }) {
             />
           ))}
         </Stack>
-        <Typography sx={{ mt: 0.45, color: alpha('#ffffff', 0.38), fontSize: '0.76rem' }}>资源加载中…</Typography>
+        <Typography sx={{ mt: 0.45, color: alpha('#ffffff', 0.38), fontSize: '0.76rem' }}>Loading...</Typography>
       </Box>
 
       <Stack

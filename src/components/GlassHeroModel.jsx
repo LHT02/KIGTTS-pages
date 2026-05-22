@@ -424,7 +424,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
           }}
         >
           <Typography sx={{ color: '#8ff5f7', fontSize: '0.72rem', letterSpacing: '0.12em', fontWeight: 700 }}>
-            模型加载 {loadProgress || 1}%
+            LOADING {loadProgress || 1}%
           </Typography>
         </Box>
       ) : null}
