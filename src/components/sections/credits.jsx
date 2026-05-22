@@ -37,7 +37,7 @@ export function CreditsSection() {
             textAlign: { xs: 'center', lg: 'left' },
           }}
         >
-          鸣谢
+          CREDITS / 鸣谢
         </Typography>
         <Typography
           sx={{

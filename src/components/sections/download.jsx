@@ -50,13 +50,28 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
             mt: { xs: 0.8, sm: 1.4 },
             maxWidth: 760,
             mx: 'auto',
-            fontSize: { xs: '1.12rem', sm: '2rem', md: '2.55rem' },
-            lineHeight: { xs: 1.18, sm: 1.1 },
+            fontSize: { xs: '1.62rem', sm: '2.1rem', md: '2.55rem' },
+            lineHeight: { xs: 1.12, sm: 1.08 },
             color: '#f5f7f7',
+            fontWeight: 700,
+            letterSpacing: '-0.03em',
             textAlign: 'center',
           }}
         >
-          选择适合你的版本，按提示下载和安装。
+          选择适合的版本
+        </Typography>
+        <Typography
+          sx={{
+            mt: { xs: 0.55, sm: 0.85 },
+            maxWidth: 760,
+            mx: 'auto',
+            color: alpha('#ffffff', 0.64),
+            fontSize: { xs: '0.74rem', sm: '0.9rem' },
+            lineHeight: 1.5,
+            textAlign: 'center',
+          }}
+        >
+          按提示下载和安装。
         </Typography>
       </Box>
 
