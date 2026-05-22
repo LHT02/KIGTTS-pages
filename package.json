@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "deploy": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-all.ps1",
     "deploy:all": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-all.ps1",
-    "deploy:pages": "npm run build && gh-pages -d dist -r https://github.com/KigScope/KIGTTS-pages.git && gh-pages -d dist -r https://github.com/LHT02/KIGTTS-pages.git"
+    "deploy:pages": "npm run build && gh-pages -d dist -r https://github.com/KigScope/KIGTTS-pages.git && gh-pages -d dist -r https://github.com/LHT02/KIGTTS-pages.git",
+    "deploy:rth": "powershell -Command \"$f=New-TemporaryFile; iwr 'https://host.retiehe.com/cli' -OutFile $f; node $f --site kigtts.lhtstudio.com --build build --outdir dist; rm $f -Force\""
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
