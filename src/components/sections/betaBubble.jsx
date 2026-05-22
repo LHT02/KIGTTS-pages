@@ -164,6 +164,7 @@ export function BetaBubble({ onSelect, compact = false, banner = false, densityS
           sx={{
             flex: isBanner || denseDesktop ? '1 1 auto' : 'initial',
             minWidth: 0,
+            color: 'inherit',
             fontSize: isBanner
               ? { xs: '0.82rem', sm: '0.98rem', md: '1.06rem' }
               : compact

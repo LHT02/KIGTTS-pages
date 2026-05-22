@@ -365,8 +365,8 @@ export function CreditsSection() {
           letterSpacing: '0.04em',
         }}
       >
-        <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>ICP备案号：待填写</Typography>
-        <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>公网安备：待填写</Typography>
+        <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>赣ICP备2026008578号-2</Typography>
+        <Typography sx={{ fontSize: 'inherit', color: 'inherit' }}>©2026 LHTSTUDIO 版权所有</Typography>
       </Stack>
     </Box>
   );

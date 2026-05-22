@@ -25,6 +25,7 @@ export function HomeSection({ onSelect, onSelectDownloadTab, desktopLayout = fal
         position: 'relative',
         flexDirection: 'column',
         alignItems: 'stretch',
+        justifyContent: { xs: 'flex-start', lg: 'center' },
         px: desktopLayout ? Math.max(1.2, 4.2 * densityScale) : { xs: 0, sm: 0, lg: 5.4, xl: 6.4 },
         pt: desktopLayout ? Math.max(1, 3.4 * densityScale) : { xs: 0, lg: 3.8 },
         pb: desktopLayout ? Math.max(1.2, 3.8 * densityScale) : { xs: 'max(10px, env(safe-area-inset-bottom))', sm: 2.2, lg: 5.2 },
