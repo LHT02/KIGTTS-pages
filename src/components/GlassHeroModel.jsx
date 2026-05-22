@@ -203,6 +203,7 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     const loader = new GLTFLoader();
     const dracoLoader = new DRACOLoader();
     dracoLoader.setDecoderPath('./draco/');
+    dracoLoader.setDecoderConfig({ type: 'js' });
     loader.setDRACOLoader(dracoLoader);
 
     loader.load(
