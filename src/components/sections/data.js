@@ -1,8 +1,8 @@
 import logoWhite from '../../../ART/LOGOWhite.svg';
-import logoWhiteTrim from '../../../ART/LOGOWhite-trim.svg';
+import logoWhiteLandscape from '../../../ART/LOGOWhite-landscape.svg';
 import lhtstudioLogo from '../../../ART/lhtstudio.svg';
 
-export { logoWhite, logoWhiteTrim, lhtstudioLogo };
+export { logoWhite, logoWhiteLandscape, lhtstudioLogo };
 export const navItems = [
   {
     id: 'home',
