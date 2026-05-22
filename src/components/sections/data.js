@@ -263,8 +263,6 @@ export const featureSlides = [
       '桌面训练器用于准备语音素材、训练语音包和导出成品；设置页用于调整识别、朗读、热键、语音包和现场使用偏好。两端配合一条龙。',
     bullets: ['Piper 标准训练', 'GPT-SoVITS / VoxCPM2 蒸馏', '训练器导出，手机端直接导入'],
     note: '电脑端制作语音包 → 导入手机端 → 现场使用，完整闭环。',
-
-(File lines truncated due to size)
     ...screenshotLod('trainer'),
     imageAlt: 'KIGTTS 训练器截图',
   },
