@@ -10,8 +10,11 @@ import matcap3TextureUrl from '../../ART/Mat/matcap3.png?url';
 import matcap4TextureUrl from '../../ART/Mat/matcap4.png?url';
 import matcap5TextureUrl from '../../ART/Mat/matcap5.png?url';
 
-// Fetch from jsDelivr CDN — model too large for retiehe upload limit
-const MODEL_URL = 'https://cdn.jsdelivr.net/gh/KigScope/KIGTTS-pages@main/public/bxzm.data';
+// Model URLs — PHP proxy preferred (same-origin), jsDelivr CDN as fallback
+const MODEL_URLS = [
+  './model.php',
+  'https://cdn.jsdelivr.net/gh/KigScope/KIGTTS-pages@main/public/bxzm.data',
+];
 
 const fallbackImageUrl = './lod/hero-fallback-900.jpg';
 
@@ -33,12 +36,11 @@ function createMatcapMaterial(matcapTexture, color = 0xffffff, { opaque = false,
     shader.fragmentShader = shader.fragmentShader.replace(
       'vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;',
       `if (matcapColor.a < ${alphaCutoff.toFixed(3)}) discard;
-        ${doubleSided ? 'if (!gl_FrontFacing) { matcapColor.rgb *= 0.7; }' : ''}
         ${opaque ? '' : 'diffuseColor.a *= matcapColor.a;'}
         vec3 outgoingLight = diffuseColor.rgb * matcapColor.rgb;`,
     );
   };
-  material.customProgramCacheKey = () => `kigtts-matcap-${opaque ? 'opaque' : 'alpha'}-${doubleSided ? 'double' : 'front'}-${alphaCutoff}`;
+  material.customProgramCacheKey = () => `kigtts-matcap-${opaque ? 'opaque' : 'alpha'}-${alphaCutoff}`;
   return material;
 }
 
@@ -208,16 +210,24 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
     dracoLoader.setDecoderConfig({ type: 'js' });
     loader.setDRACOLoader(dracoLoader);
 
-    // Fetch as ArrayBuffer then parse — .data extension + query bypasses CDN rewriting
-    fetch(MODEL_URL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        return response.arrayBuffer();
-      })
-      .then((buffer) => {
-        loader.parse(
+    // Try PHP proxy first, fallback to jsDelivr CDN
+    const modelUrls = MODEL_URLS;
+    let modelUrlIndex = 0;
+    const tryFetchModel = () => {
+      if (modelUrlIndex >= modelUrls.length) {
+        setFallbackImage(true);
+        setLoadProgress(100);
+        setModelReady(true);
+        return;
+      }
+      const url = modelUrls[modelUrlIndex++];
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.arrayBuffer();
+        })
+        .then((buffer) => {
+          loader.parse(
           buffer,
           '',
           (gltf) => {
@@ -277,10 +287,10 @@ export function GlassHeroModel({ densityScale = 1, modelScale = 1, sx }) {
         );
       })
       .catch(() => {
-        setFallbackImage(true);
-        setLoadProgress(100);
-        setModelReady(true);
+        tryFetchModel();
       });
+  };
+  tryFetchModel();
 
     const resizeRenderer = () => {
       const rect = mountNode.getBoundingClientRect();
