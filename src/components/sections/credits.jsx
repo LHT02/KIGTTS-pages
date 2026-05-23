@@ -37,7 +37,7 @@ export function CreditsSection() {
             textAlign: { xs: 'center', lg: 'left' },
           }}
         >
-          CREDITS / 鸣谢
+          CREDITS / 关于
         </Typography>
         <Typography
           sx={{
@@ -56,7 +56,7 @@ export function CreditsSection() {
             制作团队与开源引用
           </Box>
           <Box component="span" sx={{ display: { xs: 'inline', sm: 'none' } }}>
-            鸣谢
+            关于
           </Box>
         </Typography>
         <Typography

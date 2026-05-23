@@ -24,7 +24,7 @@ export const navItems = [
   },
   {
     id: 'credits',
-    label: '鸣谢',
+    label: '关于',
     caption: '团队与开源项目',
     icon: 'volunteer_activism',
   },
