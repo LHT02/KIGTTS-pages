@@ -100,7 +100,7 @@ function QrPanel({ compact = false, hideOnMobile = false, densityScale = 1 }) {
         ...md2Surface,
       }}
     >
-      <Stack spacing={compact ? 0.9 : 1.8} alignItems="center">
+      <Stack spacing={compact ? 0.9 : 1.8} alignItems="center" justifyContent="center" sx={{ height: '100%' }}>
         <RealQr compact={compact} densityScale={densityScale} />
         <Typography
           variant="body2"
