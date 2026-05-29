@@ -124,7 +124,7 @@ export const downloadTabs = [
     bullets: ['在手机浏览器中下载 APK', '确保从官网或 GitHub 下载，避免第三方修改包', '安装后按需要开启麦克风、悬浮窗等权限'],
     actions: [
       { label: '从Github下载', icon: 'download', href: androidApkUrl, primary: true },
-      { label: '从华为应用市场下载', icon: 'storefront', href: 'https://appgallery.huawei.com/app/C117576039?sharePrepath=ag&channelId=%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99&id=fafcf6ee7f5f4097bdd660bc8be21563&s=08BD28653FBBD05CDB82E8345EE55350DFC37CD4FAFE57F7F1281EB7D890CA2E&detailType=0&v=&callType=AGDLINK&installType=0000&shareTo=qrcode' },
+      { label: '从华为应用市场下载', icon: 'storefront', href: 'https://appgallery.huawei.com/app/C117576039?sharePrepath=ag&channelId=%E5%AE%98%E6%96%B9%E7%BD%91%E7%AB%99&id=fafcf6ee7f5f4097bdd660bc8be21563&s=08BD28653FBBD05CDB82E8345EE55350DFC37CD4FAFE57F7F1281EB7D890CA2E&detailType=0&v=&callType=AGDLINK&installType=0000&shareTo=qrcode', primary: true },
       { label: '查看发行页', icon: 'open_in_new', href: androidReleaseUrl },
     ],
   },
