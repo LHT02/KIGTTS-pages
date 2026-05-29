@@ -295,33 +295,33 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                   }}
                 >
                   <Box sx={{ position: 'relative', width: '100%', height: '100%', display: 'grid', placeItems: 'center' }}>
-                    <Stack spacing={1} alignItems="center" sx={{ position: 'relative', zIndex: 1, transition: 'opacity 300ms ease', opacity: hoveredAction >= 0 ? 0 : 1 }}>
-                      <SymbolIcon
-                        name={currentDownload.id === 'beta' ? currentDownload.icon : currentDownload.id === 'android' ? 'apk_install' : 'folder_zip'}
-                        size={58}
-                        sx={{ color: currentDownload.id === 'beta' ? alpha('#ffffff', 0.52) : '#8ff5f7' }}
-                      />
-                      <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '1.2rem', sm: '1.42rem' }, fontWeight: 700 }}>
-                        {currentDownload.id === 'android' ? '手机安装包' : currentDownload.id === 'trainer' ? '电脑端训练器' : '还在准备中'}
-                      </Typography>
-                      <Typography sx={{ maxWidth: 280, color: alpha('#ffffff', 0.62), fontSize: { xs: '0.78rem', sm: '0.9rem' }, lineHeight: 1.5 }}>
-                        {currentDownload.id === 'android'
-                          ? '悬停下方按钮扫码下载'
-                          : currentDownload.id === 'trainer'
-                            ? '国内用户优先选择魔搭；如果访问慢，再尝试 Hugging Face。'
-                            : 'Flutter Beta 暂未开放下载。上线后会在官网公布。'}
-                      </Typography>
-                    </Stack>
-                    {hoveredAction >= 0 && currentDownload.actions[hoveredAction]?.href ? (
-                      <Box sx={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', zIndex: 2, transition: 'opacity 300ms ease', opacity: hoveredAction >= 0 ? 1 : 0 }}>
-                        <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 1, boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
-                          <QRCodeSVG value={currentDownload.actions[hoveredAction].href} size={140} level="M" bgColor="#ffffff" fgColor="#111111" marginSize={1} />
-                        </Box>
-                        <Typography sx={{ mt: 0.8, color: alpha('#ffffff', 0.7), fontSize: '0.78rem' }}>
-                          {currentDownload.actions[hoveredAction].label}
+                    <Box sx={{ transition: 'opacity 300ms ease', opacity: hoveredAction >= 0 ? 0 : 1, pointerEvents: hoveredAction >= 0 ? 'none' : 'auto' }}>
+                      <Stack spacing={1} alignItems="center">
+                        <SymbolIcon
+                          name={currentDownload.id === 'beta' ? currentDownload.icon : currentDownload.id === 'android' ? 'apk_install' : 'folder_zip'}
+                          size={58}
+                          sx={{ color: currentDownload.id === 'beta' ? alpha('#ffffff', 0.52) : '#8ff5f7' }}
+                        />
+                        <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '1.2rem', sm: '1.42rem' }, fontWeight: 700 }}>
+                          {currentDownload.id === 'android' ? '手机安装包' : currentDownload.id === 'trainer' ? '电脑端训练器' : '还在准备中'}
                         </Typography>
+                        <Typography sx={{ maxWidth: 280, color: alpha('#ffffff', 0.62), fontSize: { xs: '0.78rem', sm: '0.9rem' }, lineHeight: 1.5 }}>
+                          {currentDownload.id === 'android'
+                            ? '悬停下方按钮扫码下载'
+                            : currentDownload.id === 'trainer'
+                              ? '国内用户优先选择魔搭；如果访问慢，再尝试 Hugging Face。'
+                              : 'Flutter Beta 暂未开放下载。上线后会在官网公布。'}
+                        </Typography>
+                      </Stack>
+                    </Box>
+                    <Box sx={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', transition: 'opacity 300ms ease', opacity: hoveredAction >= 0 && currentDownload.id === 'android' ? 1 : 0, pointerEvents: hoveredAction >= 0 ? 'auto' : 'none' }}>
+                      <Box sx={{ width: 140, height: 140, p: 0.8, backgroundColor: '#fff', borderRadius: 1, boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
+                        <QRCodeSVG value={currentDownload.actions[hoveredAction]?.href ?? ''} size={128} level="M" bgColor="#ffffff" fgColor="#111111" marginSize={1} style={{ display: 'block', width: '100%', height: '100%' }} />
                       </Box>
-                    ) : null}
+                      <Typography sx={{ mt: 0.6, color: alpha('#ffffff', 0.7), fontSize: '0.74rem', whiteSpace: 'nowrap' }}>
+                        {currentDownload.actions[hoveredAction]?.label ?? ''}
+                      </Typography>
+                    </Box>
                   </Box>
                 </Box>
 
@@ -336,7 +336,7 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                       rel={action.href ? 'noopener noreferrer' : undefined}
                       disabled={action.disabled}
                       startIcon={<SymbolIcon name={action.icon} size={24} />}
-                      onMouseEnter={() => setHoveredAction(idx)}
+                      onMouseEnter={() => currentDownload.id === 'android' ? setHoveredAction(idx) : null}
                       onMouseLeave={() => setHoveredAction(-1)}
                       sx={{
                         ...(action.primary ? md2Button : {
