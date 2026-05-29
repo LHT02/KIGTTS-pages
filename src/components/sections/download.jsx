@@ -43,7 +43,7 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
             textAlign: 'center',
           }}
         >
-          下载
+          DOWNLOAD / 下载
         </Typography>
         <Typography
           sx={{
