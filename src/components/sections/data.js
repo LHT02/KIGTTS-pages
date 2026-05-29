@@ -98,7 +98,7 @@ export const acknowledgementLibraries = [
   { name: 'ONNX Runtime', role: '模型推理运行时', logo: './logos/onnx.svg', href: 'https://onnxruntime.ai/' },
   { name: 'Piper', role: '本地语音朗读与训练', logo: './logos/piper.svg', href: 'https://github.com/OHF-Voice/piper1-gpl', monochrome: true, wide: true },
   { name: 'piper-phonemize', role: '音素转换', logo: './logos/rhasspy.png', href: 'https://github.com/rhasspy/piper-phonemize', monochrome: true },
-  { name: 'eSpeak NG', role: 'Piper 发音数据', logo: './logos/espeak-ng.png', href: 'https://github.com/espeak-ng/espeak-ng', monochrome: true },
+  { name: 'eSpeak NG', role: 'Piper 发音数据', logo: './logos/espeak-ng.svg', href: 'https://github.com/espeak-ng/espeak-ng' },
   { name: 'Electron', role: '桌面训练器窗口', logo: './logos/electron.svg', href: 'https://www.electronjs.org/' },
   { name: 'React', role: '训练器与官网界面', logo: './logos/react.svg', href: 'https://react.dev/' },
   { name: 'Python', role: '训练器核心流程', logo: './logos/python.svg', href: 'https://www.python.org/' },
