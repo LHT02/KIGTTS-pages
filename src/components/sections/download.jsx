@@ -315,10 +315,10 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                       </Stack>
                     </Box>
                     <Box sx={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', transition: 'opacity 300ms ease', opacity: hoveredAction >= 0 && currentDownload.id === 'android' ? 1 : 0, pointerEvents: hoveredAction >= 0 ? 'auto' : 'none' }}>
-                      <Box sx={{ width: 140, height: 140, p: 0.8, backgroundColor: '#fff', borderRadius: 1, boxShadow: '0 2px 8px rgba(0,0,0,0.3)' }}>
-                        <QRCodeSVG value={currentDownload.actions[hoveredAction]?.href ?? ''} size={128} level="M" bgColor="#ffffff" fgColor="#111111" marginSize={1} style={{ display: 'block', width: '100%', height: '100%' }} />
+                      <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 1, boxShadow: '0 2px 8px rgba(0,0,0,0.3)', lineHeight: 0 }}>
+                        <QRCodeSVG value={currentDownload.actions[hoveredAction]?.href ?? ''} size={120} level="M" bgColor="#ffffff" fgColor="#111111" />
                       </Box>
-                      <Typography sx={{ mt: 0.6, color: alpha('#ffffff', 0.7), fontSize: '0.74rem', whiteSpace: 'nowrap' }}>
+                      <Typography sx={{ mt: 0.5, color: alpha('#ffffff', 0.7), fontSize: '0.72rem', whiteSpace: 'nowrap', maxWidth: 200, textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {currentDownload.actions[hoveredAction]?.label ?? ''}
                       </Typography>
                     </Box>
