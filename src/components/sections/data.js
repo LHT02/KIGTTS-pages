@@ -104,7 +104,7 @@ export const acknowledgementLibraries = [
   { name: 'Python', role: '训练器核心流程', logo: './logos/python.svg', href: 'https://www.python.org/' },
   { name: 'PyTorch', role: '语音训练支持', logo: './logos/pytorch.svg', href: 'https://pytorch.org/' },
   { name: 'Hugging Face', role: '训练器海外下载', logo: './logos/huggingface.svg', href: 'https://huggingface.co/LHT02/kigtts-trainer/tree/main' },
-  { name: 'ModelScope', role: '训练器国内下载', logo: './logos/modelscope.ico', href: 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files' },
+  { name: 'ModelScope', role: '训练器国内下载', logo: './logos/modelscope.svg', href: 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files', monochrome: true },
   { name: 'GitHub', role: '项目主页与发布', logo: './logos/github.svg', href: projectUrl },
 ];
 
