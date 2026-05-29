@@ -32,8 +32,8 @@ export const navItems = [
 
 export const betaLines = ['Flutter 新版', '即将上线'];
 export const qrValue = 'www.kigtts.lhtstudio.com';
-export const androidReleaseUrl = 'https://github.com/LHT02/KIGTTS/releases/tag/APP0.1.0';
-export const androidApkUrl = 'https://github.com/LHT02/KIGTTS/releases/download/APP0.1.0/app-release.apk';
+export const androidReleaseUrl = 'https://github.com/LHT02/KIGTTS/releases/tag/APP0.1.1';
+export const androidApkUrl = 'https://github.com/LHT02/KIGTTS/releases/download/APP0.1.1/app-release.apk';
 export const trainerModelScopeUrl = 'https://modelscope.cn/models/LHTSTUDIO/KIGTTS_TRAINER/files';
 export const trainerHuggingFaceUrl = 'https://huggingface.co/LHT02/kigtts-trainer/tree/main';
 export const projectUrl = 'https://github.com/LHT02/KIGTTS';
@@ -118,7 +118,7 @@ export const downloadTabs = [
     summary: '手机端适合直接带到现场使用：便捷字幕、TTS 朗读、快捷名片、画板、音效板和悬浮窗都在同一个应用里。',
     meta: [
       ['文件', 'APK 安装包'],
-      ['版本', '0.1.0'],
+      ['版本', '0.1.1'],
       ['下载', 'GitHub Release'],
     ],
     bullets: ['在手机浏览器中下载 APK', '确保从官网或 GitHub 下载，避免第三方修改包', '安装后按需要开启麦克风、悬浮窗等权限'],
