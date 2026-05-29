@@ -322,7 +322,7 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                       </Stack>
                     </Box>
                     <Box sx={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', transition: 'opacity 300ms ease', opacity: hoveredAction >= 0 && currentDownload.id === 'android' ? 1 : 0, pointerEvents: hoveredAction >= 0 ? 'auto' : 'none' }}>
-                      <Box key={hoveredAction} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', animation: `${qrFadeIn} 260ms ease` }}>
+                      <Box key={qrAction} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', animation: `${qrFadeIn} 260ms ease` }}>
                         <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 1, boxShadow: '0 2px 8px rgba(0,0,0,0.3)', lineHeight: 0 }}>
                           <QRCodeSVG value={currentDownload.actions[qrAction]?.href ?? ''} size={120} level="M" bgColor="#ffffff" fgColor="#111111" />
                         </Box>
