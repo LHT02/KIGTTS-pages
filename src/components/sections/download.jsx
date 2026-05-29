@@ -1,11 +1,17 @@
 import { Box, Button, Divider, Grid, Stack, Typography } from '@mui/material';
-import { alpha } from '@mui/material/styles';
+import { alpha, keyframes } from '@mui/material/styles';
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { downloadTabs } from './data';
 import { featurePanelEnter } from './motion';
 import { SymbolIcon } from './SymbolIcon';
 import { centeredContentSx, centeredSectionSx, md2Button, md2RaisedShadow, md2Surface, md2SurfaceShadow } from './styles';
+
+const qrFadeIn = keyframes`
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+`;
+
 export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
   const [localActiveTabId, setLocalActiveTabId] = useState(downloadTabs[0].id);
   const [hoveredAction, setHoveredAction] = useState(-1);
@@ -315,12 +321,14 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                       </Stack>
                     </Box>
                     <Box sx={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', transition: 'opacity 300ms ease', opacity: hoveredAction >= 0 && currentDownload.id === 'android' ? 1 : 0, pointerEvents: hoveredAction >= 0 ? 'auto' : 'none' }}>
-                      <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 1, boxShadow: '0 2px 8px rgba(0,0,0,0.3)', lineHeight: 0 }}>
-                        <QRCodeSVG value={currentDownload.actions[hoveredAction]?.href ?? ''} size={120} level="M" bgColor="#ffffff" fgColor="#111111" />
+                      <Box key={hoveredAction} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', animation: `${qrFadeIn} 260ms ease` }}>
+                        <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 1, boxShadow: '0 2px 8px rgba(0,0,0,0.3)', lineHeight: 0 }}>
+                          <QRCodeSVG value={currentDownload.actions[hoveredAction]?.href ?? ''} size={120} level="M" bgColor="#ffffff" fgColor="#111111" />
+                        </Box>
+                        <Typography sx={{ mt: 0.5, color: alpha('#ffffff', 0.7), fontSize: '0.72rem', whiteSpace: 'nowrap', maxWidth: 200, textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {currentDownload.actions[hoveredAction]?.label ?? ''}
+                        </Typography>
                       </Box>
-                      <Typography sx={{ mt: 0.5, color: alpha('#ffffff', 0.7), fontSize: '0.72rem', whiteSpace: 'nowrap', maxWidth: 200, textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {currentDownload.actions[hoveredAction]?.label ?? ''}
-                      </Typography>
                     </Box>
                   </Box>
                 </Box>
