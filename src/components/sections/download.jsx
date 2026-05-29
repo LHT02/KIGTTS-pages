@@ -15,6 +15,7 @@ const qrFadeIn = keyframes`
 export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
   const [localActiveTabId, setLocalActiveTabId] = useState(downloadTabs[0].id);
   const [hoveredAction, setHoveredAction] = useState(-1);
+  const [qrAction, setQrAction] = useState(-1);
   const activeTabId = activeTabIdProp ?? localActiveTabId;
   const activeIndex = downloadTabs.findIndex((item) => item.id === activeTabId);
   const currentDownload = downloadTabs[activeIndex] ?? downloadTabs[0];
@@ -323,10 +324,10 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                     <Box sx={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', transition: 'opacity 300ms ease', opacity: hoveredAction >= 0 && currentDownload.id === 'android' ? 1 : 0, pointerEvents: hoveredAction >= 0 ? 'auto' : 'none' }}>
                       <Box key={hoveredAction} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', animation: `${qrFadeIn} 260ms ease` }}>
                         <Box sx={{ p: 1, backgroundColor: '#fff', borderRadius: 1, boxShadow: '0 2px 8px rgba(0,0,0,0.3)', lineHeight: 0 }}>
-                          <QRCodeSVG value={currentDownload.actions[hoveredAction]?.href ?? ''} size={120} level="M" bgColor="#ffffff" fgColor="#111111" />
+                          <QRCodeSVG value={currentDownload.actions[qrAction]?.href ?? ''} size={120} level="M" bgColor="#ffffff" fgColor="#111111" />
                         </Box>
                         <Typography sx={{ mt: 0.5, color: alpha('#ffffff', 0.7), fontSize: '0.72rem', whiteSpace: 'nowrap', maxWidth: 200, textAlign: 'center', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {currentDownload.actions[hoveredAction]?.label ?? ''}
+                          {currentDownload.actions[qrAction]?.label ?? ''}
                         </Typography>
                       </Box>
                     </Box>
@@ -344,7 +345,7 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                       rel={action.href ? 'noopener noreferrer' : undefined}
                       disabled={action.disabled}
                       startIcon={<SymbolIcon name={action.icon} size={24} />}
-                      onMouseEnter={() => currentDownload.id === 'android' ? setHoveredAction(idx) : null}
+                      onMouseEnter={() => currentDownload.id === 'android' ? (setHoveredAction(idx), setQrAction(idx)) : null}
                       onMouseLeave={() => setHoveredAction(-1)}
                       sx={{
                         ...(action.primary ? md2Button : {
