@@ -79,6 +79,7 @@ export const friendLinks = [
   { name: 'LHT Bilibili', caption: 'LHT 的个人主页', icon: 'play_circle', href: lhtBilibiliUrl },
   { name: '花酱 Bilibili', caption: '花酱的个人主页', icon: 'play_circle', href: huajiangBilibiliUrl },
   { name: 'Yui Lu Bilibili', caption: 'Yui Lu 的个人主页', icon: 'play_circle', href: yuiBilibiliUrl },
+  { name: 'Kigland 2026', caption: '2026 Kigurumi 主题站', icon: 'language', href: 'https://2026.kigland.cn/' },
 ];
 
 export const acknowledgementLibraries = [
