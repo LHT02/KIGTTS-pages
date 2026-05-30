@@ -178,11 +178,9 @@ export function CreditsSection() {
                 </Typography>
                 <Grid container spacing={0.8} sx={{ mt: 1.25 }}>
                   {[
-                    ['Android 开源许可证', 'android', androidLicenseUrl],
-                    ['Android 隐私说明', 'policy', androidPrivacyUrl],
-                    ['Android 用户协议', 'description', androidAgreementUrl],
-                    ['训练器开源许可证', 'laptop_mac', trainerLicenseUrl],
-                    ['训练器隐私说明', 'privacy_tip', trainerPrivacyUrl],
+                  ['Android 隐私政策', 'policy', androidPrivacyUrl],
+                  ['Android 开源许可证', 'android', androidLicenseUrl],
+                  ['训练器隐私政策', 'privacy_tip', trainerPrivacyUrl],
                   ].map(([label, icon, href]) => (
                     <Grid key={label} size={{ xs: 12, sm: 6, lg: 6 }}>
                       <Button
