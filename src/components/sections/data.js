@@ -79,7 +79,7 @@ export const friendLinks = [
   { name: 'LHT Bilibili', caption: 'LHT 的个人主页', icon: 'play_circle', href: lhtBilibiliUrl },
   { name: '花酱 Bilibili', caption: '花酱的个人主页', icon: 'play_circle', href: huajiangBilibiliUrl },
   { name: 'Yui Lu Bilibili', caption: 'Yui Lu 的个人主页', icon: 'play_circle', href: yuiBilibiliUrl },
-  { name: '偶域Kigland', caption: '重现角色，成就愉悦', icon: 'language', href: 'https://2026.kigland.cn/' },
+  { name: '偶域Kigland', caption: '重现角色，成就愉悦', icon: 'language', logo: './logos/kigland.svg', href: 'https://2026.kigland.cn/' },
 ];
 
 export const acknowledgementLibraries = [

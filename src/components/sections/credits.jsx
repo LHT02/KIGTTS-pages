@@ -332,7 +332,11 @@ export function CreditsSection() {
                             borderRadius: 0.45,
                           }}
                         >
-                          <SymbolIcon name={link.icon} size={18} />
+                          {link.logo ? (
+                            <Box component="img" src={link.logo} alt={link.name} sx={{ width: 18, height: 18, objectFit: 'contain' }} />
+                          ) : (
+                            <SymbolIcon name={link.icon} size={18} />
+                          )}
                         </Box>
                         <Box sx={{ minWidth: 0 }}>
                           <Typography sx={{ color: '#f5f7f7', fontSize: { xs: '0.76rem', sm: '0.84rem' }, fontWeight: 700, lineHeight: 1.16 }}>
