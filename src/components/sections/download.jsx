@@ -335,7 +335,33 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                 </Box>
 
                 <Stack spacing={1}>
-                  {currentDownload.actions.map((action, idx) => (
+                  {currentDownload.actions.map((action, idx) => {
+                    // Group GitHub + Gitee into one row for Android
+                    const isAndroidPair = currentDownload.id === 'android' && idx === 0;
+                    if (isAndroidPair) {
+                      const gh = action;
+                      const gitee = currentDownload.actions[1];
+                      return (
+                        <Stack direction="row" spacing={1} key="gh-gitee-row">
+                          <Button fullWidth component="a" href={gh.href} target="_blank" rel="noopener noreferrer"
+                            startIcon={<SymbolIcon name={gh.icon} size={20} />}
+                            onMouseEnter={() => (setHoveredAction(0), setQrAction(0))}
+                            onMouseLeave={() => setHoveredAction(-1)}
+                            sx={{ ...md2Button, flex: 1, minWidth: 0, minHeight: { xs: 46, sm: 54 }, justifyContent: 'center', borderRadius: 0.7, fontSize: { xs: '0.8rem', sm: '0.95rem' } }}>
+                            {gh.label}
+                          </Button>
+                          <Button fullWidth component="a" href={gitee.href} target="_blank" rel="noopener noreferrer"
+                            startIcon={<SymbolIcon name={gitee.icon} size={20} />}
+                            onMouseEnter={() => (setHoveredAction(1), setQrAction(1))}
+                            onMouseLeave={() => setHoveredAction(-1)}
+                            sx={{ ...md2Button, flex: 1, minWidth: 0, minHeight: { xs: 46, sm: 54 }, justifyContent: 'center', borderRadius: 0.7, fontSize: { xs: '0.8rem', sm: '0.95rem' } }}>
+                            {gitee.label}
+                          </Button>
+                        </Stack>
+                      );
+                    }
+                    if (currentDownload.id === 'android' && idx === 1) return null;
+                    return (
                     <Button
                       key={action.label}
                       fullWidth
@@ -369,7 +395,7 @@ export function DownloadSection({ activeTabId: activeTabIdProp, onTabChange }) {
                     >
                       {action.label}
                     </Button>
-                  ))}
+                  )})}
                 </Stack>
               </Stack>
             </Grid>
