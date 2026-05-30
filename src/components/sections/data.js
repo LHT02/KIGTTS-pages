@@ -94,7 +94,7 @@ export const acknowledgementLibraries = [
   { name: 'Jetpack Compose', role: '手机端界面支持', logo: './logos/jetpackcompose.svg', href: 'https://developer.android.com/compose' },
   { name: 'Flutter', role: '未来 Beta 版本', logo: './logos/flutter.svg', href: 'https://flutter.dev/' },
   { name: 'Material Symbols', role: '界面图标支持', logo: './logos/materialdesign.svg', href: 'https://fonts.google.com/icons' },
-  { name: 'sherpa-onnx', role: '离线 ASR / 说话人验证', logo: './logos/k2-fsa.png', href: 'https://github.com/k2-fsa/sherpa-onnx', monochrome: true },
+  { name: 'sherpa-onnx', role: '离线 ASR / 说话人验证', logo: './logos/sherpa-onnx.svg', href: 'https://github.com/k2-fsa/sherpa-onnx' },
   { name: 'ONNX Runtime', role: '模型推理运行时', logo: './logos/onnx.svg', href: 'https://onnxruntime.ai/' },
   { name: 'Piper', role: '本地语音朗读与训练', logo: './logos/piper.svg', href: 'https://github.com/OHF-Voice/piper1-gpl', monochrome: true, wide: true },
   { name: 'piper-phonemize', role: '音素转换', logo: './logos/rhasspy.png', href: 'https://github.com/rhasspy/piper-phonemize', monochrome: true },
