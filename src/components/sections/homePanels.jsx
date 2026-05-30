@@ -89,12 +89,11 @@ function QrPanel({ compact = false, hideOnMobile = false, densityScale = 1 }) {
   return (
     <Box
       sx={{
-        display: { xs: hideOnMobile ? 'none' : 'block', sm: 'block' },
+        display: hideOnMobile ? { xs: 'none', md: 'block' } : 'block',
         width: scaledCompact ? panelWidth : compact ? { xs: 112, sm: 170, md: 180 } : { xs: '100%', sm: 204, md: 212 },
         minWidth: scaledCompact ? panelWidth : compact ? { xs: 112, sm: 170, md: 180 } : { sm: 204, md: 212 },
         minHeight: 'auto',
         alignSelf: 'stretch',
-        display: 'flex',
         px: compact ? { xs: 0.95, sm: 1.4, md: 1.4 } : { xs: 1.4, sm: 1.6, md: 1.6 },
         py: compact ? { xs: 0.95, sm: 1.4, md: 1.4 } : { xs: 1.4, sm: 1.6, md: 1.6 },
         ...md2Surface,
