@@ -178,6 +178,7 @@ export function CreditsSection() {
                 </Typography>
                 <Grid container spacing={0.8} sx={{ mt: 1.25 }}>
                   {[
+                  ['Android 用户协议', 'description', androidAgreementUrl],
                   ['Android 开源许可证', 'android', androidLicenseUrl],
                   ['Android 隐私政策', 'policy', androidPrivacyUrl],
                   ['训练器开源许可证', 'laptop_mac', trainerLicenseUrl],
