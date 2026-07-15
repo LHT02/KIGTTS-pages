@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>KIGTTS Three.js Impostor Demo</title>
+    <script type="module" crossorigin src="../assets/impostor-Bze8L2Q3.js"></script>
+    <link rel="modulepreload" crossorigin href="../assets/modulepreload-polyfill-B5Qt9EMX.js">
+    <link rel="modulepreload" crossorigin href="../assets/three.module-BpIZQv1S.js">
+    <link rel="stylesheet" crossorigin href="../assets/impostor-CcyHY369.css">
+  </head>
+  <body>
+    <main class="demo-shell">
+      <section class="stage-panel">
+        <header class="hero-head">
+          <div>
+            <p class="eyebrow">KIGTTS THREE.JS IMPOSTOR</p>
+            <h1>Unity 风格多视角 Impostor</h1>
+            <p class="summary">用 Blender 烘焙 RGBA 与深度图集，Three.js shader 根据视角在图集中做四邻域采样，并用深度做轻微视差修正。</p>
+          </div>
+          <label class="color-field">
+            <span>背景色</span>
+            <input id="backgroundColor" type="color" value="#062c2b" />
+            <input id="backgroundText" type="text" value="#062c2b" spellcheck="false" />
+          </label>
+        </header>
+
+        <div id="stage" class="stage" aria-label="three.js impostor preview">
+          <div class="checker"></div>
+          <div id="threeStage" class="three-stage"></div>
+          <div id="tileOverlay" class="tile-overlay" hidden></div>
+          <div id="emptyState" class="empty-state">
+            <strong>还没有渲染输出。</strong>
+            <span>运行 <code>scripts/render-impostor-demo.ps1</code> 后会读取 <code>renders/manifest.json</code>。</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="control-panel">
+        <section class="control-card status-card">
+          <h2>加载状态</h2>
+          <p id="loadStatus">等待读取 manifest。</p>
+          <div class="meter"><span id="loadMeter"></span></div>
+        </section>
+
+        <section class="control-card">
+          <h2>视角</h2>
+          <label>
+            横向角度
+            <input id="azimuthSlider" type="range" min="-28" max="28" value="0" step="0.1" />
+          </label>
+          <label>
+            纵向角度
+            <input id="elevationSlider" type="range" min="-18" max="18" value="0" step="0.1" />
+          </label>
+          <label class="switch-row">
+            <input id="pointerToggle" type="checkbox" checked />
+            <span>鼠标/触摸控制视角</span>
+          </label>
+        </section>
+
+        <section class="control-card">
+          <h2>Impostor Shader</h2>
+          <label>
+            采样模式
+            <select id="sampleMode">
+              <option value="bilinear" selected>四邻域平滑采样</option>
+              <option value="nearest">最近视角采样</option>
+            </select>
+          </label>
+          <label>
+            深度视差强度
+            <input id="depthParallaxSlider" type="range" min="0" max="0.12" value="0.035" step="0.002" />
+          </label>
+          <label class="switch-row">
+            <input id="depthToggle" type="checkbox" />
+            <span>显示深度图</span>
+          </label>
+          <label class="switch-row">
+            <input id="weightToggle" type="checkbox" />
+            <span>显示参与权重</span>
+          </label>
+          <p class="hint">这是更接近 Unity impostor 的版本：一张 billboard 面片 + RGBA atlas + depth atlas。深度不是最终方案，只用于验证视差和遮挡边缘。</p>
+        </section>
+
+        <section class="control-card">
+          <h2>当前采样</h2>
+          <dl id="viewInfo" class="view-info">
+            <dt>状态</dt>
+            <dd>等待加载</dd>
+          </dl>
+        </section>
+
+        <section class="control-card command-card">
+          <h2>重新渲染</h2>
+          <pre><code>pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/render-impostor-demo.ps1</code></pre>
+        </section>
+      </aside>
+    </main>
+
+  </body>
+</html>

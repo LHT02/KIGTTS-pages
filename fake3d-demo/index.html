@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>KIGTTS Fake 3D Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="demo-shell">
+      <section class="stage-panel">
+        <div class="stage-toolbar">
+          <div>
+            <p class="eyebrow">KIGTTS FAKE 3D DEMO</p>
+            <h1>多视角透明图预览</h1>
+          </div>
+          <label class="color-field">
+            <span>背景色</span>
+            <input id="backgroundColor" type="color" value="#062c2b" />
+            <input id="backgroundText" type="text" value="#062c2b" spellcheck="false" />
+          </label>
+        </div>
+
+        <div id="stage" class="stage" aria-label="fake 3d preview">
+          <div class="checker"></div>
+          <div id="viewLayers" class="view-layers"></div>
+          <div id="depthLayers" class="view-layers depth-layers" hidden></div>
+          <div id="emptyState" class="empty-state">
+            <strong>还没有渲染输出。</strong>
+            <span>运行 <code>scripts/render-fake3d-demo.ps1</code> 后会读取 <code>renders/views.json</code>。</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="control-panel">
+        <div class="control-card">
+          <h2>交互</h2>
+          <label>
+            横向角度
+            <input id="azimuthSlider" type="range" min="-24" max="24" value="0" step="0.1" />
+          </label>
+          <label>
+            纵向角度
+            <input id="elevationSlider" type="range" min="0" max="0" value="0" step="0.1" disabled />
+          </label>
+          <label>
+            过渡时间
+            <input id="transitionSlider" type="range" min="0" max="180" value="40" step="10" />
+          </label>
+          <label>
+            深度重投影强度
+            <input id="depthOffsetSlider" type="range" min="0" max="42" value="14" step="1" />
+          </label>
+        </div>
+
+        <div class="control-card">
+          <h2>显示模式</h2>
+          <label class="switch-row">
+            <input id="blendToggle" type="checkbox" />
+            <span>相邻视角混合</span>
+          </label>
+          <label class="switch-row">
+            <input id="rbfToggle" type="checkbox" />
+            <span>高斯 RBF 混合</span>
+          </label>
+          <label>
+            RBF 平滑半径
+            <input id="rbfSigmaSlider" type="range" min="2" max="24" value="9" step="0.5" />
+          </label>
+          <label>
+            RBF 参与视角数
+            <input id="rbfViewCountSlider" type="range" min="2" max="6" value="4" step="1" />
+          </label>
+          <label class="switch-row">
+            <input id="depthToggle" type="checkbox" />
+            <span>显示深度图</span>
+          </label>
+          <label class="switch-row">
+            <input id="depthOffsetToggle" type="checkbox" checked />
+            <span>启用深度重投影</span>
+          </label>
+          <p class="hint">默认用最近视角作为源图，按相机矩阵、视野角和深度图重投影到目标视角。RBF 只是对照实验，主流程以深度重投影为准。</p>
+        </div>
+
+        <div class="control-card">
+          <h2>当前视角</h2>
+          <dl id="viewInfo" class="view-info">
+            <dt>状态</dt>
+            <dd>等待加载</dd>
+          </dl>
+        </div>
+
+        <div class="control-card">
+          <h2>导出命令</h2>
+          <pre><code>powershell -NoProfile -ExecutionPolicy Bypass -File scripts/render-fake3d-demo.ps1</code></pre>
+        </div>
+      </aside>
+    </main>
+
+    <script type="module" src="./demo.js"></script>
+  </body>
+</html>

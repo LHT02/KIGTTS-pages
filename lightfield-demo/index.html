@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>KIGTTS Light Field Demo</title>
+    <script type="module" crossorigin src="../assets/lightfield-DPwBdfNW.js"></script>
+    <link rel="modulepreload" crossorigin href="../assets/modulepreload-polyfill-B5Qt9EMX.js">
+    <link rel="modulepreload" crossorigin href="../assets/three.module-BpIZQv1S.js">
+    <link rel="stylesheet" crossorigin href="../assets/lightfield-BgLPsjhC.css">
+  </head>
+  <body>
+    <main class="demo-shell">
+      <section class="stage-panel">
+        <header class="hero-head">
+          <div>
+            <p class="eyebrow">KIGTTS LIGHT FIELD DEMO</p>
+            <h1>实用光场渲染预览</h1>
+            <p class="summary">按 Ray Tracey 的思路，从 Blender 渲染平移相机阵列。默认显示清晰视点插值，光圈合成与重聚焦作为实验参数手动开启。</p>
+          </div>
+          <label class="color-field">
+            <span>背景色</span>
+            <input id="backgroundColor" type="color" value="#062c2b" />
+            <input id="backgroundText" type="text" value="#062c2b" spellcheck="false" />
+          </label>
+        </header>
+
+        <div id="stage" class="stage" aria-label="light field preview">
+          <div class="checker"></div>
+          <div id="threeStage" class="three-stage"></div>
+          <div id="sampleOverlay" class="tile-overlay" hidden></div>
+          <div id="emptyState" class="empty-state">
+            <strong>还没有渲染输出。</strong>
+            <span>运行 <code>scripts/render-lightfield-demo.ps1</code> 后会读取 <code>renders/manifest.json</code>。</span>
+          </div>
+        </div>
+      </section>
+
+      <aside class="control-panel">
+        <section class="control-card status-card">
+          <h2>加载状态</h2>
+          <p id="loadStatus">等待读取 manifest。</p>
+          <div class="meter"><span id="loadMeter"></span></div>
+        </section>
+
+        <section class="control-card">
+          <h2>观察视点</h2>
+          <label>
+            水平视点
+            <input id="viewXSlider" type="range" min="-1" max="1" value="0" step="0.01" autocomplete="off" />
+          </label>
+          <label>
+            垂直视点
+            <input id="viewYSlider" type="range" min="-1" max="1" value="0" step="0.01" autocomplete="off" />
+          </label>
+          <label class="switch-row">
+            <input id="pointerToggle" type="checkbox" autocomplete="off" />
+            <span>鼠标/触摸控制视点</span>
+          </label>
+        </section>
+
+        <section class="control-card">
+          <h2>光场合成</h2>
+          <label>
+            光圈半径
+            <input id="apertureSlider" type="range" min="0" max="3.5" value="0" step="0.05" autocomplete="off" />
+          </label>
+          <label>
+            焦点偏移
+            <input id="focusSlider" type="range" min="-0.08" max="0.08" value="0" step="0.001" autocomplete="off" />
+          </label>
+          <label>
+            显示强度
+            <input id="intensitySlider" type="range" min="0.5" max="2.5" value="1.35" step="0.05" autocomplete="off" />
+          </label>
+          <label class="switch-row">
+            <input id="depthToggle" type="checkbox" autocomplete="off" />
+            <span>显示深度图</span>
+          </label>
+          <label class="switch-row">
+            <input id="sampleToggle" type="checkbox" autocomplete="off" />
+            <span>显示参与采样</span>
+          </label>
+          <p class="hint">半透明毛玻璃素材不适合默认大光圈叠加。光圈保持 0 时只做邻近视角插值；需要观察景深和重聚焦时，再逐步增加光圈和焦点偏移。</p>
+        </section>
+
+        <section class="control-card">
+          <h2>当前状态</h2>
+          <dl id="viewInfo" class="view-info">
+            <dt>状态</dt>
+            <dd>等待加载</dd>
+          </dl>
+        </section>
+
+        <section class="control-card command-card">
+          <h2>重新渲染</h2>
+          <pre><code>pwsh -NoProfile -ExecutionPolicy Bypass -File scripts/render-lightfield-demo.ps1</code></pre>
+        </section>
+      </aside>
+    </main>
+
+  </body>
+</html>
